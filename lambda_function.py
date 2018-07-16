@@ -32,5 +32,3 @@ def lambda_function(event, context):
         'bestbuy_price': bestbuy_price,
         'walmart_price': walmart_price
     }
-
-    print(message)
