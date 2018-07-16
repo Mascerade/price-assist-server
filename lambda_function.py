@@ -4,7 +4,7 @@ from bestbuy_scraper import BestBuy
 from walmart_scraper import Walmart
 
 
-def lambda_function(event, context):
+def lambda_handler(event, context):
     amazon = AmazonProduct(event["q"])
     amazon.retrieve_item_model()
     amazon.retrieve_item_price()
