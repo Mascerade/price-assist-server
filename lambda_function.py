@@ -26,7 +26,7 @@ def lambda_function(event, context):
     walmart.retrieve_product_price()
     walmart_price = walmart.price
 
-    message = {
+    return {
         'amazon_price': item_price,
         'newegg_price': newegg_price,
         'bestbuy_price': bestbuy_price,
