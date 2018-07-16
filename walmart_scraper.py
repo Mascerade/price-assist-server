@@ -35,9 +35,3 @@ class Walmart:
 
             else:
                 self.price += letter
-
-
-product = Walmart("X322BV-SR")
-product.retrieve_product_address()
-product.retrieve_product_price()
-print(product.price)

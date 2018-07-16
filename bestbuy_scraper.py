@@ -18,15 +18,13 @@ class BestBuy:
         data = requests.get(self.product_search_address, headers=self.headers)
         data = data.text
         soup = BeautifulSoup(data, "html.parser")
-        skuTitle = soup.find('div', 'sku-title')
-        self.product_address = "https://www.bestbuy.com" + skuTitle.find('a')['href']
+        sku_header = soup.find('h4', 'sku-header')
+        print(sku_header.find('a')['href'])
+        self.product_address = sku_header.find('a')['href']
 
     def retrieve_product_price(self):
         data = requests.get(self.product_address, headers=self.headers)
         data = data.text
         soup = BeautifulSoup(data, "html.parser")
-        print(soup.find('div', 'priceView-hero-price priceView-purchase-price').text)
+        self.price = soup.find('div', 'priceView-hero-price priceView-purchase-price').text
 
-product = BestBuy("XBR65X900F")
-product.retrieve_product_address()
-product.retrieve_product_price()

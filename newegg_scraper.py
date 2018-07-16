@@ -43,7 +43,3 @@ class NeweggProduct:
                 elif x in numbers or x == "$":
                     self.price += x
 
-product = NeweggProduct("XBR65X900F")
-product.retrieve_product_address()
-product.retrieve_product_price()
-print(product.price)
