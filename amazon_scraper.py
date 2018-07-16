@@ -36,35 +36,3 @@ class AmazonProduct:
         data = requests.get(self.address, headers=self.headers)
         soup = BeautifulSoup(data.text, "html.parser")
         self.price = soup.find(id='priceblock_ourprice').text.strip()
-
-
-def lambda_function(event, context):
-    amazon = AmazonProduct(event["q"])
-    amazon.retrieve_item_model()
-    amazon.retrieve_item_price()
-    item_model = amazon.model_number
-    item_price = amazon.price
-
-    newegg = NeweggProduct(item_model)
-    newegg.retrieve_product_address()
-    newegg.retrieve_product_price()
-    newegg_price = newegg.price
-
-    bestbuy = BestBuy(item_model)
-    bestbuy.retrieve_product_address()
-    bestbuy.retrieve_product_price()
-    bestbuy_price = bestbuy.price
-
-    walmart = Walmart(item_model)
-    walmart.retrieve_product_address()
-    walmart.retrieve_product_price()
-    walmart_price = walmart.price
-
-    message = {
-        'amazon_price': item_price,
-        'newegg_price': newegg_price,
-        'bestbuy_price': bestbuy_price,
-        'walmart_price': walmart_price
-    }
-
-    print(message)

@@ -32,3 +32,4 @@ def lambda_handler(event, context):
         'bestbuy_price': bestbuy_price,
         'walmart_price': walmart_price
     }
+
