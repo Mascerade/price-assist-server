@@ -42,4 +42,3 @@ class NeweggProduct:
                     self.price += x
                 elif x in numbers or x == "$":
                     self.price += x
-

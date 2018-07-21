@@ -32,6 +32,5 @@ class Walmart:
                     return
                 else:
                     self.price += letter
-
             else:
                 self.price += letter

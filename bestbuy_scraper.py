@@ -19,7 +19,6 @@ class BestBuy:
         data = data.text
         soup = BeautifulSoup(data, "html.parser")
         sku_header = soup.find('h4', 'sku-header')
-        print(sku_header.find('a')['href'])
         self.product_address = sku_header.find('a')['href']
 
     def retrieve_product_price(self):
@@ -27,4 +26,3 @@ class BestBuy:
         data = data.text
         soup = BeautifulSoup(data, "html.parser")
         self.price = soup.find('div', 'priceView-hero-price priceView-purchase-price').text
-
