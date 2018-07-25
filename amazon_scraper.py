@@ -1,8 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-from newegg_scraper import NeweggProduct
-from bestbuy_scraper import BestBuy
-from walmart_scraper import Walmart
 
 
 class AmazonProduct:
