@@ -2,7 +2,78 @@ from amazon_scraper import AmazonProduct
 from newegg_scraper import NeweggProduct
 from bestbuy_scraper import BestBuy
 from walmart_scraper import Walmart
-from flask import Flask, request
+from bandh_scraper import BandH
+from ebay_scraper import Ebay
+from tigerdirect_scraper import TigerDirect
+from flask import Flask, request, jsonify
+import threading
+import urllib
+
+newegg_price = None
+bestbuy_price = None
+walmart_price = None
+bandh_price = None
+ebay_price = None
+tiger_direct_price = None
+
+
+def retrieve_newegg_data(item_model):
+    newegg = NeweggProduct(item_model)
+    newegg.retrieve_product_address()
+    newegg.retrieve_product_price()
+    global newegg_price
+    newegg_price = newegg.price
+    return
+
+
+def retrieve_bestbuy_data(item_model):
+    bestbuy = BestBuy(item_model)
+    bestbuy.retrieve_product_address()
+    bestbuy.retrieve_product_price()
+    global bestbuy_price
+    bestbuy_price = bestbuy.price
+    return
+
+
+def retrieve_walmart_data(item_model):
+    walmart = Walmart(item_model)
+    walmart.retrieve_product_address()
+    walmart.retrieve_product_price()
+    global walmart_price
+    walmart_price = walmart.price
+    return
+
+
+def retrieve_bandh_data(item_model):
+    bandh = BandH(item_model)
+    bandh.retrieve_price()
+    global bandh_price
+    bandh_price = bandh.price
+    return
+
+
+def retrieve_tigerdirect_data(item_model):
+    tiger_direct = TigerDirect(item_model)
+    tiger_direct.retrieve_price()
+    global tiger_direct_price
+    tiger_direct_price = tiger_direct.price
+    return
+
+
+def retrieve_ebay_data(item_model):
+    ebay = Ebay(item_model)
+    ebay.retrieve_product_price()
+    global ebay_price
+    ebay_price = ebay.price
+    return
+
+
+def retrieve_tiger_direct_data(item_model):
+    tiger = TigerDirect(item_model)
+    tiger.retrieve_price()
+    global tiger_direct_price
+    tiger_direct_price = tiger.price
+    return
 
 
 def lambda_handler(url):
@@ -12,31 +83,36 @@ def lambda_handler(url):
     item_model = amazon.model_number
     item_price = amazon.price
 
+    t = threading.Thread(target=retrieve_newegg_data, args=(item_model,))
+    t2 = threading.Thread(target=retrieve_bestbuy_data, args=(item_model,))
+    t3 = threading.Thread(target=retrieve_walmart_data, args=(item_model,))
+    t4 = threading.Thread(target=retrieve_bandh_data, args=(item_model,))
+    t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
+    t6 = threading.Thread(target=retrieve_tigerdirect_data, args=(item_model,))
+
+    t.start()
+    t2.start()
+    t3.start()
+    t4.start()
+    t5.start()
+    t6.start()
+
     if item_model is not None:
-        newegg = NeweggProduct(item_model)
-        newegg.retrieve_product_address()
-        newegg.retrieve_product_price()
-        newegg_price = newegg.price
 
-        bestbuy = BestBuy(item_model)
-        bestbuy.retrieve_product_address()
-        bestbuy.retrieve_product_price()
-        bestbuy_price = bestbuy.price
+        prices = {
+            "amazon_price": item_price,
+            "newegg_price": newegg_price,
+            "bestbuy_price": bestbuy_price,
+            "walmart_price": walmart_price,
+            "bandh_price": bandh_price,
+            "ebay_price": ebay_price,
+            "tigerdirect_price": tiger_direct_price
+        }
 
-        walmart = Walmart(item_model)
-        walmart.retrieve_product_address()
-        walmart.retrieve_product_price()
-        walmart_price = walmart.price
-
-        prices = {"amazon_price": item_price,
-                  "newegg_price": newegg_price,
-                  "bestbuy_price": bestbuy_price,
-                  "walmart_price": walmart_price}
-
-        return str(prices)
+        return jsonify(prices)
 
     else:
-        return {"Error": "Amazon link invalid; Could not retrieve prices"}
+        return jsonify({"Error": "Amazon link invalid; Could not retrieve prices"})
 
 
 # Create the Flask app
@@ -46,9 +122,17 @@ app = Flask(__name__)
 @app.route('/query')
 def query_example():
     link = request.args.get('link')
-    return lambda_handler(link)
+    try:
+        return lambda_handler(link)
+
+    except urllib.error.HTTPError as e:
+        print(e)
+        return jsonify({"Error": "Server error"})
+
+    except TypeError as e:
+        print(e)
 
 
-# Run app using ip 102.168.0.177 debug mode on port 5000
+# Run app using localhost on port 5000
 if __name__ == '__main__':
-    app.run(host='192.168.0.177', port=5000)
+    app.run(host='localhost', port=5000)
