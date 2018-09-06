@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import requests
+import urllib.request
 
 
 class NeweggProduct:
@@ -17,9 +17,9 @@ class NeweggProduct:
 
     def retrieve_product_address(self):
         try:
-            data = requests.get(self.product_search_address, headers=self.headers)
-            data = data.text
-            soup = BeautifulSoup(data, 'html.parser')
+            data = urllib.request.urlopen(self.product_search_address)
+            data = data.read()
+            soup = BeautifulSoup(data, 'lxml')
             for product in soup.find_all('div', 'item-container'):
                 self.product_address = product.find('a').text
 
@@ -29,9 +29,9 @@ class NeweggProduct:
     def retrieve_product_price(self):
         if self.product_address is not None:
             numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-            data = requests.get(self.product_search_address, headers=self.headers)
-            data = data.text
-            soup = BeautifulSoup(data, 'html.parser')
+            data = urllib.request.urlopen(self.product_search_address)
+            data = data.read()
+            soup = BeautifulSoup(data, 'lxml')
             counter = 0
             for price in soup.find_all('li', 'price-current'):
                 for x in price.text.strip():

@@ -14,7 +14,6 @@ class TigerDirect:
     def retrieve_price(self):
 
         try:
-            print(self.product_address)
             data = urllib.request.Request(self.product_address, headers=self.headers)
             data = urllib.request.urlopen(data).read()
             soup = BeautifulSoup(data, "html.parser")
@@ -23,6 +22,4 @@ class TigerDirect:
             self.price = self.price.replace(temp, '')
 
         except AttributeError as e:
-            print(e)
-            print(self.product_address)
             self.price = "Could not find price"

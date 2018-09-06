@@ -5,9 +5,10 @@ from walmart_scraper import Walmart
 from bandh_scraper import BandH
 from ebay_scraper import Ebay
 from tigerdirect_scraper import TigerDirect
-from flask import Flask, request, jsonify
+from flask import Flask, request
 import threading
-import urllib
+import urllib.request
+import time
 
 newegg_price = None
 bestbuy_price = None
@@ -49,14 +50,7 @@ def retrieve_bandh_data(item_model):
     bandh.retrieve_price()
     global bandh_price
     bandh_price = bandh.price
-    return
-
-
-def retrieve_tigerdirect_data(item_model):
-    tiger_direct = TigerDirect(item_model)
-    tiger_direct.retrieve_price()
-    global tiger_direct_price
-    tiger_direct_price = tiger_direct.price
+    print(bandh_price)
     return
 
 
@@ -77,6 +71,8 @@ def retrieve_tiger_direct_data(item_model):
 
 
 def lambda_handler(url):
+
+    start_time = time.time()
     amazon = AmazonProduct(url)
     amazon.retrieve_item_model()
     amazon.retrieve_item_price()
@@ -84,35 +80,45 @@ def lambda_handler(url):
     item_price = amazon.price
 
     t = threading.Thread(target=retrieve_newegg_data, args=(item_model,))
-    t2 = threading.Thread(target=retrieve_bestbuy_data, args=(item_model,))
     t3 = threading.Thread(target=retrieve_walmart_data, args=(item_model,))
     t4 = threading.Thread(target=retrieve_bandh_data, args=(item_model,))
     t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
-    t6 = threading.Thread(target=retrieve_tigerdirect_data, args=(item_model,))
+    t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(item_model,))
 
     t.start()
-    t2.start()
     t3.start()
     t4.start()
     t5.start()
     t6.start()
 
-    if item_model is not None:
+    t.join()
+    t3.join()
+    t4.join()
+    t5.join()
+    t6.join()
 
+    global newegg_price
+    global bestbuy_price
+    global walmart_price
+    global bandh_price
+    global ebay_price
+    global tiger_direct_price
+
+    if item_model is not None:
         prices = {
             "amazon_price": item_price,
             "newegg_price": newegg_price,
-            "bestbuy_price": bestbuy_price,
             "walmart_price": walmart_price,
             "bandh_price": bandh_price,
             "ebay_price": ebay_price,
             "tigerdirect_price": tiger_direct_price
         }
 
-        return jsonify(prices)
+        print(time.time()-start_time)
+        return str(prices)
 
     else:
-        return jsonify({"Error": "Amazon link invalid; Could not retrieve prices"})
+        return str({"Error": "Amazon link invalid; Could not retrieve prices"})
 
 
 # Create the Flask app
@@ -127,7 +133,7 @@ def query_example():
 
     except urllib.error.HTTPError as e:
         print(e)
-        return jsonify({"Error": "Server error"})
+        return str({"Error": "Server error"})
 
     except TypeError as e:
         print(e)

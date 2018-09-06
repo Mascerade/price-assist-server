@@ -17,7 +17,7 @@ class Walmart:
         try:
             data = requests.get(self.product_search_address, headers=self.headers)
             data = data.text
-            soup = BeautifulSoup(data, "html.parser")
+            soup = BeautifulSoup(data, "lxml")
             self.product_address = "https://www.walmart.com" + \
                                    soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
 
@@ -32,7 +32,7 @@ class Walmart:
             count = 0
             data = requests.get(self.product_address, headers=self.headers)
             data = data.text
-            soup = BeautifulSoup(data, "html.parser")
+            soup = BeautifulSoup(data, "lxml")
             price = soup.find('div', 'prod-PriceHero').text
             for letter in price:
                 if letter == "$":
