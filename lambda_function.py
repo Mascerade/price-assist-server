@@ -141,4 +141,4 @@ def query_example():
 
 # Run app using localhost on port 5000
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000)
+    app.run(host='localhost', port=5000, threaded=True, debug=True)
