@@ -13,7 +13,7 @@ class TargetScraper:
         }
         options = Options()
         options.add_argument('--headless')
-        self.driver = selenium.webdriver.Chrome()
+        self.driver = selenium.webdriver.Chrome(options=options)
         self.data = self.driver.get(self.product_address)
 
     def retrieve_product_price(self):

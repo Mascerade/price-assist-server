@@ -36,8 +36,6 @@ class AmazonProduct:
                 if "Item model number" in x:
                     self.model_number = x[17:].strip()
 
-            print(self.model_number)
-
         except AttributeError:
             self.model_number = None
 
@@ -49,3 +47,4 @@ class AmazonProduct:
             return
         soup = BeautifulSoup(self.data, "lxml")
         self.price = soup.find(id='priceblock_ourprice').text.strip()
+        return
