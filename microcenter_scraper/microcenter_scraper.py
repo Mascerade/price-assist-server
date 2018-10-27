@@ -21,4 +21,3 @@ class Microcenter:
 
         except AttributeError:
             self.price = "Could not find price"
-
