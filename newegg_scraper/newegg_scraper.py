@@ -20,7 +20,7 @@ class NeweggProduct:
             data = urllib.request.urlopen(self.product_search_address)
             data = data.read()
             soup = BeautifulSoup(data, 'lxml')
-            self.product_address = "https://www.newegg.com" + soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
+            self.product_address = soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
         except AttributeError:
             self.product_address = None

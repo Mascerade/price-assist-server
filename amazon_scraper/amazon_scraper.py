@@ -10,16 +10,11 @@ class AmazonProduct:
         self.model_number = ""
         self.address = address
         self.entry_list = []
-        self.headers = [
-            {'User-Agent': 'Mozilla/5.0 (Linux; Android 5.1.1; LG-H345 Build/LMY47V) AppleWebKit/537.36 ' +
-                           '(KHTML, like Gecko) Chrome/43.0.2357.78 Mobile Safari/537.36 OPR/30.0.1856.93524'},
-        ]
+        self.headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                                      'Silk/44.1.54 like Chrome/44.0.2403.63 Safari/537.36'}
 
-        self.req = urllib.request.Request(self.address,
-                                          data=None,
-                                          headers=self.headers[(random.randint(0, len(self.headers) - 1))])
-
-        self.data = urllib.request.urlopen(self.address).read()
+        self.data = urllib.request.Request(self.address, headers=self.headers)
+        self.data = urllib.request.urlopen(self.data).read()
 
     def retrieve_item_model(self):
         try:
@@ -47,7 +42,7 @@ class AmazonProduct:
             return
         soup = BeautifulSoup(self.data, "lxml")
         try:
-            self.price = soup.find(id='priceblock_ourprice').text.strip()
+            self.price = soup.find("span", id='priceblock_ourprice').text.strip()
         except AttributeError:
             try:
                 self.price = soup.find(id='priceblock_dealprice').text.strip()
