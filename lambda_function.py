@@ -96,6 +96,23 @@ def retrieve_microcenter_price(item_model):
     return
 
 
+def reset_retailer_lists():
+    global newegg_data
+    global bestbuy_data
+    global walmart_data
+    global bandh_data
+    global ebay_data
+    global tiger_direct_data
+    global microcenter_data
+
+    newegg_data = []
+    walmart_data = []
+    bandh_data = []
+    ebay_data = []
+    tiger_direct_data = []
+    microcenter_data = []
+
+
 def lambda_handler(url):
     start_time = time.time()
     amazon = AmazonProduct(url)
@@ -136,6 +153,8 @@ def lambda_handler(url):
     global tiger_direct_data
     global microcenter_data
 
+    print(newegg_data, walmart_data, bandh_data, ebay_data, tiger_direct_data, microcenter_data)
+
     if item_model is not None:
         prices = {
             "amazon_data": amazon.price,
@@ -161,6 +180,7 @@ app = Flask(__name__)
 @app.route('/query')
 def query_example():
     link = request.args.get('link')
+    reset_retailer_lists()
     try:
         return lambda_handler(link)
 

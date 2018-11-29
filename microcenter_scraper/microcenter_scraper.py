@@ -14,7 +14,6 @@ class Microcenter:
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
         }
 
-        print(self.product_search_address)
         data = urllib.request.Request(self.product_search_address)
         data.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0')
         data = urllib.request.urlopen(data)

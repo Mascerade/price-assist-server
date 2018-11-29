@@ -23,3 +23,6 @@ class Ebay:
 
         except AttributeError:
             self.price = "Could Not Find Price"
+
+        except TypeError:
+            self.price = "Could Not Find Price"
