@@ -2,18 +2,18 @@ from bs4 import BeautifulSoup
 import requests
 import urllib.request
 import random
+import os
 
 
 class AmazonProduct:
     def __init__(self, address):
+        with open(os.getcwd() + "\scrapers.txt", "r") as scrapers:
+            self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
         self.price = ""
         self.model_number = ""
         self.address = address
         self.entry_list = []
-        self.headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                                      'Silk/44.1.54 like Chrome/44.0.2403.63 Safari/537.36'}
-
-        self.data = urllib.request.Request(self.address, headers=self.headers)
+        self.data = urllib.request.Request(self.address, headers=self.user_agent)
         self.data = urllib.request.urlopen(self.data).read()
 
     def retrieve_item_model(self):
