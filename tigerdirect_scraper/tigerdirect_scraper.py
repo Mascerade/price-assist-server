@@ -18,7 +18,15 @@ class TigerDirect:
 
     def retrieve_price(self):
         try:
+            count = 0
             self.price = self.soup.find('div', 'salePrice').text
+            if self.price.count("$") > 1:
+                for index, x in enumerate(self.price):
+                    if x == "$" and count > 0:
+                        self.price = self.price[index:]
+                        break
+                    if x == "$":
+                        count += 1
 
         except AttributeError:
             self.price = "Could not find price"

@@ -6,6 +6,7 @@ from bandh_scraper.bandh_scraper import BandH
 from ebay_scraper.ebay_scraper import Ebay
 from tigerdirect_scraper.tigerdirect_scraper import TigerDirect
 from microcenter_scraper.microcenter_scraper import Microcenter
+from target_scraper.target_scraper import TargetScraper
 from flask import Flask, request
 import threading
 import urllib.request
@@ -18,6 +19,7 @@ bandh_data = []
 ebay_data = []
 tiger_direct_data = []
 microcenter_data = []
+target_data = []
 
 
 def retrieve_newegg_data(item_model):
@@ -96,6 +98,15 @@ def retrieve_microcenter_price(item_model):
     return
 
 
+def retrieve_target_price(item_model):
+    target = TargetScraper(item_model)
+    target.retrieve_product_price()
+    global target_data
+    target_data.append("Target")
+    target_data.append(target.price)
+    target_data.append(target.product_address)
+
+
 def reset_retailer_lists():
     global newegg_data
     global bestbuy_data
@@ -104,6 +115,7 @@ def reset_retailer_lists():
     global ebay_data
     global tiger_direct_data
     global microcenter_data
+    global target_data
 
     newegg_data = []
     walmart_data = []
@@ -111,6 +123,7 @@ def reset_retailer_lists():
     ebay_data = []
     tiger_direct_data = []
     microcenter_data = []
+    target_data = []
 
 
 def lambda_handler(url):
@@ -128,6 +141,7 @@ def lambda_handler(url):
     t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
     t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(item_model,))
     t7 = threading.Thread(target=retrieve_microcenter_price, args=(item_model,))
+    t8 = threading.Thread(target=retrieve_target_price, args=(item_model,))
 
     t.start()
     t2.start()
@@ -136,6 +150,7 @@ def lambda_handler(url):
     t5.start()
     t6.start()
     t7.start()
+    t8.start()
 
     t.join()
     t2.join()
@@ -144,6 +159,7 @@ def lambda_handler(url):
     t5.join()
     t6.join()
     t7.join()
+    t8.join()
 
     global newegg_data
     global bestbuy_data
@@ -152,6 +168,7 @@ def lambda_handler(url):
     global ebay_data
     global tiger_direct_data
     global microcenter_data
+    global target_data
 
     if item_model is not None:
         prices = {
@@ -161,7 +178,8 @@ def lambda_handler(url):
             "bandh_data": bandh_data,
             "ebay_data": ebay_data,
             "tigerdirect_data": tiger_direct_data,
-            "microcenter_data": microcenter_data
+            "microcenter_data": microcenter_data,
+            "target_data": target_data
         }
 
         print(time.time()-start_time)

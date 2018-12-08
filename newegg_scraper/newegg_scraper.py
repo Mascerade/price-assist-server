@@ -13,7 +13,7 @@ class NeweggProduct:
         self.product_address = ""
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/58.0.3029.110 Safari/537.36',
+                          'Chrome/70.0.3538.102 Safari/537.36'
         }
 
     def retrieve_product_address(self):
@@ -45,7 +45,7 @@ class NeweggProduct:
                         elif x == "(":
                             stop = True
 
-                        elif x == ".":
+                        elif x == "." or x == ",":
                             self.price += x
 
                 self.price = self.price.strip(" ")
