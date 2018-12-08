@@ -153,8 +153,6 @@ def lambda_handler(url):
     global tiger_direct_data
     global microcenter_data
 
-    print(newegg_data, walmart_data, bandh_data, ebay_data, tiger_direct_data, microcenter_data)
-
     if item_model is not None:
         prices = {
             "amazon_data": amazon.price,

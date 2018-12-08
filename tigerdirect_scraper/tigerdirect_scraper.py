@@ -20,8 +20,11 @@ class TigerDirect:
         try:
             self.price = self.soup.find('div', 'salePrice').text
 
-        except AttributeError as e:
+        except AttributeError:
             self.price = "Could not find price"
+
+        except TypeError:
+            self.product_address = None
 
     def retrieve_product_address(self):
         try:

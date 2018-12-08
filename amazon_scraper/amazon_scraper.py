@@ -34,6 +34,9 @@ class AmazonProduct:
         except AttributeError:
             self.model_number = None
 
+        except TypeError:
+            self.model_number = None
+
         except requests.HTTPError as e:
             print("From Amazon", e)
 
@@ -43,9 +46,10 @@ class AmazonProduct:
         soup = BeautifulSoup(self.data, "lxml")
         try:
             self.price = soup.find("span", id='priceblock_ourprice').text.strip()
-        except AttributeError:
+        except AttributeError or TypeError:
             try:
                 self.price = soup.find(id='priceblock_dealprice').text.strip()
-            except AttributeError:
+            except AttributeError or TypeError:
                 self.price = "Price Not Available"
+
         return

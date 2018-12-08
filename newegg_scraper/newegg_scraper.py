@@ -26,6 +26,9 @@ class NeweggProduct:
         except AttributeError:
             self.product_address = None
 
+        except TypeError:
+            self.product_address = None
+
     def retrieve_product_price(self):
         if self.product_address is not None:
             try:
