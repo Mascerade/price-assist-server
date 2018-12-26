@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="12fed21b-a04f-4ce4-a6ea-9a2172078bc7" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/bandh_scraper/bandh_scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/bandh_scraper/bandh_scraper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lambda_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/lambda_function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/newegg_scraper/newegg_scraper.py" beforeDir="false" afterPath="$PROJECT_DIR$/newegg_scraper/newegg_scraper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,11 +12,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lambda_function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="179" column="49" selection-start-line="179" selection-start-column="49" selection-end-line="179" selection-end-column="49" />
+            <state relative-caret-position="4180">
+              <caret line="190" column="22" lean-forward="true" selection-start-line="190" selection-start-column="22" selection-end-line="190" selection-end-column="22" />
               <folding>
                 <element signature="e#0#55#0" expanded="true" />
               </folding>
@@ -27,10 +25,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/amazon_scraper/amazon_scraper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="880">
+              <caret line="40" column="17" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/newegg_scraper/newegg_scraper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+            <state relative-caret-position="457">
+              <caret line="48" column="43" lean-forward="true" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -82,8 +92,8 @@
         <option value="$PROJECT_DIR$/tigerdirect_scraper/tigerdirect_scraper.py" />
         <option value="$PROJECT_DIR$/target_scraper/target_scraper.py" />
         <option value="$PROJECT_DIR$/bandh_scraper/bandh_scraper.py" />
-        <option value="$PROJECT_DIR$/newegg_scraper/newegg_scraper.py" />
         <option value="$PROJECT_DIR$/lambda_function.py" />
+        <option value="$PROJECT_DIR$/newegg_scraper/newegg_scraper.py" />
       </list>
     </option>
   </component>
@@ -216,12 +226,12 @@
       <workItem from="1544284559275" duration="7970000" />
       <workItem from="1544302624211" duration="1256000" />
       <workItem from="1545494507009" duration="1392000" />
-      <workItem from="1545834231772" duration="1328000" />
+      <workItem from="1545834231772" duration="3174000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12682000" />
+    <option name="totallyTimeSpent" value="14528000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -294,16 +304,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/amazon_scraper/amazon_scraper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="880">
-          <caret line="40" column="17" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ebay_scraper/ebay_scraper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
@@ -361,10 +361,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/newegg_scraper/newegg_scraper.py">
+    <entry file="file://$PROJECT_DIR$/amazon_scraper/amazon_scraper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
+        <state relative-caret-position="880">
+          <caret line="40" column="17" selection-start-line="40" selection-start-column="12" selection-end-line="40" selection-end-column="17" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>
@@ -373,10 +373,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lambda_function.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="179" column="49" selection-start-line="179" selection-start-column="49" selection-end-line="179" selection-end-column="49" />
+        <state relative-caret-position="4180">
+          <caret line="190" column="22" lean-forward="true" selection-start-line="190" selection-start-column="22" selection-end-line="190" selection-end-column="22" />
           <folding>
             <element signature="e#0#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/newegg_scraper/newegg_scraper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="48" column="43" lean-forward="true" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>

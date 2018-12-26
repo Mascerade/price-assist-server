@@ -48,7 +48,11 @@ class NeweggProduct:
                         elif x == "." or x == ",":
                             self.price += x
 
-                self.price = self.price.strip(" ")
+                if self.price.strip(" ") == "$":
+                    self.price = "Price Shown In Cart"
+
+                else:
+                    self.price = self.price.strip(" ")
 
             except AttributeError as e:
                 self.price = "Could Not Find Price"
