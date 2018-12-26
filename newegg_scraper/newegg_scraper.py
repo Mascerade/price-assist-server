@@ -24,10 +24,10 @@ class NeweggProduct:
             self.product_address = soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
         except AttributeError:
-            self.product_address = None
+            self.product_address = "None"
 
         except TypeError:
-            self.product_address = None
+            self.product_address = "None"
 
     def retrieve_product_price(self):
         if self.product_address is not None:

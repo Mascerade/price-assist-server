@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import urllib.request
+import urllib
 
 
 class BandH:
@@ -13,10 +14,16 @@ class BandH:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
         }
+        try:
+            data = urllib.request.urlopen(self.product_search_address)
+            data = data.read()
+            self.soup = BeautifulSoup(data, "html.parser")
 
-        data = urllib.request.urlopen(self.product_search_address)
-        data = data.read()
-        self.soup = BeautifulSoup(data, "html.parser")
+        except urllib.error.HTTPError:
+            self.price = "Could not find price"
+
+        except urllib.error.HTTPError:
+            self.product_address = "None"
 
     def retrieve_price(self):
         try:
