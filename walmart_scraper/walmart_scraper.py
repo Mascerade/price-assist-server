@@ -26,6 +26,9 @@ class Walmart:
         except TypeError:
             self.product_address = "None"
 
+        except Exception as e:
+            self.product_address = "None"
+
     def retrieve_product_price(self):
         if self.product_address is not "None":
             try:
@@ -48,6 +51,9 @@ class Walmart:
                 self.price = "Could Not Find Price"
 
             except TypeError:
+                self.price = "Could Not Find Price"
+
+            except Exception as e:
                 self.price = "Could Not Find Price"
 
         else:

@@ -12,9 +12,13 @@ class TigerDirect:
             'User-Agent': 'Googlebot/2.1 (+http://www.google.com/bot.html)'
         }
 
-        data = urllib.request.Request(self.product_search_address, headers=self.headers)
-        data = urllib.request.urlopen(data).read()
-        self.soup = BeautifulSoup(data, "html.parser")
+        try:
+            data = urllib.request.Request(self.product_search_address, headers=self.headers)
+            data = urllib.request.urlopen(data).read()
+            self.soup = BeautifulSoup(data, "html.parser")
+
+        except Exception as e:
+            self.price = "Could not find price"
 
     def retrieve_price(self):
         try:
@@ -32,7 +36,12 @@ class TigerDirect:
             self.price = "Could not find price"
 
         except TypeError:
-            self.product_address = None
+            self.product_address = "None"
+            self.price = "Could not find price"
+
+        except Exception as e:
+            self.product_address = "None"
+            self.price = "Could not find price"
 
     def retrieve_product_address(self):
         try:
@@ -42,4 +51,7 @@ class TigerDirect:
             self.product_address = "None"
 
         except TypeError:
+            self.product_address = "None"
+
+        except Exception as e:
             self.product_address = "None"

@@ -7,8 +7,10 @@ import os
 
 class AmazonProduct:
     def __init__(self, address):
-        with open(os.getcwd() + "\scrapers.txt", "r") as scrapers:
+        print(os.getcwd())
+        with open(os.getcwd() + "\\amazon_agents.txt", "r") as scrapers:
             self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            print(self.user_agent)
         self.price = ""
         self.model_number = ""
         self.address = address
@@ -37,6 +39,9 @@ class AmazonProduct:
         except TypeError:
             self.model_number = None
 
+        except Exception:
+            self.model_number = None
+
         except requests.HTTPError as e:
             print("From Amazon", e)
 
@@ -51,5 +56,8 @@ class AmazonProduct:
                 self.price = soup.find(id='priceblock_dealprice').text.strip()
             except AttributeError or TypeError:
                 self.price = "Price Not Available"
+
+        except Exception:
+            self.price = "Price Not Available"
 
         return

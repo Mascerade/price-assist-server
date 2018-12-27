@@ -29,6 +29,9 @@ class NeweggProduct:
         except TypeError:
             self.product_address = "None"
 
+        except Exception as e:
+            self.product_address = "None"
+
     def retrieve_product_price(self):
         if self.product_address is not None:
             try:
@@ -60,6 +63,8 @@ class NeweggProduct:
             except TypeError as e:
                 self.price = "Could Not Find Price"
 
+            except Exception as e:
+                self.price = "Could Not Find Price"
+
         else:
             self.price = "Could Not Find Price"
-

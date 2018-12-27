@@ -169,7 +169,7 @@ def lambda_handler(url):
     global microcenter_data
     global target_data
 
-    if item_model is not None:
+    if item_model is not None or item_model == "":
         prices = {
             "amazon_data": amazon.price,
             "newegg_data": newegg_data,

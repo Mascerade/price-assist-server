@@ -13,11 +13,15 @@ class Microcenter:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
         }
+        try:
+            data = urllib.request.Request(self.product_search_address)
+            data.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0')
+            data = urllib.request.urlopen(data)
+            data = data.read()
 
-        data = urllib.request.Request(self.product_search_address)
-        data.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0')
-        data = urllib.request.urlopen(data)
-        data = data.read()
+        except Exception as e:
+            self.price = "Could not find price"
+
         self.soup = BeautifulSoup(data, "lxml")
 
     def retrieve_price(self):
@@ -25,6 +29,9 @@ class Microcenter:
             self.price = self.soup.find('span', {"itemprop":"price"}).text
 
         except AttributeError:
+            self.price = "Could not find price"
+
+        except Exception as e:
             self.price = "Could not find price"
 
     def retrieve_product_address(self):
@@ -36,3 +43,7 @@ class Microcenter:
 
         except TypeError:
             self.product_address = "None"
+
+        except Exception as e:
+            self.price = "Could not find price"
+
