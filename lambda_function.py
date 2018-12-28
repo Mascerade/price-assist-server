@@ -133,6 +133,8 @@ def lambda_handler(url):
     item_model = amazon.model_number
     title = amazon.title
     searcher = item_model
+    if item_model is None:
+        searcher = title
 
     if searcher is not None:
         t = threading.Thread(target=amazon.retrieve_item_price)

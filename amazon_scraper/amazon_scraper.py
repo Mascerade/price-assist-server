@@ -47,8 +47,6 @@ class AmazonProduct:
             print("From Amazon", e)
 
     def retrieve_item_price(self):
-        if self.model_number is None:
-            return
         soup = BeautifulSoup(self.data, "lxml")
         try:
             self.price = soup.find("span", id='priceblock_ourprice').text.strip()
