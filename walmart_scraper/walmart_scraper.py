@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import os
+import random
 
 
 class Walmart:
@@ -8,9 +10,8 @@ class Walmart:
         self.product_model = product_model
         self.product_search_address = 'https://www.walmart.com/search/?query={}'.format(product_model, product_model)
         self.product_address = "None"
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
-        }
+        with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
+            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
     def retrieve_product_address(self):
         try:

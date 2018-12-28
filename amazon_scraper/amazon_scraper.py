@@ -7,8 +7,7 @@ import os
 
 class AmazonProduct:
     def __init__(self, address):
-        print(os.getcwd())
-        with open(os.getcwd() + "\\amazon_agents.txt", "r") as scrapers:
+        with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
             self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
             print(self.user_agent)
         self.price = ""

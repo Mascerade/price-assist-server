@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib.request
-
+import os
+import random
 
 class TigerDirect:
     def __init__(self, product_model):
@@ -8,9 +9,8 @@ class TigerDirect:
         self.product_model = product_model
         self.product_search_address = 'http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'.format(product_model)
         self.product_address = "None"
-        self.headers = {
-            'User-Agent': 'Googlebot/2.1 (+http://www.google.com/bot.html)'
-        }
+        with open(os.getcwd() + "\\user_agents\\tigerdirect_agents.txt", "r") as scrapers:
+            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         try:
             data = urllib.request.Request(self.product_search_address, headers=self.headers)

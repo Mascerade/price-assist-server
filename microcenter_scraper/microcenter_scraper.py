@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib.request
+import os
+import random
 
 
 class Microcenter:
@@ -10,13 +12,12 @@ class Microcenter:
         self.product_search_address = 'https://www.microcenter.com/search/' \
                                       'search_results.aspx?Ntt={}'.format(product_model)
         self.product_address = "None"
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
-        }
+        with open(os.getcwd() + "\\user_agents\\microcenter_agents.txt", "r") as scrapers:
+            self.headers = ['User-Agent', random.choice(scrapers.read().splitlines())]
 
         try:
             data = urllib.request.Request(self.product_search_address)
-            data.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0')
+            data.add_header(self.headers[0], self.header[1])
             data = urllib.request.urlopen(data)
             data = data.read()
             self.soup = BeautifulSoup(data, "lxml")

@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import urllib.request
 import requests
+import os
+import random
 
 
 class NeweggProduct:
@@ -11,10 +13,8 @@ class NeweggProduct:
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(self.product_model)
         self.product_address = ""
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/70.0.3538.102 Safari/537.36'
-        }
+        with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
+            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
     def retrieve_product_address(self):
         try:

@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import urllib.request
 import urllib
+import random
+import os
 
 
 class BandH:
@@ -11,9 +13,8 @@ class BandH:
                                       'Ntt={}&N=0&InitialSearch=yes' \
                                       '&sts=ma&Top+Nav-Search='.format(product_model)
         self.product_address = "None"
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
-        }
+        with open(os.getcwd() + "\\user_agents\\bandh_agents.txt", "r") as scrapers:
+            self.header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         try:
             data = urllib.request.urlopen(self.product_search_address)
