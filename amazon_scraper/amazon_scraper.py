@@ -12,6 +12,7 @@ class AmazonProduct:
             print(self.user_agent)
         self.price = ""
         self.model_number = None
+        self.title = None
         self.address = address
         self.entry_list = []
         self.data = urllib.request.Request(self.address, headers=self.user_agent)
@@ -20,6 +21,7 @@ class AmazonProduct:
     def retrieve_item_model(self):
         try:
             soup = BeautifulSoup(self.data, "lxml")
+            self.title = soup.find(id="productTitle").text.strip()
             for number in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
                 for row in soup.find_all(id='productDetails_techSpec_section_' + str(number)):
                     for tr in row.find_all('tr'):

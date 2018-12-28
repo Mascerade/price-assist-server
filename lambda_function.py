@@ -131,16 +131,17 @@ def lambda_handler(url):
     amazon = AmazonProduct(url)
     amazon.retrieve_item_model()
     item_model = amazon.model_number
-    print(item_model)
+    title = amazon.title
+    searcher = item_model
 
-    if item_model is not None:
+    if searcher is not None:
         t = threading.Thread(target=amazon.retrieve_item_price)
-        t2 = threading.Thread(target=retrieve_newegg_data, args=(item_model,))
-        t3 = threading.Thread(target=retrieve_walmart_data, args=(item_model,))
-        t4 = threading.Thread(target=retrieve_bandh_data, args=(item_model,))
-        t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
-        t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(item_model,))
-        t7 = threading.Thread(target=retrieve_microcenter_price, args=(item_model,))
+        t2 = threading.Thread(target=retrieve_newegg_data, args=(searcher,))
+        t3 = threading.Thread(target=retrieve_walmart_data, args=(searcher,))
+        t4 = threading.Thread(target=retrieve_bandh_data, args=(searcher,))
+        t5 = threading.Thread(target=retrieve_ebay_data, args=(searcher,))
+        t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(searcher,))
+        t7 = threading.Thread(target=retrieve_microcenter_price, args=(searcher,))
         # t8 = threading.Thread(target=retrieve_target_price, args=(item_model,))
 
         t.start()
