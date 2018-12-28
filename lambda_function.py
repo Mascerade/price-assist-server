@@ -133,43 +133,44 @@ def lambda_handler(url):
     item_model = amazon.model_number
     print(item_model)
 
-    t = threading.Thread(target=amazon.retrieve_item_price)
-    t2 = threading.Thread(target=retrieve_newegg_data, args=(item_model,))
-    t3 = threading.Thread(target=retrieve_walmart_data, args=(item_model,))
-    t4 = threading.Thread(target=retrieve_bandh_data, args=(item_model,))
-    t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
-    t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(item_model,))
-    t7 = threading.Thread(target=retrieve_microcenter_price, args=(item_model,))
-    # t8 = threading.Thread(target=retrieve_target_price, args=(item_model,))
+    if item_model is not None:
+        t = threading.Thread(target=amazon.retrieve_item_price)
+        t2 = threading.Thread(target=retrieve_newegg_data, args=(item_model,))
+        t3 = threading.Thread(target=retrieve_walmart_data, args=(item_model,))
+        t4 = threading.Thread(target=retrieve_bandh_data, args=(item_model,))
+        t5 = threading.Thread(target=retrieve_ebay_data, args=(item_model,))
+        t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(item_model,))
+        t7 = threading.Thread(target=retrieve_microcenter_price, args=(item_model,))
+        # t8 = threading.Thread(target=retrieve_target_price, args=(item_model,))
 
-    t.start()
-    t2.start()
-    t3.start()
-    t4.start()
-    t5.start()
-    t6.start()
-    t7.start()
-    # t8.start()
+        t.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
+        t7.start()
+        # t8.start()
 
-    t.join()
-    t2.join()
-    t3.join()
-    t4.join()
-    t5.join()
-    t6.join()
-    t7.join()
-    # t8.join()
+        t.join()
+        t2.join()
+        t3.join()
+        t4.join()
+        t5.join()
+        t6.join()
+        t7.join()
+        # t8.join()
 
-    global newegg_data
-    global bestbuy_data
-    global walmart_data
-    global bandh_data
-    global ebay_data
-    global tiger_direct_data
-    global microcenter_data
-    global target_data
+        global newegg_data
+        global bestbuy_data
+        global walmart_data
+        global bandh_data
+        global ebay_data
+        global tiger_direct_data
+        global microcenter_data
+        global target_data
 
-    if item_model is not None or item_model == "":
+        print("GAUTAM")
         prices = {
             "amazon_data": amazon.price,
             "newegg_data": newegg_data,

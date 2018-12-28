@@ -7,10 +7,10 @@ class BestBuy:
         self.price = ""
         self.product_model = product_model
         self.product_search_address = 'https://www.bestbuy.com/site/searchpage.jsp?st={}'.format(product_model)
+        print(self.product_search_address)
         self.product_address = "None"
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/58.0.3029.110 Safari/537.36',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.0; rv:52.0) Gecko/20100101 Firefox/52.0'
         }
         data = urllib.request.Request(self.product_search_address, headers=self.headers)
         data = urllib.request.urlopen(data).read()

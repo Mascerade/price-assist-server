@@ -12,7 +12,7 @@ class AmazonProduct:
             self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
             print(self.user_agent)
         self.price = ""
-        self.model_number = ""
+        self.model_number = None
         self.address = address
         self.entry_list = []
         self.data = urllib.request.Request(self.address, headers=self.user_agent)
