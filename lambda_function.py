@@ -130,7 +130,7 @@ def lambda_handler(url):
     start_time = time.time()
     amazon = AmazonProduct(url)
     amazon.retrieve_item_model()
-    item_model = amazon.model_number
+    item_model = amazon.product_model
     title = amazon.title
     searcher = item_model
     if item_model is None:

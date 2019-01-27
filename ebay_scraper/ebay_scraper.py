@@ -2,21 +2,27 @@ from bs4 import BeautifulSoup
 import urllib.request
 import random
 import os
+import sys
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
 
-class Ebay:
+class Ebay(Scraper):
     def __init__(self, product_model):
-        self.price = ""
-        self.product_model = product_model
-        self.product_address = 'https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
-                               'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
-                               'sacat=0'.format(product_model, product_model)
         with open(os.getcwd() + "\\user_agents\\ebay_agents.txt", "r") as scrapers:
-            self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        super().__init__(search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
+                               'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
+                               'sacat=0'.format(product_model, product_model),
+                         product_model=product_model,
+                         user_agent=headers,
+                         data="")
+        self.product_address = self.search_address
 
     def retrieve_product_price(self):
         try:
-            data = urllib.request.urlopen(self.product_address)
+            data = urllib.request.urlopen(self.search_address)
             data = data.read()
             soup = BeautifulSoup(data, "lxml")
             price = soup.find_all('span', 's-item__price')[0].text

@@ -1,20 +1,25 @@
 from bs4 import BeautifulSoup
 import requests
 import os
+import sys
 import random
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
 
-class NeweggProduct:
+class NeweggProduct(Scraper):
     def __init__(self, product_model):
         self.price = ""
-        self.product_model = product_model
-        self.product_search_address = 'https://www.newegg.com/Product/ProductList.aspx?' +\
-                                      'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
-                                .format(self.product_model)
         self.product_address = ""
         with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
-            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
-        self.data = requests.get(self.product_search_address, headers=self.headers)
+            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+        super().__init__(search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
+                                      'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
+                                .format(product_model),
+                         product_model=product_model,
+                         user_agent=headers,
+                         data="")
+        self.data = requests.get(self.search_address, headers=self.user_agent)
         self.data = self.data.text
         self.soup = BeautifulSoup(self.data, 'html.parser')
 
@@ -33,7 +38,6 @@ class NeweggProduct:
 
     def retrieve_product_price(self):
         try:
-
             self.price = "$"
             stop = False
             for x in self.soup.find("li", "price-current").text:

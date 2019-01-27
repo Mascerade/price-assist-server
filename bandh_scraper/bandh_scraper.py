@@ -3,21 +3,24 @@ import urllib.request
 import urllib
 import random
 import os
+import sys
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
 
-class BandH:
+class BandH(Scraper):
     def __init__(self, product_model):
-        self.price = ""
-        self.product_model = product_model
-        self.product_search_address = 'https://www.bhphotovideo.com/c/search?' \
-                                      'Ntt={}&N=0&InitialSearch=yes' \
-                                      '&sts=ma&Top+Nav-Search='.format(product_model)
-        self.product_address = "None"
         with open(os.getcwd() + "\\user_agents\\bandh_agents.txt", "r") as scrapers:
-            self.header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
+        super().__init__(search_address='https://www.bhphotovideo.com/c/search?' \
+                                      'Ntt={}&N=0&InitialSearch=yes' \
+                                      '&sts=ma&Top+Nav-Search='.format(product_model),
+                         product_model=product_model,
+                         user_agent=header,
+                         data="")
         try:
-            data = urllib.request.urlopen(self.product_search_address)
+            data = urllib.request.urlopen(self.search_address)
             data = data.read()
             self.soup = BeautifulSoup(data, "html.parser")
 

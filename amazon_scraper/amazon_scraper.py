@@ -3,19 +3,19 @@ import requests
 import urllib.request
 import random
 import os
+import sys
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
 
-class AmazonProduct:
+class AmazonProduct(Scraper):
     def __init__(self, address):
         with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
-            self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
-            print(self.user_agent)
-        self.price = ""
-        self.model_number = None
+            user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+        super().__init__(search_address=address, product_model=None, user_agent=user_agent, data="")
         self.title = None
-        self.address = address
         self.entry_list = []
-        self.data = urllib.request.Request(self.address, headers=self.user_agent)
+        self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
         self.data = urllib.request.urlopen(self.data).read()
 
     def retrieve_item_model(self):
@@ -32,20 +32,20 @@ class AmazonProduct:
                     self.entry_list.append(tr.text.strip())
             for x in self.entry_list:
                 if "Item model number" in x:
-                    self.model_number = x[17:].strip()
+                    self.product_model = x[17:].strip()
 
         except AttributeError:
-            self.model_number = None
+            self.product_model = None
 
         except TypeError:
-            self.model_number = None
-
-        except Exception:
-            self.model_number = None
+            self.product_model = None
 
         except requests.HTTPError as e:
             print("From Amazon", e)
 
+        except Exception:
+            self.product_model = None
+            
     def retrieve_item_price(self):
         soup = BeautifulSoup(self.data, "lxml")
         try:

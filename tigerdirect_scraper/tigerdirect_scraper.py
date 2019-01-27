@@ -2,19 +2,23 @@ from bs4 import BeautifulSoup
 import urllib.request
 import os
 import random
+import sys
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
-class TigerDirect:
+class TigerDirect(Scraper):
     def __init__(self, product_model):
-        self.price = ""
-        self.product_model = product_model
-        self.product_search_address = 'http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'.format(product_model)
-        self.product_address = "None"
         with open(os.getcwd() + "\\user_agents\\tigerdirect_agents.txt", "r") as scrapers:
-            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
+        super().__init__(search_address='http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'
+                         .format(product_model),
+                         product_model=product_model,
+                         user_agent=headers,
+                         data="")
         try:
-            data = urllib.request.Request(self.product_search_address, headers=self.headers)
-            data = urllib.request.urlopen(data).read()
+            self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
+            self.data = urllib.request.urlopen(data).read()
             self.soup = BeautifulSoup(data, "html.parser")
 
         except Exception as e:

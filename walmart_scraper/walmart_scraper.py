@@ -1,21 +1,24 @@
 from bs4 import BeautifulSoup
 import requests
 import os
+import sys
 import random
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
 
-class Walmart:
+class Walmart(Scraper):
     def __init__(self, product_model):
-        self.price = ""
-        self.product_model = product_model
-        self.product_search_address = 'https://www.walmart.com/search/?query={}'.format(product_model, product_model)
-        self.product_address = "None"
         with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
-            self.headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+        super().__init__(search_address='https://www.walmart.com/search/?query={}'.format(product_model, product_model),
+                         product_model=product_model,
+                         user_agent=headers,
+                         data="")
 
     def retrieve_product_address(self):
         try:
-            data = requests.get(self.product_search_address, headers=self.headers)
+            data = requests.get(self.search_address, headers=self.user_agent)
             data = data.text
             soup = BeautifulSoup(data, "lxml")
             self.product_address = "https://www.walmart.com" + \
@@ -34,7 +37,7 @@ class Walmart:
         if self.product_address is not "None":
             try:
                 count = 0
-                data = requests.get(self.product_address, headers=self.headers)
+                data = requests.get(self.product_address, headers=self.user_agent)
                 data = data.text
                 soup = BeautifulSoup(data, "lxml")
                 price = soup.find('div', 'prod-PriceHero').text
