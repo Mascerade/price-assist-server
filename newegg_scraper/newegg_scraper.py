@@ -11,77 +11,58 @@ class NeweggProduct(Scraper):
     def __init__(self, product_model):
         with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
-
-        # Initializes the Scraper class with the NeweggProduct
         super().__init__(search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(product_model),
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        self.prices = []
-        self.titles_links = None
-        self.data = requests.get(self.search_address, headers=self.user_agent)
-        self.data = self.data.text
+
+        self.data = requests.get(self.search_address, headers=self.user_agent).text
         self.soup = BeautifulSoup(self.data, 'html.parser')
 
-    def retrieve_product_information(self):
+    def retrieve_product_address(self):
         try:
-            # Includes info about link AND actual title
-            full_titles = self.soup.find_all("a", attrs={"class": "item-title", "title": "View Details"})[:6]
-            titles = []
-            links = []
+            self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
-            for index, title in enumerate(full_titles):
-                titles.append(title.text)  # Appends the actual title of the product
-                links.append(title['href'])  # Appends just the link to the product page of the product
-
-                self.prices.append(self.check_price(self.soup.findAll("li", attrs={"class": "price-current"})[index].text))
-
-            self.price = self.prices[0]
-            self.titles_links = dict(zip(titles, links))  # Makes the title name the key and the link the value in a dict
-            self.product_address = self.soup.find("li", attrs={"class": "price-current"}).text
-
-        except AttributeError:
+        except AttributeError as e:
+            print(e)
             self.product_address = "None"
 
-        except TypeError:
+        except TypeError as e:
+            print(e)
             self.product_address = "None"
 
         except Exception as e:
+            print(e)
             self.product_address = "None"
 
-    def check_price(self, price):
+    def retrieve_product_price(self):
         try:
-            self.adjusted_price = ""
+            self.price = "$"
             stop = False
-            for x in price:
+            for x in self.soup.find("li", "price-current").text:
                 if not stop:
                     if x.isdigit():
-                        self.adjusted_price += x
+                        self.price += x
 
                     elif x == "(":
                         stop = True
 
-                    elif x == ".":
-                        self.adjusted_price += x
+                    elif x == "." or x == ",":
+                        self.price += x
 
-            if self.adjusted_price.strip(" ") == "":
-                self.adjusted_price = None
+            if self.price.strip(" ") == "$":
+                self.price = "Price Shown In Cart"
 
             else:
-                self.adjusted_price = self.adjusted_price.strip(" ")
-                return self.adjusted_price
+                self.price = self.price.strip(" ")
 
         except AttributeError as e:
-            self.adjusted_price = None
+            self.price = "Could Not Find Price"
 
         except TypeError as e:
-            self.adjusted_price = None
+            self.price = "Could Not Find Price"
 
         except Exception as e:
-            self.adjusted_price = None
-
-    def print_titles_links(self, dict):
-        for key, value in dict.items():
-            print(key, ": ", value)
+            self.price = "Could Not Find Price"

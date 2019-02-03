@@ -24,7 +24,8 @@ target_data = []
 
 def retrieve_newegg_data(item_model):
     newegg = NeweggProduct(item_model)
-    newegg.retrieve_product_information()
+    newegg.retrieve_product_address()
+    newegg.retrieve_product_price()
     global newegg_data
     newegg_data.append("Newegg")
     newegg_data.append(newegg.price)
