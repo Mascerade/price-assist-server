@@ -40,7 +40,7 @@ class NeweggProduct(Scraper):
 
             self.price = self.prices[0]
             self.titles_links = dict(zip(titles, links))  # Makes the title name the key and the link the value in a dict
-            self.product_address = links[0]
+            self.product_address = self.soup.find("li", attrs={"class": "price-current"}).text
 
         except AttributeError:
             self.product_address = "None"
