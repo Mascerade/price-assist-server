@@ -8,7 +8,7 @@ from master_scraper.master_scraper import Scraper
 
 
 class NeweggProduct(Scraper):
-    def __init__(self, product_model, amazon_title):
+    def __init__(self, product_model):
         with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
@@ -17,10 +17,8 @@ class NeweggProduct(Scraper):
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(product_model),
                          product_model=product_model,
-                         title=None,
                          user_agent=headers,
-                         data="",
-                         amazon_title=amazon_title)
+                         data="")
         self.prices = []
         self.titles_links = None
         self.data = requests.get(self.search_address, headers=self.user_agent)
@@ -40,7 +38,9 @@ class NeweggProduct(Scraper):
 
                 self.prices.append(self.check_price(self.soup.findAll("li", attrs={"class": "price-current"})[index].text))
 
+            self.price = self.prices[0]
             self.titles_links = dict(zip(titles, links))  # Makes the title name the key and the link the value in a dict
+            self.product_address = links[0]
 
         except AttributeError:
             self.product_address = "None"
@@ -50,11 +50,6 @@ class NeweggProduct(Scraper):
 
         except Exception as e:
             self.product_address = "None"
-
-    def get_best_product(self):
-        """
-
-        """
 
     def check_price(self, price):
         try:
@@ -90,10 +85,3 @@ class NeweggProduct(Scraper):
     def print_titles_links(self, dict):
         for key, value in dict.items():
             print(key, ": ", value)
-
-
-newegg = NeweggProduct("789564-0010",
-                       'Bose QuietComfort 35 (Series II) Wireless Headphones, Noise Cancelling, with Alexa voice control - Black')
-newegg.retrieve_product_information()
-newegg.get_best_product()
-
