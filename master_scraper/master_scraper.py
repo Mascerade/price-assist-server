@@ -3,9 +3,13 @@ import json
 
 
 class Scraper:
-    file = open(os.getcwd() + "/adjs.json", "r")
-    adjectives = json.load(file)
-    file.close()
+    """
+    The "Master" scraper
+    Creates unified class for all other scrapers to inherit from
+    Keeps properties of objects the same across all scrapers
+    * Have to create a variable that stores the amazon title across all of the scraper classes
+    * Will make it simpler to keep track of it
+    """
 
     def __init__(self, search_address, product_model, user_agent, data):
         self.price = ""
