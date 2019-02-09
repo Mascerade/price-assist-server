@@ -1,6 +1,7 @@
 import sys
 import os
 import random
+import requests
 import bs4
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
@@ -15,4 +16,3 @@ class Rakuten(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        
