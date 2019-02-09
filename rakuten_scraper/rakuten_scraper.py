@@ -7,17 +7,20 @@ from selenium.webdriver.chrome.options import Options
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
+
 class Rakuten(Scraper):
+    """
+    Scrapes Rakuten to get required information
+    """
 
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\scrapers_master.txt", "r") as scrapers:
+        with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(search_address="https://www.rakuten.com/search/" + product_model.replace(" ", "%20"),
                          product_model=product_model,
                          user_agent=headers,
                          data="")
 
-        print(self.search_address)
         options = Options()
         options.add_argument("user-agent=" + self.user_agent["User-Agent"])
         options.add_argument('--headless')
@@ -28,11 +31,36 @@ class Rakuten(Scraper):
         self.soup = BeautifulSoup(self.driver.page_source, "html.parser")
 
     def retrieve_product_address(self):
-        self.product_address = self.soup.findAll("a", attrs={"itemprop":"url"})[0]["href"]
+        try:
+            self.product_address = self.soup.findAll("a", attrs={"itemprop":"url"})[0]["href"]
+
+        except AttributeError as e:
+            print(e)
+            self.product_address = "None"
+
+        except TypeError as e:
+            print(e)
+            self.product_address = "None"
+
+        except Exception as e:
+            print(e)
+            self.product_address = "None"
 
     def retrieve_product_price(self):
-        self.price = self.soup.findAll("span", attrs={"class":"r-product__price-text"})[0].text
-        self.done()
+        try:
+            self.price = self.soup.findAll("span", attrs={"class":"r-product__price-text"})[0].text
+
+        except AttributeError as e:
+            self.price = "Could Not Find Price"
+
+        except TypeError as e:
+            self.price = "Could Not Find Price"
+
+        except Exception as e:
+            self.price = "Could Not Find Price"
+
+        finally:
+            self.done()
 
     def done(self):
         self.driver.close()
