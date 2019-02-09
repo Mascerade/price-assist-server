@@ -18,8 +18,8 @@ class TigerDirect(Scraper):
                          data="")
         try:
             self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
-            self.data = urllib.request.urlopen(data).read()
-            self.soup = BeautifulSoup(data, "html.parser")
+            self.data = urllib.request.urlopen(self.data).read()
+            self.soup = BeautifulSoup(self.data, "html.parser")
 
         except Exception as e:
             self.price = "Could not find price"
