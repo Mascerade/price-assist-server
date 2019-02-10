@@ -7,6 +7,7 @@ from ebay_scraper.ebay_scraper import Ebay
 from tigerdirect_scraper.tigerdirect_scraper import TigerDirect
 from microcenter_scraper.microcenter_scraper import Microcenter
 from target_scraper.target_scraper import TargetScraper
+from rakuten_scraper.rakuten_scraper import Rakuten
 from flask import Flask, request
 import threading
 import urllib.request
@@ -20,6 +21,7 @@ ebay_data = []
 tiger_direct_data = []
 microcenter_data = []
 target_data = []
+rakuten_data = []
 
 
 def retrieve_newegg_data(item_model):
@@ -107,6 +109,16 @@ def retrieve_target_price(item_model):
     target_data.append(target.product_address)
 
 
+def retrieve_rakuten_price(item_model):
+    rakuten = Rakuten(item_model)
+    rakuten.retrieve_product_address()
+    rakuten.retrieve_product_price()
+    global rakuten_data
+    rakuten_data.append("Rakuten")
+    rakuten_data.append(rakuten.price)
+    rakuten_data.append(rakuten.product_address)
+
+
 def reset_retailer_lists():
     global newegg_data
     global bestbuy_data
@@ -116,6 +128,7 @@ def reset_retailer_lists():
     global tiger_direct_data
     global microcenter_data
     global target_data
+    global rakuten_data
 
     newegg_data = []
     walmart_data = []
@@ -124,6 +137,7 @@ def reset_retailer_lists():
     tiger_direct_data = []
     microcenter_data = []
     target_data = []
+    rakuten_data = []
 
 
 def lambda_handler(url):
@@ -144,7 +158,7 @@ def lambda_handler(url):
         t5 = threading.Thread(target=retrieve_ebay_data, args=(searcher,))
         t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(searcher,))
         t7 = threading.Thread(target=retrieve_microcenter_price, args=(searcher,))
-        # t8 = threading.Thread(target=retrieve_target_price, args=(item_model,))
+        t8 = threading.Thread(target=retrieve_rakuten_price, args=(item_model,))
 
         t.start()
         t2.start()
@@ -153,7 +167,7 @@ def lambda_handler(url):
         t5.start()
         t6.start()
         t7.start()
-        # t8.start()
+        t8.start()
 
         t.join()
         t2.join()
@@ -162,7 +176,7 @@ def lambda_handler(url):
         t5.join()
         t6.join()
         t7.join()
-        # t8.join()
+        t8.join()
 
         global newegg_data
         global bestbuy_data
@@ -171,7 +185,7 @@ def lambda_handler(url):
         global ebay_data
         global tiger_direct_data
         global microcenter_data
-        global target_data
+        global rakuten_data
 
         print("GAUTAM")
         prices = {
@@ -182,7 +196,7 @@ def lambda_handler(url):
             "ebay_data": ebay_data,
             "tigerdirect_data": tiger_direct_data,
             "microcenter_data": microcenter_data,
-            # "target_data": target_data
+            "rakuten_data": rakuten_data
         }
 
         print(time.time()-start_time)
