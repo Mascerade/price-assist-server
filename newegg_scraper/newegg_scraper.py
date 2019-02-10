@@ -26,15 +26,12 @@ class NeweggProduct(Scraper):
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
         except AttributeError as e:
-            print(e)
             self.product_address = "None"
 
         except TypeError as e:
-            print(e)
             self.product_address = "None"
 
         except Exception as e:
-            print(e)
             self.product_address = "None"
 
     def retrieve_product_price(self):

@@ -19,3 +19,9 @@ class Scraper:
         self.user_agent = user_agent
         self.title = None
         self.data = data
+
+    def retrieve_product_address(self):
+        pass
+
+    def retrieve_product_price(self):
+        pass
