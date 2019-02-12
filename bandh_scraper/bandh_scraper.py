@@ -13,7 +13,8 @@ class BandH(Scraper):
         with open(os.getcwd() + "\\user_agents\\bandh_agents.txt", "r") as scrapers:
             header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
-        super().__init__(search_address='https://www.bhphotovideo.com/c/search?' \
+        super().__init__(name="B&H",
+                         search_address='https://www.bhphotovideo.com/c/search?' \
                                       'Ntt={}&N=0&InitialSearch=yes' \
                                       '&sts=ma&Top+Nav-Search='.format(product_model),
                          product_model=product_model,
@@ -28,7 +29,7 @@ class BandH(Scraper):
             self.price = "Could not find price"
             self.product_address = "None"
 
-    def retrieve_price(self):
+    def retrieve_product_price(self):
         try:
             self.price = self.soup.find('span', 'itc-you-pay-price bold').text.strip()
 

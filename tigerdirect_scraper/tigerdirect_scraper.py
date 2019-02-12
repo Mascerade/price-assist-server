@@ -11,7 +11,8 @@ class TigerDirect(Scraper):
         with open(os.getcwd() + "\\user_agents\\tigerdirect_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
-        super().__init__(search_address='http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'
+        super().__init__(name="TigerDirect",
+                         search_address='http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'
                          .format(product_model),
                          product_model=product_model,
                          user_agent=headers,
@@ -24,7 +25,7 @@ class TigerDirect(Scraper):
         except Exception as e:
             self.price = "Could not find price"
 
-    def retrieve_price(self):
+    def retrieve_product_price(self):
         try:
             count = 0
             self.price = self.soup.find('div', 'salePrice').text

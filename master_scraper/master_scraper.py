@@ -1,6 +1,6 @@
 import os
 import json
-
+import time
 
 class Scraper:
     """
@@ -11,7 +11,9 @@ class Scraper:
     * Will make it simpler to keep track of it
     """
 
-    def __init__(self, search_address, product_model, user_agent, data):
+    def __init__(self, name, search_address, product_model, user_agent, data):
+        self.time = time.time()
+        self.name = name
         self.price = ""
         self.search_address = search_address
         self.product_address = ""
@@ -25,3 +27,6 @@ class Scraper:
 
     def retrieve_product_price(self):
         pass
+
+    def get_elapsed_time(self):
+        print(self.name + " " + str(time.time() - self.time))

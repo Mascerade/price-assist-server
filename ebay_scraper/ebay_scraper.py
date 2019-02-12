@@ -12,7 +12,8 @@ class Ebay(Scraper):
         with open(os.getcwd() + "\\user_agents\\ebay_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
-        super().__init__(search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
+        super().__init__(name="Ebay",
+                         search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
                                'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
                                'sacat=0'.format(product_model, product_model),
                          product_model=product_model,

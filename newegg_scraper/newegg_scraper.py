@@ -11,7 +11,8 @@ class NeweggProduct(Scraper):
     def __init__(self, product_model):
         with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
-        super().__init__(search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
+        super().__init__(name="Newegg",
+                         search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(product_model),
                          product_model=product_model,

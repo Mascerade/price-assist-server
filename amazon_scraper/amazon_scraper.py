@@ -12,16 +12,17 @@ class AmazonProduct(Scraper):
     def __init__(self, address):
         with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
             user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
-        super().__init__(search_address=address, product_model=None, user_agent=user_agent, data="")
+        super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
         self.title = None
         self.entry_list = []
         self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
         self.data = urllib.request.urlopen(self.data).read()
+        self.soup = BeautifulSoup(self.data, "lxml")
 
     def retrieve_item_model(self):
         try:
             soup = BeautifulSoup(self.data, "lxml")
-            self.title = soup.find(id="productTitle").text.strip()
+            self.title = self.soup.find(id="productTitle").text.strip()
             for number in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
                 for row in soup.find_all(id='productDetails_techSpec_section_' + str(number)):
                     for tr in row.find_all('tr'):
@@ -30,6 +31,7 @@ class AmazonProduct(Scraper):
             for row in soup.find_all(id='productDetails_detailBullets_sections1'):
                 for tr in row.find_all('tr'):
                     self.entry_list.append(tr.text.strip())
+
             for x in self.entry_list:
                 if "Item model number" in x:
                     self.product_model = x[17:].strip()
@@ -47,12 +49,11 @@ class AmazonProduct(Scraper):
             self.product_model = None
             
     def retrieve_item_price(self):
-        soup = BeautifulSoup(self.data, "lxml")
         try:
-            self.price = soup.find("span", id='priceblock_ourprice').text.strip()
+            self.price = self.soup.find("span", id='priceblock_ourprice').text.strip()
         except AttributeError or TypeError:
             try:
-                self.price = soup.find(id='priceblock_dealprice').text.strip()
+                self.price = self.soup.find(id='priceblock_dealprice').text.strip()
             except AttributeError or TypeError:
                 self.price = "Price Not Available"
 

@@ -32,6 +32,7 @@ def retrieve_newegg_data(item_model):
     newegg_data.append("Newegg")
     newegg_data.append(newegg.price)
     newegg_data.append(newegg.product_address)
+    newegg.get_elapsed_time()
     return
 
 
@@ -54,17 +55,19 @@ def retrieve_walmart_data(item_model):
     walmart_data.append("Walmart")
     walmart_data.append(walmart.price)
     walmart_data.append(walmart.product_address)
+    walmart.get_elapsed_time()
     return
 
 
 def retrieve_bandh_data(item_model):
     bandh = BandH(item_model)
-    bandh.retrieve_price()
     bandh.retrieve_product_address()
+    bandh.retrieve_product_price()
     global bandh_data
     bandh_data.append("B&H")
     bandh_data.append(bandh.price)
     bandh_data.append(bandh.product_address)
+    bandh.get_elapsed_time()
     return
 
 
@@ -75,28 +78,31 @@ def retrieve_ebay_data(item_model):
     ebay_data.append("Ebay")
     ebay_data.append(ebay.price)
     ebay_data.append(ebay.product_address)
+    ebay.get_elapsed_time()
     return
 
 
 def retrieve_tiger_direct_data(item_model):
     tiger = TigerDirect(item_model)
     tiger.retrieve_product_address()
-    tiger.retrieve_price()
+    tiger.retrieve_product_price()
     global tiger_direct_data
     tiger_direct_data.append("Tiger Direct")
     tiger_direct_data.append(tiger.price)
     tiger_direct_data.append(tiger.product_address)
+    tiger.get_elapsed_time()
     return
 
 
 def retrieve_microcenter_price(item_model):
     micro = Microcenter(item_model)
     micro.retrieve_product_address()
-    micro.retrieve_price()
+    micro.retrieve_product_price()
     global microcenter_data
     microcenter_data.append("Microcenter")
     microcenter_data.append(micro.price)
     microcenter_data.append(micro.product_address)
+    micro.get_elapsed_time()
     return
 
 
@@ -107,6 +113,7 @@ def retrieve_target_price(item_model):
     target_data.append("Target")
     target_data.append(target.price)
     target_data.append(target.product_address)
+    return
 
 
 def retrieve_rakuten_price(item_model):
@@ -117,6 +124,8 @@ def retrieve_rakuten_price(item_model):
     rakuten_data.append("Rakuten")
     rakuten_data.append(rakuten.price)
     rakuten_data.append(rakuten.product_address)
+    rakuten.get_elapsed_time()
+    return
 
 
 def reset_retailer_lists():
@@ -144,6 +153,7 @@ def lambda_handler(url):
     start_time = time.time()
     amazon = AmazonProduct(url)
     amazon.retrieve_item_model()
+    print("Amazon: " + str(time.time() - start_time))
     item_model = amazon.product_model
     title = amazon.title
     searcher = item_model
@@ -187,7 +197,6 @@ def lambda_handler(url):
         global microcenter_data
         global rakuten_data
 
-        print("GAUTAM")
         prices = {
             "amazon_data": amazon.price,
             "newegg_data": newegg_data,
@@ -199,7 +208,7 @@ def lambda_handler(url):
             "rakuten_data": rakuten_data
         }
 
-        print(time.time()-start_time)
+        print("Total Elapsed Time: " + str(time.time()-start_time))
         return str(prices)
 
     else:

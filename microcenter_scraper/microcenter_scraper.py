@@ -10,7 +10,8 @@ class Microcenter(Scraper):
     def __init__(self, product_model):
         with open(os.getcwd() + "\\user_agents\\microcenter_agents.txt", "r") as scrapers:
             headers = ['User-Agent', random.choice(scrapers.read().splitlines())]
-        super().__init__(search_address='https://www.bhphotovideo.com/c/search?' \
+        super().__init__(name="Microcenter",
+                         search_address='https://www.bhphotovideo.com/c/search?' \
                                       'Ntt={}&N=0&InitialSearch=yes' \
                                       '&sts=ma&Top+Nav-Search='.format(product_model),
                          product_model=product_model,
@@ -26,7 +27,7 @@ class Microcenter(Scraper):
         except Exception as e:
             self.price = "Could not find price"
 
-    def retrieve_price(self):
+    def retrieve_product_price(self):
         try:
             self.price = self.soup.find('span', {"itemprop": "price"}).text
 
