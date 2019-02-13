@@ -16,15 +16,13 @@ class Walmart(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
+        self.data = requests.get(self.search_address, headers=self.user_agent).text
+        self.soup = BeautifulSoup(self.data, "lxml")
 
     def retrieve_product_address(self):
         try:
-            data = requests.get(self.search_address, headers=self.user_agent)
-            data = data.text
-            soup = BeautifulSoup(data, "lxml")
             self.product_address = "https://www.walmart.com" + \
-                                   soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
-
+                                   self.soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
         except AttributeError:
             self.product_address = "None"
 
@@ -37,6 +35,8 @@ class Walmart(Scraper):
     def retrieve_product_price(self):
         if self.product_address is not "None":
             try:
+                """ 
+                *** OLD ALGORITHM; Didn't like how it used a seperate request ***
                 count = 0
                 data = requests.get(self.product_address, headers=self.user_agent)
                 data = data.text
@@ -51,6 +51,10 @@ class Walmart(Scraper):
                             self.price += letter
                     else:
                         self.price += letter
+                """
+
+                # Much simpler
+                self.price = self.soup.find("span", attrs={"class": "price-group", "role": "text"})["aria-label"]
 
             except AttributeError:
                 self.price = "Could Not Find Price"
