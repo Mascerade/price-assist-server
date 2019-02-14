@@ -29,4 +29,4 @@ class Scraper:
         pass
 
     def get_elapsed_time(self):
-        print(self.name + " " + str(time.time() - self.time))
+        print(str(self.name) + " " + str(time.time() - self.time))
