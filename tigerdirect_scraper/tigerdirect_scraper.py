@@ -1,10 +1,12 @@
 from bs4 import BeautifulSoup
 import urllib.request
+import requests
 import os
 import random
 import sys
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
+
 
 class TigerDirect(Scraper):
     def __init__(self, product_model):
@@ -18,11 +20,11 @@ class TigerDirect(Scraper):
                          user_agent=headers,
                          data="")
         try:
-            self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
-            self.data = urllib.request.urlopen(self.data).read()
-            self.soup = BeautifulSoup(self.data, "html.parser")
+            self.data = requests.get(self.search_address, headers=self.user_agent).text
+            self.soup = BeautifulSoup(self.data, "lxml")
 
         except Exception as e:
+            print(e)
             self.price = "Could not find price"
 
     def retrieve_product_price(self):
@@ -60,3 +62,9 @@ class TigerDirect(Scraper):
 
         except Exception as e:
             self.product_address = "None"
+
+
+tiger = TigerDirect("core i7")
+tiger.retrieve_product_address()
+tiger.retrieve_product_price()
+print(tiger.product_address, tiger.price)
