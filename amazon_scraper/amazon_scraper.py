@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-import urllib.request
 import random
 import os
 import sys
@@ -10,14 +9,17 @@ from master_scraper.master_scraper import Scraper
 
 class AmazonProduct(Scraper):
     def __init__(self, address):
-        with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
-            user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
-        super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
-        self.title = None
-        self.entry_list = []
-        self.data = urllib.request.Request(self.search_address, headers=self.user_agent)
-        self.data = urllib.request.urlopen(self.data).read()
-        self.soup = BeautifulSoup(self.data, "lxml")
+        try:
+            with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
+                user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+            super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
+            self.title = None
+            self.entry_list = []
+            self.data = requests.get(self.search_address, headers=self.user_agent).text
+            self.soup = BeautifulSoup(self.data, "lxml")
+
+        except Exception as e:
+            print(e)
 
     def retrieve_item_model(self):
         try:

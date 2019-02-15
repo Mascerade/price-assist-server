@@ -61,9 +61,3 @@ class TigerDirect(Scraper):
 
         except Exception as e:
             self.product_address = "None"
-
-
-tiger = TigerDirect("core i7")
-tiger.retrieve_product_address()
-tiger.retrieve_product_price()
-print(tiger.product_address, tiger.price)

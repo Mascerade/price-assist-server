@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import urllib.request
+import requests
 import random
 import os
 import sys
@@ -20,14 +21,12 @@ class Ebay(Scraper):
                          user_agent=headers,
                          data="")
         self.product_address = self.search_address
+        self.data = requests.get(self.search_address, headers=self.user_agent).text
+        self.soup = BeautifulSoup(self.data, "lxml")
 
     def retrieve_product_price(self):
         try:
-            data = urllib.request.urlopen(self.search_address)
-            data = data.read()
-            soup = BeautifulSoup(data, "lxml")
-            price = soup.find_all('span', 's-item__price')[0].text
-            self.price = price
+            self.price = self.soup.find_all('span', 's-item__price')[0].text
 
         except AttributeError:
             self.price = "Could Not Find Price"
