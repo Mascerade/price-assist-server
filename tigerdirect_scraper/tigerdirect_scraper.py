@@ -6,6 +6,7 @@ import sys
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
+
 class TigerDirect(Scraper):
     def __init__(self, product_model):
         with open(os.getcwd() + "\\user_agents\\tigerdirect_agents.txt", "r") as scrapers:
