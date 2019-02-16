@@ -28,10 +28,11 @@ class Rakuten(Scraper):
         options.add_argument("user-agent=" + self.user_agent["User-Agent"])
         options.add_argument('--headless')
         options.add_argument('--log-level=3')
-        chrome_path = "C:\\Users\\Jason\\Documents\\Price-Assist---Server\\target_scraper\\chromedriver.exe"
+        chrome_path = os.getcwd() + "\\target_scraper\\chromedriver.exe"
+
         self.driver = selenium.webdriver.Chrome(executable_path=chrome_path, options=options, service_log_path="NUL")
         self.driver.get(self.search_address)
-        self.soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        self.soup = BeautifulSoup(self.driver.page_source, "lxml")
 
     def retrieve_product_address(self):
         try:

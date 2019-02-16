@@ -168,7 +168,7 @@ def lambda_handler(url):
         t5 = threading.Thread(target=retrieve_ebay_data, args=(searcher,))
         t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(searcher,))
         t7 = threading.Thread(target=retrieve_microcenter_price, args=(searcher,))
-        t8 = threading.Thread(target=retrieve_rakuten_price, args=(item_model,))
+        # t8 = threading.Thread(target=retrieve_rakuten_price, args=(item_model,))
 
         t.start()
         t2.start()
@@ -177,7 +177,7 @@ def lambda_handler(url):
         t5.start()
         t6.start()
         t7.start()
-        t8.start()
+        # t8.start()
 
         t.join()
         t2.join()
@@ -186,7 +186,7 @@ def lambda_handler(url):
         t5.join()
         t6.join()
         t7.join()
-        t8.join()
+        # t8.join()
 
         global newegg_data
         global bestbuy_data
@@ -205,7 +205,7 @@ def lambda_handler(url):
             "ebay_data": ebay_data,
             "tigerdirect_data": tiger_direct_data,
             "microcenter_data": microcenter_data,
-            "rakuten_data": rakuten_data
+            # "rakuten_data": rakuten_data
         }
 
         print("Total Elapsed Time: " + str(time.time()-start_time))
