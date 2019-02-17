@@ -10,7 +10,7 @@ from master_scraper.master_scraper import Scraper
 class AmazonProduct(Scraper):
     def __init__(self, address):
         try:
-            with open(os.getcwd() + "\\user_agents\\amazon_agents.txt", "r") as scrapers:
+            with open(os.getcwd() + "\\user_agents\\amazon_agents_refined.txt", "r") as scrapers:
                 user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
             super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
             self.title = None

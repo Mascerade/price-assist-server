@@ -19,7 +19,7 @@ class TigerDirect(Scraper):
                          user_agent=headers,
                          data="")
         try:
-            self.data = requests.get(self.search_address, headers=self.user_agent).text
+            self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
             self.soup = BeautifulSoup(self.data, "lxml")
 
         except Exception as e:

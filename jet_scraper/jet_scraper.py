@@ -16,7 +16,7 @@ class Jet(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        self.data = requests.get(self.search_address, headers=self.user_agent).text
+        self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
         self.soup = BeautifulSoup(self.data, "lxml")
 
     def retrieve_product_address(self):

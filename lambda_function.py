@@ -15,7 +15,7 @@ from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
 
-""" PACKAGE IMPORTS """
+""" OUTSIDE IMPORTS """
 from flask import Flask, request
 import threading
 import urllib.request
