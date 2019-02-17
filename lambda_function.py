@@ -15,7 +15,7 @@ from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
 
-"""PACKAGE IMPORTS"""
+""" PACKAGE IMPORTS """
 from flask import Flask, request
 import threading
 import urllib.request
@@ -53,6 +53,7 @@ def retrieve_bestbuy_data(item_model):
     bestbuy_data.append("BestBuy")
     bestbuy_data.append(bestbuy.price)
     bestbuy_data.append(bestbuy.product_address)
+    bestbuy.get_elapsed_time()
     return
 
 
@@ -150,8 +151,8 @@ def retrieve_jet_price(item_model):
 
 
 def reset_retailer_lists():
-    global newegg_data
     global bestbuy_data
+    global newegg_data
     global walmart_data
     global bandh_data
     global ebay_data
@@ -161,6 +162,7 @@ def reset_retailer_lists():
     global rakuten_data
     global jet_data
 
+    bestbuy_data = []
     newegg_data = []
     walmart_data = []
     bandh_data = []
@@ -192,6 +194,7 @@ def lambda_handler(url):
         t6 = threading.Thread(target=retrieve_tiger_direct_data, args=(searcher,))
         t7 = threading.Thread(target=retrieve_microcenter_price, args=(searcher,))
         t8 = threading.Thread(target=retrieve_jet_price, args=(item_model,))
+        t9 = threading.Thread(target=retrieve_bestbuy_data, args=(item_model,))
 
         t.start()
         t2.start()
@@ -201,6 +204,7 @@ def lambda_handler(url):
         t6.start()
         t7.start()
         t8.start()
+        t9.start()
 
         t.join()
         t2.join()
@@ -210,6 +214,7 @@ def lambda_handler(url):
         t6.join()
         t7.join()
         t8.join()
+        t9.join()
 
         global newegg_data
         global bestbuy_data
@@ -223,6 +228,7 @@ def lambda_handler(url):
 
         prices = {
             "amazon_data": amazon.price,
+            "bestbuy_data": bestbuy_data,
             "newegg_data": newegg_data,
             "walmart_data": walmart_data,
             "bandh_data": bandh_data,

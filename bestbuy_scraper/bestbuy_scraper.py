@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 class BestBuy(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
+        with open(os.getcwd() + "\\user_agents\\bestbuy_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="BestBuy",
                          search_address='https://www.bestbuy.com/site/searchpage.jsp?st={}'.format(product_model),
@@ -22,7 +22,7 @@ class BestBuy(Scraper):
     def retrieve_product_address(self):
         try:
             sku_header = self.soup.find('h4', 'sku-header')
-            self.product_address = "https:www.bestbuy.com" + sku_header.find('a')['href']
+            self.product_address = "https://www.bestbuy.com" + sku_header.find('a')['href']
 
         except AttributeError:
             self.product_address = "None"
@@ -36,9 +36,3 @@ class BestBuy(Scraper):
 
         else:
             self.price = "Could Not Find Price"
-
-
-best = BestBuy("220-G3-0750-X1")
-best.retrieve_product_address()
-best.retrieve_product_price()
-print(best.product_address, best.price)
