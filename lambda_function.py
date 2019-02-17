@@ -1,3 +1,8 @@
+""""
+Developed by Jason Acheampong of Timeless Apps
+"""
+
+""" LOCAL IMPORTS """
 from amazon_scraper.amazon_scraper import AmazonProduct
 from newegg_scraper.newegg_scraper import NeweggProduct
 from bestbuy_scraper.bestbuy_scraper import BestBuy
@@ -9,6 +14,8 @@ from microcenter_scraper.microcenter_scraper import Microcenter
 from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
+
+"""PACKAGE IMPORTS"""
 from flask import Flask, request
 import threading
 import urllib.request

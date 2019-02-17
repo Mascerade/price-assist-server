@@ -21,7 +21,7 @@ class Jet(Scraper):
 
     def retrieve_product_address(self):
         try:
-            self.product_address = "htttps://www.jet.com" + self.soup.findAll("a", attrs={"class":
+            self.product_address = "https://www.jet.com" + self.soup.findAll("a", attrs={"class":
                 "base__BaseStyledComponent-djfk5g-0 "
                 "base__Link-djfk5g-2 BaseProductTile__ItemLink-mors47-0 kIPima"})[0]["href"]
 
