@@ -14,6 +14,7 @@ from microcenter_scraper.microcenter_scraper import Microcenter
 from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
+from outletpc_scraper.outletpc_scraper import OutletPC
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
@@ -31,6 +32,7 @@ microcenter_data = []
 target_data = []
 rakuten_data = []
 jet_data = []
+outletpc_data = []
 
 
 def retrieve_newegg_data(item_model):
@@ -150,6 +152,18 @@ def retrieve_jet_price(item_model):
     return
 
 
+def retrieve_outletpc_price(item_model):
+    outletpc = OutletPC(item_model)
+    outletpc.retrieve_product_address()
+    outletpc.retrieve_product_price()
+    global outletpc_data
+    outletpc_data.append("OutletPC")
+    outletpc_data.append(outletpc.price)
+    outletpc_data.append(outletpc.product_address)
+    outletpc.get_elapsed_time()
+    return
+
+
 def reset_retailer_lists():
     global bestbuy_data
     global newegg_data
@@ -161,6 +175,7 @@ def reset_retailer_lists():
     global target_data
     global rakuten_data
     global jet_data
+    global outletpc_data
 
     bestbuy_data = []
     newegg_data = []
@@ -172,6 +187,7 @@ def reset_retailer_lists():
     target_data = []
     rakuten_data = []
     jet_data = []
+    outletpc_data = []
 
 
 def lambda_handler(url):
@@ -195,6 +211,7 @@ def lambda_handler(url):
         t7 = threading.Thread(target=retrieve_microcenter_price, args=(searcher,))
         t8 = threading.Thread(target=retrieve_jet_price, args=(item_model,))
         t9 = threading.Thread(target=retrieve_bestbuy_data, args=(item_model,))
+        t10 = threading.Thread(target=retrieve_outletpc_price, args=(item_model,))
 
         t.start()
         t2.start()
@@ -205,6 +222,7 @@ def lambda_handler(url):
         t7.start()
         t8.start()
         t9.start()
+        t10.start()
 
         t.join()
         t2.join()
@@ -215,6 +233,7 @@ def lambda_handler(url):
         t7.join()
         t8.join()
         t9.join()
+        t10.join()
 
         global newegg_data
         global bestbuy_data
@@ -225,6 +244,7 @@ def lambda_handler(url):
         global microcenter_data
         global jet_data
         global rakuten_data
+        global outletpc_data
 
         prices = {
             "amazon_data": amazon.price,
@@ -235,7 +255,8 @@ def lambda_handler(url):
             "ebay_data": ebay_data,
             "tigerdirect_data": tiger_direct_data,
             "microcenter_data": microcenter_data,
-            "jet_data": jet_data
+            "jet_data": jet_data,
+            "outletpc_data": outletpc_data
         }
 
         print("Total Elapsed Time: " + str(time.time()-start_time))
