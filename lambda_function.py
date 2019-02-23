@@ -15,6 +15,7 @@ from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
 from outletpc_scraper.outletpc_scraper import OutletPC
+from helpers.scraper_functions import ScraperHelpers
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
@@ -34,6 +35,7 @@ rakuten_data = []
 jet_data = []
 outletpc_data = []
 
+ScraperHelpers.retrieve_newegg_data("stuff")
 
 def retrieve_newegg_data(item_model):
     newegg = NeweggProduct(item_model)
