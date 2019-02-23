@@ -89,10 +89,6 @@ def query_example():
     try:
         return lambda_handler(link)
 
-    except urllib.error.HTTPError as e:
-        print(e)
-        return str({"Error": "Server error"})
-
     except TypeError as e:
         print(e)
 
