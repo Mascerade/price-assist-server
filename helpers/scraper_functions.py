@@ -42,7 +42,7 @@ class ScraperHelpers:
         self.bestbuy_data.append("BestBuy")
         self.bestbuy_data.append(bestbuy.price)
         self.bestbuy_data.append(bestbuy.product_address)
-        self.bestbuy.get_elapsed_time()
+        bestbuy.get_elapsed_time()
         return
 
     def retrieve_walmart_data(self, item_model):
