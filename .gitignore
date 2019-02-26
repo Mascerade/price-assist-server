@@ -1,7 +1,7 @@
 *.pyc
 .idea/
 __pychache__/
-
+venv/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
