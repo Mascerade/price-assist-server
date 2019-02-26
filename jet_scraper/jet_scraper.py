@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 class Jet(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\scrapers_master.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'scrapers_master.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="Jet",
                          search_address='https://jet.com/search?term={}'.format(product_model),
@@ -17,7 +17,7 @@ class Jet(Scraper):
                          user_agent=headers,
                          data="")
         self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-        self.soup = BeautifulSoup(self.data, "lxml")
+        self.soup = BeautifulSoup(self.data, "html5lib")
 
     def retrieve_product_address(self):
         try:

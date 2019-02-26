@@ -10,7 +10,7 @@ from master_scraper.master_scraper import Scraper
 
 class Ebay(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\ebay_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'ebay_agents.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         super().__init__(name="Ebay",
@@ -22,7 +22,7 @@ class Ebay(Scraper):
                          data="")
         self.product_address = self.search_address
         self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, "lxml")
+        self.soup = BeautifulSoup(self.data, "html5lib")
 
     def retrieve_product_price(self):
         try:

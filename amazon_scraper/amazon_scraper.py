@@ -3,6 +3,7 @@ import requests
 import random
 import os
 import sys
+
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -10,27 +11,27 @@ from master_scraper.master_scraper import Scraper
 class AmazonProduct(Scraper):
     def __init__(self, address):
         try:
-            with open(os.getcwd() + "\\user_agents\\amazon_agents_refined.txt", "r") as scrapers:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_refined.txt'), "r") as scrapers:
                 user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
             super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
-            self.title = None
             self.entry_list = []
             self.data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(self.data, "lxml")
+            self.soup = BeautifulSoup(self.data, "html5lib")
+            self.error = ""
+            self.title = ""
 
         except Exception as e:
             print(e)
 
     def retrieve_item_model(self):
         try:
-            soup = BeautifulSoup(self.data, "lxml")
             self.title = self.soup.find(id="productTitle").text.strip()
             for number in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-                for row in soup.find_all(id='productDetails_techSpec_section_' + str(number)):
+                for row in self.soup.find_all(id='productDetails_techSpec_section_' + str(number)):
                     for tr in row.find_all('tr'):
                         self.entry_list.append(tr.text.strip())
 
-            for row in soup.find_all(id='productDetails_detailBullets_sections1'):
+            for row in self.soup.find_all(id='productDetails_detailBullets_sections1'):
                 for tr in row.find_all('tr'):
                     self.entry_list.append(tr.text.strip())
 
@@ -38,18 +39,22 @@ class AmazonProduct(Scraper):
                 if "Item model number" in x:
                     self.product_model = x[17:].strip()
 
-        except AttributeError:
+        except AttributeError as e:
+            self.error = e
             self.product_model = None
 
-        except TypeError:
+        except TypeError as e:
+            self.error = e
             self.product_model = None
 
         except requests.HTTPError as e:
+            self.error = e
             print("From Amazon", e)
 
-        except Exception:
+        except Exception as e:
+            self.error = e
             self.product_model = None
-            
+
     def retrieve_item_price(self):
         try:
             self.price = self.soup.find("span", id='priceblock_ourprice').text.strip()
