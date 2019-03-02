@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 class OutletPC(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'walmart_agents.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="OutletPC",
                          search_address='https://sitesearch.outletpc.com/search/display_type-Grid--keywords-{}'
@@ -18,7 +18,7 @@ class OutletPC(Scraper):
                          user_agent=headers,
                          data="")
         self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-        self.soup = BeautifulSoup(self.data, "lxml")
+        self.soup = BeautifulSoup(self.data, "html5lib")
 
     def retrieve_product_address(self):
         try:

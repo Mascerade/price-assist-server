@@ -1,4 +1,9 @@
 *.pyc
 .idea/
 __pychache__/
+venv/
 
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

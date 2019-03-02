@@ -10,7 +10,7 @@ from master_scraper.master_scraper import Scraper
 
 class BandH(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\bandh_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'bandh_agents.txt'), "r") as scrapers:
             header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         super().__init__(name="B&H",

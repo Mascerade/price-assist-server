@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 class TigerDirect(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\tigerdirect_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'tigerdirect_agents.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         super().__init__(name="TigerDirect",
@@ -20,7 +20,7 @@ class TigerDirect(Scraper):
                          data="")
         try:
             self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-            self.soup = BeautifulSoup(self.data, "lxml")
+            self.soup = BeautifulSoup(self.data, "html5lib")
 
         except Exception as e:
             print(e)

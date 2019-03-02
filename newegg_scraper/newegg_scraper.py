@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 class NeweggProduct(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\newegg_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\

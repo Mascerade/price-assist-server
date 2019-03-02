@@ -6,9 +6,10 @@ import sys
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
+
 class Microcenter(Scraper):
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\microcenter_agents.txt", "r") as scrapers:
+        with open(os.path.join(os.getcwd(), 'user_agents', 'microcenter_agents.txt'), "r") as scrapers:
             headers = ['User-Agent', random.choice(scrapers.read().splitlines())]
         super().__init__(name="Microcenter",
                          search_address='https://www.bhphotovideo.com/c/search?' \
@@ -22,7 +23,7 @@ class Microcenter(Scraper):
             data.add_header(self.user_agent[0], self.user_agent[1])
             data = urllib.request.urlopen(data)
             data = data.read()
-            self.soup = BeautifulSoup(data, "lxml")
+            self.soup = BeautifulSoup(data, "html5lib")
 
         except Exception as e:
             self.price = "Could not find price"

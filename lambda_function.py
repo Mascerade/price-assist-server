@@ -6,6 +6,7 @@ Developed by Jason Acheampong of Timeless Apps
 from amazon_scraper.amazon_scraper import AmazonProduct
 from helpers.scraper_functions import ScraperHelpers
 
+
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
 import threading
@@ -19,10 +20,7 @@ def lambda_handler(url):
     amazon.retrieve_item_model()
     print("Amazon: " + str(time.time() - start_time))
     item_model = amazon.product_model
-    title = amazon.title
     searcher = item_model
-    if item_model is None:
-        searcher = title
 
     if searcher is not None:
         t = threading.Thread(target=amazon.retrieve_item_price)

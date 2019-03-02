@@ -16,7 +16,7 @@ class Rakuten(Scraper):
     """
 
     def __init__(self, product_model):
-        with open(os.getcwd() + "\\user_agents\\walmart_agents.txt", "r") as scrapers:
+        with open(os.getcwd() + "/user_agents/walmart_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="Rakuten",
                          search_address="https://www.rakuten.com/search/" + product_model.replace(" ", "%20"),
