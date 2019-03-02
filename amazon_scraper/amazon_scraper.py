@@ -16,7 +16,7 @@ class AmazonProduct(Scraper):
             super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
             self.entry_list = []
             self.data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(self.data, "html5lib")
+            self.soup = BeautifulSoup(self.data, Scraper.parser)
             self.error = ""
             self.title = ""
 

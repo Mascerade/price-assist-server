@@ -22,7 +22,7 @@ class Ebay(Scraper):
                          data="")
         self.product_address = self.search_address
         self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, "html5lib")
+        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_price(self):
         try:

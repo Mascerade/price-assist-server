@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
-import urllib.request
-import urllib
 import random
 import os
 import sys
+import requests
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -21,9 +20,8 @@ class BandH(Scraper):
                          user_agent=header,
                          data="")
         try:
-            data = urllib.request.urlopen(self.search_address)
-            data = data.read()
-            self.soup = BeautifulSoup(data, "html.parser")
+            data = requests.get(self.search_address, headers=self.user_agent).text
+            self.soup = BeautifulSoup(data, Scraper.parser)
 
         except Exception as e:
             self.price = "Could not find price"

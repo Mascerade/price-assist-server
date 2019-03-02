@@ -32,7 +32,7 @@ class Rakuten(Scraper):
 
         self.driver = selenium.webdriver.Chrome(executable_path=chrome_path, options=options, service_log_path="NUL")
         self.driver.get(self.search_address)
-        self.soup = BeautifulSoup(self.driver.page_source, "lxml")
+        self.soup = BeautifulSoup(self.driver.page_source, Scraper.parser)
 
     def retrieve_product_address(self):
         try:

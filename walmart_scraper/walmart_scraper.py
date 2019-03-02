@@ -17,7 +17,7 @@ class Walmart(Scraper):
                          user_agent=headers,
                          data="")
         self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, "html5lib")
+        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:
@@ -35,25 +35,6 @@ class Walmart(Scraper):
     def retrieve_product_price(self):
         if self.product_address is not "None":
             try:
-                """ 
-                *** OLD ALGORITHM; Didn't like how it used a seperate request ***
-                count = 0
-                data = requests.get(self.product_address, headers=self.user_agent)
-                data = data.text
-                soup = BeautifulSoup(data, "lxml")
-                price = soup.find('div', 'prod-PriceHero').text
-                for letter in price:
-                    if letter == "$":
-                        count += 1
-                        if count == 2:
-                            return
-                        else:
-                            self.price += letter
-                    else:
-                        self.price += letter
-                """
-
-                # Much simpler
                 self.price = self.soup.find("span", attrs={"class": "price-group", "role": "text"})["aria-label"]
 
             except AttributeError:

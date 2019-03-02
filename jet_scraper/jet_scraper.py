@@ -17,7 +17,7 @@ class Jet(Scraper):
                          user_agent=headers,
                          data="")
         self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-        self.soup = BeautifulSoup(self.data, "html5lib")
+        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:

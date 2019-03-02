@@ -20,7 +20,7 @@ class TigerDirect(Scraper):
                          data="")
         try:
             self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-            self.soup = BeautifulSoup(self.data, "html5lib")
+            self.soup = BeautifulSoup(self.data, Scraper.parser)
 
         except Exception as e:
             print(e)

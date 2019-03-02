@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import urllib.request
+import requests
 import os
 import random
 import sys
@@ -10,22 +10,19 @@ from master_scraper.master_scraper import Scraper
 class Microcenter(Scraper):
     def __init__(self, product_model):
         with open(os.path.join(os.getcwd(), 'user_agents', 'microcenter_agents.txt'), "r") as scrapers:
-            headers = ['User-Agent', random.choice(scrapers.read().splitlines())]
+            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="Microcenter",
-                         search_address='https://www.bhphotovideo.com/c/search?' \
-                                      'Ntt={}&N=0&InitialSearch=yes' \
-                                      '&sts=ma&Top+Nav-Search='.format(product_model),
+                         search_address='https://www.microcenter.com/search/search_results.aspx?Ntt={}'
+                         .format(product_model),
                          product_model=product_model,
                          user_agent=headers,
                          data="")
         try:
-            data = urllib.request.Request(self.search_address)
-            data.add_header(self.user_agent[0], self.user_agent[1])
-            data = urllib.request.urlopen(data)
-            data = data.read()
-            self.soup = BeautifulSoup(data, "html5lib")
+            data = requests.get(self.search_address, headers=self.user_agent).text
+            self.soup = BeautifulSoup(data, Scraper.parser)
 
         except Exception as e:
+            print(e)
             self.price = "Could not find price"
 
     def retrieve_product_price(self):

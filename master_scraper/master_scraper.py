@@ -1,6 +1,6 @@
-import os
-import json
 import time
+from sys import platform
+
 
 class Scraper:
     """
@@ -10,6 +10,12 @@ class Scraper:
     * Have to create a variable that stores the amazon title across all of the scraper classes
     * Will make it simpler to keep track of it
     """
+    parser = ""
+    if platform == "win32":
+        parser = "lxml"
+
+    else:
+        parser = "html5lib"
 
     def __init__(self, name, search_address, product_model, user_agent, data):
         self.time = time.time()

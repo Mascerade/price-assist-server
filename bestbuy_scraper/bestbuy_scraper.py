@@ -18,7 +18,7 @@ class BestBuy(Scraper):
                          data="")
 
         data = requests.get(self.search_address, headers=headers).text
-        self.soup = BeautifulSoup(data, "html5lib")
+        self.soup = BeautifulSoup(data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:

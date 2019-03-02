@@ -20,7 +20,7 @@ class NeweggProduct(Scraper):
                          data="")
 
         self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, 'html.parser')
+        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:
