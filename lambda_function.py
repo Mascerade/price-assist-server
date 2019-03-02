@@ -9,7 +9,6 @@ from helpers.scraper_functions import ScraperHelpers
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
 import threading
-import urllib.request
 import time
 
 
