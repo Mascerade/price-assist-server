@@ -7,12 +7,12 @@ sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
 
-class SuperBlitz(Scraper):
+class SuperBiiz(Scraper):
     def __init__(self, product_model):
         with open(os.path.join(os.getcwd(), 'user_agents', 'scrapers_master.txt'), "r") as scrapers:
             header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
-        super().__init__(name="Super Blitz",
+        super().__init__(name="SuperBiiz",
                          search_address='https://www.superbiiz.com/query.php?s={}'.format(product_model),
                          product_model=product_model,
                          user_agent=header,
@@ -44,16 +44,10 @@ class SuperBlitz(Scraper):
 
     def retrieve_product_address(self):
         try:
-            self.product_address = "https:www.superbiiz.com" + self.soup.find_all("tr")[45].find("a")["href"]
+            self.product_address = "https://www.superbiiz.com" + self.soup.find_all("tr")[45].find("a")["href"]
 
         except AttributeError as e:
             self.product_address = "None"
 
         except Exception as e:
             self.product_address = "None"
-
-
-superbiiz = SuperBlitz("i7 8700")
-superbiiz.retrieve_product_address()
-superbiiz.retrieve_product_price()
-print(superbiiz.price, superbiiz.product_address)

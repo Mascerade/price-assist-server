@@ -1,3 +1,4 @@
+"""" LOCAL IMPORTS """
 from newegg_scraper.newegg_scraper import NeweggProduct
 from bestbuy_scraper.bestbuy_scraper import BestBuy
 from walmart_scraper.walmart_scraper import Walmart
@@ -9,6 +10,7 @@ from target_scraper.target_scraper import TargetScraper
 from rakuten_scraper.rakuten_scraper import Rakuten
 from jet_scraper.jet_scraper import Jet
 from outletpc_scraper.outletpc_scraper import OutletPC
+from superbiiz_scraper.superbiizz_scraper import SuperBiiz
 
 
 class ScraperHelpers:
@@ -24,6 +26,7 @@ class ScraperHelpers:
         self.rakuten_data = []
         self.jet_data = []
         self.outletpc_data = []
+        self.biiz_data = []
 
     def retrieve_newegg_data(self, item_model):
         newegg = NeweggProduct(item_model)
@@ -130,6 +133,16 @@ class ScraperHelpers:
         self.outletpc_data.append(outletpc.price)
         self.outletpc_data.append(outletpc.product_address)
         outletpc.get_elapsed_time()
+        return
+
+    def retrieve_super_biiz_price(self, item_model):
+        biiz = SuperBiiz(item_model)
+        biiz.retrieve_product_price()
+        biiz.retrieve_product_address()
+        self.biiz_data.append("SuperBiiz")
+        self.biiz_data.append(biiz.price)
+        self.biiz_data.append(biiz.product_address)
+        biiz.get_elapsed_time()
         return
 
     def reset_retailer_lists(self):
