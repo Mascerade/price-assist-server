@@ -17,7 +17,7 @@ class BestBuy(Scraper):
                          user_agent=headers,
                          data="")
 
-        data = requests.get(self.search_address, headers=headers).text
+        data = requests.get(self.search_address, headers=headers, timeout=5).text
         self.soup = BeautifulSoup(data, Scraper.parser)
 
     def retrieve_product_address(self):
