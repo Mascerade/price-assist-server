@@ -10,8 +10,12 @@ class Scraper:
     * Have to create a variable that stores the amazon title across all of the scraper classes
     * Will make it simpler to keep track of it
     """
+
+    # For linux OS
+    REQUIRED_PACKAGES_INSTALLED = True
+
     parser = ""
-    if platform == "win32":
+    if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
         parser = "lxml"
 
     else:
