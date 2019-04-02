@@ -13,7 +13,7 @@ class NewScraper(Scraper):
             header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         super().__init__(name="NAME",
-                         search_address='SEARCH ADDRESs {}'.format(product_model),
+                         search_address='SEARCH ADDRESS {}'.format(product_model),
                          product_model=product_model,
                          user_agent=header,
                          data="")
@@ -37,7 +37,7 @@ class NewScraper(Scraper):
 
     def retrieve_product_address(self):
         try:
-            self.product_address = self.soup.find_all("a")['href']
+            self.product_address = self.soup.find_all("a")[0]['href']
 
         except AttributeError as e:
             self.product_address = "None"
