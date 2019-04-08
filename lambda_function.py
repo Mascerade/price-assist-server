@@ -43,8 +43,6 @@ def lambda_handler(url, price, item_model):
         for thread in thread_list:
             thread.join()
 
-
-
         prices = {
             "amazon_data": price,
             "bestbuy_data": scrapers.bestbuy_data,
@@ -67,10 +65,10 @@ def lambda_handler(url, price, item_model):
 
 
 # Create the Flask app
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route('/query')
+@application.route('/query')
 def query():
     link = request.args.get('link')
     amazon_price = request.args.get('amazon_price')
@@ -84,4 +82,4 @@ def query():
 
 # Run app using localhost on port 5000
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
+    application.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
