@@ -68,7 +68,7 @@ def lambda_handler(url, price, item_model):
 application = Flask(__name__)
 
 
-@application.route('/query')
+@application.route('/api/query')
 def query():
     link = request.args.get('link')
     amazon_price = request.args.get('amazon_price')
