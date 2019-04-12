@@ -12,13 +12,7 @@ base_html = """
 
 <div id="card-container" style="margin-top: 17px;">
 
-    <div id="card" class="card mb-3" style="max-width: 325px;">
-        <div class="card-body" style="font-color: black;">
-            <h4 id="retailer" class="card-title text-dark">Amazon</h4>
-            <p id="base-price" class="card-text text-dark">Base Price: $549.94</p>
-        </div>
-        <a href="#" id="link-button" class="btn btn-primary" target="_blank">Product</a>
-    </div>
+
 
 
 """

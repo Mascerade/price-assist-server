@@ -72,7 +72,7 @@ def lambda_handler(url, price, item_model):
             "outletpc_data": scrapers.outletpc_data,
             "superbiiz_data": scrapers.biiz_data
         }
-
+        scrapers.all_scrapers.insert(0, ["Amazon", price, "#"])
         print("Total Elapsed Time: " + str(time.time()-start_time))
         return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         # return str(prices)
