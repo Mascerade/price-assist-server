@@ -27,6 +27,7 @@ class ScraperHelpers:
         self.jet_data = []
         self.outletpc_data = []
         self.biiz_data = []
+        self.all_scrapers = []
 
     def retrieve_newegg_data(self, item_model):
         newegg = NeweggProduct(item_model)
@@ -36,6 +37,7 @@ class ScraperHelpers:
         self.newegg_data.append(newegg.price)
         self.newegg_data.append(newegg.product_address)
         newegg.get_elapsed_time()
+        self.all_scrapers.append(self.newegg_data)
         return
 
     def retrieve_bestbuy_data(self, item_model):
@@ -45,6 +47,7 @@ class ScraperHelpers:
         self.bestbuy_data.append("BestBuy")
         self.bestbuy_data.append(bestbuy.price)
         self.bestbuy_data.append(bestbuy.product_address)
+        self.all_scrapers.append(self.bestbuy_data)
         bestbuy.get_elapsed_time()
         return
 
@@ -55,6 +58,7 @@ class ScraperHelpers:
         self.walmart_data.append("Walmart")
         self.walmart_data.append(walmart.price)
         self.walmart_data.append(walmart.product_address)
+        self.all_scrapers.append(self.walmart_data)
         walmart.get_elapsed_time()
         return
 
@@ -65,6 +69,7 @@ class ScraperHelpers:
         self.bandh_data.append("B&H")
         self.bandh_data.append(bandh.price)
         self.bandh_data.append(bandh.product_address)
+        self.all_scrapers.append(self.bandh_data)
         bandh.get_elapsed_time()
         return
 
@@ -74,6 +79,7 @@ class ScraperHelpers:
         self.ebay_data.append("Ebay")
         self.ebay_data.append(ebay.price)
         self.ebay_data.append(ebay.product_address)
+        self.all_scrapers.append(self.ebay_data)
         ebay.get_elapsed_time()
         return
 
@@ -84,6 +90,7 @@ class ScraperHelpers:
         self.tiger_direct_data.append("Tiger Direct")
         self.tiger_direct_data.append(tiger.price)
         self.tiger_direct_data.append(tiger.product_address)
+        self.all_scrapers.append(self.tiger_direct_data)
         tiger.get_elapsed_time()
         return
 
@@ -94,6 +101,7 @@ class ScraperHelpers:
         self.microcenter_data.append("Microcenter")
         self.microcenter_data.append(micro.price)
         self.microcenter_data.append(micro.product_address)
+        self.all_scrapers.append(self.microcenter_data)
         micro.get_elapsed_time()
         return
 
@@ -103,6 +111,7 @@ class ScraperHelpers:
         self.target_data.append("Target")
         self.target_data.append(target.price)
         self.target_data.append(target.product_address)
+        self.all_scrapers.append(self.target_data)
         return
 
     def retrieve_rakuten_price(self, item_model):
@@ -112,6 +121,7 @@ class ScraperHelpers:
         self.rakuten_data.append("Rakuten")
         self.rakuten_data.append(rakuten.price)
         self.rakuten_data.append(rakuten.product_address)
+        self.all_scrapers.append(self.rakuten_data)
         rakuten.get_elapsed_time()
         return
 
@@ -122,6 +132,7 @@ class ScraperHelpers:
         self.jet_data.append("Jet")
         self.jet_data.append(jet.price)
         self.jet_data.append(jet.product_address)
+        self.all_scrapers.append(self.jet_data)
         jet.get_elapsed_time()
         return
 
@@ -132,6 +143,7 @@ class ScraperHelpers:
         self.outletpc_data.append("OutletPC")
         self.outletpc_data.append(outletpc.price)
         self.outletpc_data.append(outletpc.product_address)
+        self.all_scrapers.append(self.outletpc_data)
         outletpc.get_elapsed_time()
         return
 
@@ -142,6 +154,7 @@ class ScraperHelpers:
         self.biiz_data.append("SuperBiiz")
         self.biiz_data.append(biiz.price)
         self.biiz_data.append(biiz.product_address)
+        self.all_scrapers.append(self.biiz_data)
         biiz.get_elapsed_time()
         return
 

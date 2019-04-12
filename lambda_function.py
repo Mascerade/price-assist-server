@@ -5,12 +5,28 @@ Developed by Jason Acheampong of Timeless Apps
 """ LOCAL IMPORTS """
 from amazon_scraper.amazon_scraper import AmazonProduct
 from helpers.scraper_functions import ScraperHelpers
+from helpers.gui_generator import gui_generator
 
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
 import threading
 import time
+
+iframe = """
+<div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; z-index: 100000000; border: none;">
+    <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none;">
+    </iframe>
+</div>
+"""
+
+heading = """
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,500" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://raw.githack.com/BinaryWiz/Price-Assist/master/css/retailers-popup.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/lux/bootstrap.min.css">
+"""
 
 
 def lambda_handler(url, price, item_model):
@@ -58,7 +74,8 @@ def lambda_handler(url, price, item_model):
         }
 
         print("Total Elapsed Time: " + str(time.time()-start_time))
-        return str(prices)
+        return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
+        # return str(prices)
 
     else:
         return str({"Error": "Amazon link invalid; Could not retrieve prices"})
