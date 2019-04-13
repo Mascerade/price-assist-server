@@ -1,7 +1,7 @@
 
 base_html = """
 <nav id="nav" class="navbar fixed-top navbar-dark bg-dark" style="margin-bottom: 13px;">
-    <a class="navbar-brand" href="https://binarywiz.github.io/Timeless-Apps-Website/home.html" target="_blank">
+    <a class="navbar-brand" href="http://www.timeless-apps.com" target="_blank">
         <img src="https://dl.dropboxusercontent.com/s/7vleowye5psd2mj/only_logo_transparent_white.png?dl=0" style="max-height: 46px; max-width: 46px;">
         <span style="font-size: 18px; color: white; margin-left: 12px;"> Price Assist </span>
     </a>
