@@ -14,13 +14,32 @@ import threading
 import time
 
 iframe = """
-<div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; z-index: 100000000; border: none;">
+<div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; 
+align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; 
+z-index: 100000000; border: none;">
     <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none;">
     </iframe>
 </div>
 """
 
 heading = """
+    <style>
+        ::-webkit-scrollbar {
+            width: 10;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #7D7D7D;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4D4D4D;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,500" rel="stylesheet"> 
