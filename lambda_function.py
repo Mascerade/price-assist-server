@@ -3,8 +3,8 @@ Developed by Jason Acheampong of Timeless Apps
 """
 
 """ LOCAL IMPORTS """
-from amazon_scraper.amazon_scraper import AmazonProduct
 from helpers.scraper_functions import ScraperHelpers
+from amazon_scraper.amazon_scraper import AmazonProduct
 from helpers.gui_generator import gui_generator
 
 
@@ -48,13 +48,13 @@ heading = """
 """
 
 
-def lambda_handler(url, price, item_model):
+def lambda_handler(retailer, price, item_model):
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
-    print(searcher)
 
     retailer_functions = {
+        "amazon_data": scrapers.retrieve_amazon_data,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
         "newegg_data": scrapers.retrieve_newegg_data,
         "walmart_data": scrapers.retrieve_walmart_data,
@@ -66,6 +66,8 @@ def lambda_handler(url, price, item_model):
         "outletpc_data": scrapers.retrieve_outletpc_price,
         "superbiiz_data": scrapers.retrieve_super_biiz_price
     }
+
+    retailer_functions[retailer] = price
 
     if searcher is not None:
         thread_list = []
@@ -106,11 +108,11 @@ application = Flask(__name__)
 
 @application.route('/api/query')
 def query():
-    link = request.args.get('link')
-    amazon_price = request.args.get('amazon_price')
+    retailer = request.args.get('retailer')
+    price = request.args.get('price')
     item_model = request.args.get('item_model')
     try:
-        return lambda_handler(link, amazon_price, item_model)
+        return lambda_handler(retailer, price, item_model)
 
     except TypeError as e:
         print(e)

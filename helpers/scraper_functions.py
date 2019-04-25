@@ -1,4 +1,5 @@
 """" LOCAL IMPORTS """
+from amazon_scraper.amazon_scraper import Amazon
 from newegg_scraper.newegg_scraper import NeweggProduct
 from bestbuy_scraper.bestbuy_scraper import BestBuy
 from walmart_scraper.walmart_scraper import Walmart
@@ -15,6 +16,7 @@ from superbiiz_scraper.superbiizz_scraper import SuperBiiz
 
 class ScraperHelpers:
     def __init__(self):
+        self.amazon_data = []
         self.newegg_data = []
         self.bestbuy_data = []
         self.walmart_data = []
@@ -28,6 +30,17 @@ class ScraperHelpers:
         self.outletpc_data = []
         self.biiz_data = []
         self.all_scrapers = []
+
+    def retrieve_amazon_data(self, item_model):
+        amazon = Amazon(item_model)
+        amazon.retrieve_product_address()
+        amazon.retrieve_product_price()
+        self.amazon_data.append("Amazon")
+        self.amazon_data.append(amazon.price)
+        self.amazon_data.append(amazon.product_address)
+        amazon.get_elapsed_time()
+        self.all_scrapers.append(self.amazon_data)
+        return
 
     def retrieve_newegg_data(self, item_model):
         newegg = NeweggProduct(item_model)

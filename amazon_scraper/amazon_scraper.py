@@ -68,3 +68,43 @@ class AmazonProduct(Scraper):
             self.price = "Price Not Available"
 
         return
+
+
+class Amazon(Scraper):
+    def __init__(self, product_model):
+        with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_refined.txt'), "r") as scrapers:
+            header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        super().__init__(name="Amazon",
+                         search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),
+                         product_model=product_model,
+                         user_agent=header,
+                         data="")
+        try:
+            data = requests.get(self.search_address, headers=self.user_agent).text
+            self.soup = BeautifulSoup(data, Scraper.parser)
+
+        except Exception as e:
+            self.price = "Could not find price"
+            self.product_address = "None"
+
+    def retrieve_product_price(self):
+        try:
+            self.price = self.soup.find_all("span", attrs={"class": "a-offscreen"})[0].text
+
+        except AttributeError as e:
+            self.price = "Could not find price"
+
+        except Exception as e:
+            self.product_address = "None"
+
+    def retrieve_product_address(self):
+        try:
+            self.product_address = "https://www.amazon.com" + \
+                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[0]['href']
+
+        except AttributeError as e:
+            self.product_address = "None"
+
+        except Exception as e:
+            self.product_address = "None"
