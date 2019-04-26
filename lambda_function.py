@@ -66,12 +66,13 @@ def lambda_handler(retailer, price, item_model):
         "outletpc_data": scrapers.retrieve_outletpc_price,
         "superbiiz_data": scrapers.retrieve_super_biiz_price
     }
-
-    retailer_functions[retailer] = price
+    retailer_functions[retailer.strip().lower() + "_data"] = price
 
     if searcher is not None:
         thread_list = []
         for function in retailer_functions.values():
+            if type(function) == str:
+                continue
             thread_list.append(threading.Thread(target=function, args=(searcher,)))
 
         for thread in thread_list:
@@ -81,7 +82,7 @@ def lambda_handler(retailer, price, item_model):
             thread.join()
 
         prices = {
-            "amazon_data": price,
+            "amazon_data": scrapers.amazon_data,
             "bestbuy_data": scrapers.bestbuy_data,
             "newegg_data": scrapers.newegg_data,
             "walmart_data": scrapers.walmart_data,
@@ -93,7 +94,9 @@ def lambda_handler(retailer, price, item_model):
             "outletpc_data": scrapers.outletpc_data,
             "superbiiz_data": scrapers.biiz_data
         }
-        scrapers.all_scrapers.insert(0, ["Amazon", price, "#"])
+        if retailer == "bandh":
+            retailer = "B&H"
+        scrapers.all_scrapers.insert(0, [retailer, price, "#"])
         print("Total Elapsed Time: " + str(time.time()-start_time))
         return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         # return str(prices)
@@ -118,6 +121,6 @@ def query():
         print(e)
 
 
-# Run app using localhost on port 5000
+# Run app using localhost
 if __name__ == '__main__':
     application.run(host='0.0.0.0', threaded=True, debug=True)
