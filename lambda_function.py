@@ -48,7 +48,7 @@ heading = """
 """
 
 
-def lambda_handler(retailer, price, item_model):
+def lambda_handler(retailer, price, item_model, return_type):
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
@@ -94,11 +94,25 @@ def lambda_handler(retailer, price, item_model):
             "outletpc_data": scrapers.outletpc_data,
             "superbiiz_data": scrapers.biiz_data
         }
+
+        new_retailer = retailer
+        if retailer == "bandh":
+            new_retailer = "B&H"
+
+        prices[retailer.strip().lower() + "_data"] = [new_retailer, price, "#"]
+
         if retailer == "bandh":
             retailer = "B&H"
+
         scrapers.all_scrapers.insert(0, [retailer, price, "#"])
+    
         print("Total Elapsed Time: " + str(time.time()-start_time))
-        return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
+
+        if return_type == "json":
+            return str(prices)
+        
+        elif return_type == "gui":
+            return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         # return str(prices)
 
     else:
@@ -114,8 +128,9 @@ def query():
     retailer = request.args.get('retailer')
     price = request.args.get('price')
     item_model = request.args.get('item_model')
+    return_type = request.args.get('return_type')
     try:
-        return lambda_handler(retailer, price, item_model)
+        return lambda_handler(retailer, price, item_model, return_type)
 
     except TypeError as e:
         print(e)
