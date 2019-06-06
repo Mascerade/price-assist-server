@@ -27,7 +27,7 @@ def gui_generator(retailers):
     new_html = ""
     new_html += base_html
     for retailer in retailers:
-        if retailer[1].lower() == "could not find price" or retailer[1] == "undefined" or len(retailer[1]) == 0:
+        if len(retailer[1]) == 0:
             pass
 
         else:

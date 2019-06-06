@@ -1,3 +1,6 @@
+""" EXTERNAL IMPORTS """
+from operator import itemgetter
+
 """" LOCAL IMPORTS """
 from amazon_scraper.amazon_scraper import Amazon
 from newegg_scraper.newegg_scraper import NeweggProduct
@@ -183,3 +186,13 @@ class ScraperHelpers:
         self.rakuten_data = []
         self.jet_data = []
         self.outletpc_data = []
+    
+    def remove_extraneous(self):
+        print(len(self.all_scrapers))
+        for index, retailer in enumerate(self.all_scrapers):
+            if retailer[1].lower() == "could not find price" or retailer[1] == "undefined":
+                print(index)
+                self.all_scrapers.remove(index)
+
+    def sort_all_scraperes(self):
+        self.all_scrapers.sort(key=itemgetter(1))
