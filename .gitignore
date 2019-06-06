@@ -2,6 +2,7 @@
 .idea/
 __pychache__/
 venv/
+.vscode/
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

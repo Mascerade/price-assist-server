@@ -119,7 +119,6 @@ def lambda_handler(retailer, price, item_model, return_type):
     else:
         return str({"Error": "Amazon link invalid; Could not retrieve prices"})
 
-
 # Create the Flask app
 application = Flask(__name__)
 
