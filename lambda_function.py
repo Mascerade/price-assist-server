@@ -114,8 +114,6 @@ def lambda_handler(retailer, price, item_model, return_type):
         
         elif return_type == "gui":
             return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
-        # return str(prices)
-
     else:
         return str({"Error": "Amazon link invalid; Could not retrieve prices"})
 
