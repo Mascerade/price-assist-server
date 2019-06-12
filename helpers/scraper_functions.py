@@ -188,17 +188,16 @@ class ScraperHelpers:
         self.outletpc_data = []
     
     def remove_extraneous(self):
-        print(len(self.all_scrapers))
-        stop = False
-        while not stop:
-            for index, retailer in enumerate(self.all_scrapers):
-                if retailer[1].lower() == "could not find price" or retailer[1] == "undefined":
-                    print(index)
-                    del self.all_scrapers[index]
-                    break
-                
-                if index == len(self.all_scrapers) - 1:
-                    stop = True  
+        
+        for index, retailer in enumerate(self.all_scrapers):
+            if retailer[1].lower() == "could not find price" or retailer[1] == "undefined" or retailer[1] == "$":
+                print(index, len(self.all_scrapers))
+                del self.all_scrapers[index]
+
+        for retailer in self.all_scrapers:
+            retailer[1] = retailer[1].replace("$", "")
 
     def sort_all_scraperes(self):
         self.all_scrapers.sort(key=itemgetter(1))
+        for retailer in self.all_scrapers:
+            retailer[1] = "$" + retailer[1]
