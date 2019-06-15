@@ -81,6 +81,7 @@ def lambda_handler(retailer, price, item_model, return_type):
         for thread in thread_list:
             thread.join()
 
+        # Note: prices is for the json format, while all_scrapers is for the gui
         prices = {
             "amazon_data": scrapers.amazon_data,
             "bestbuy_data": scrapers.bestbuy_data,
