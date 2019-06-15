@@ -188,6 +188,7 @@ class ScraperHelpers:
         self.outletpc_data = []
     
     def remove_extraneous(self):
+        """ Removes retailer products that don't have a price (For sorting) """
         length = len(self.all_scrapers)
         index = 0
         while index < length:
@@ -199,11 +200,12 @@ class ScraperHelpers:
             
             else:
                 index += 1
+    
+    def sort_all_scrapers(self):
+        self.all_scrapers.sort(key=sort_by)
 
-        for retailer in self.all_scrapers:
-            retailer[1] = retailer[1].replace("$", "")
-
-    def sort_all_scraperes(self):
-        self.all_scrapers.sort(key=itemgetter(1))
-        for retailer in self.all_scrapers:
-            retailer[1] = "$" + retailer[1]
+def sort_by(e):
+    parameter = e[1]
+    parameter = parameter.replace("$", "")
+    parameter = parameter.replace(",", "")
+    return float(parameter)

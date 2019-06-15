@@ -108,7 +108,8 @@ def lambda_handler(retailer, price, item_model, return_type):
         print("Total Elapsed Time: " + str(time.time()-start_time))
 
         scrapers.remove_extraneous()
-        scrapers.sort_all_scraperes()
+        scrapers.sort_all_scrapers()
+
         if return_type == "json":
             return str(prices)
         
