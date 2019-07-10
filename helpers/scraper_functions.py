@@ -192,14 +192,16 @@ class ScraperHelpers:
         length = len(self.all_scrapers)
         index = 0
         while index < length:
-            if self.all_scrapers[index][1].strip().lower() == "could not find price" or self.all_scrapers[index][1].strip().lower() == "undefined" or self.all_scrapers[index][1].strip().lower() == "":
+            try:
+                float(self.all_scrapers[index][1].strip().lower().replace("$", "").replace(",", "")) 
+            
+            except ValueError:
                 del self.all_scrapers[index]
                 index = 0
                 length -= 1
                 continue
-            
-            else:
-                index += 1
+
+            index += 1
     
     def sort_all_scrapers(self):
         self.all_scrapers.sort(key=sort_by)
