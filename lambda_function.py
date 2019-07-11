@@ -10,6 +10,7 @@ from helpers.gui_generator import gui_generator
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
+import flask
 import threading
 import time
 
@@ -117,7 +118,7 @@ def lambda_handler(retailer, price, item_model, return_type):
         elif return_type == "gui":
             return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
     else:
-        return str({"Error": "Amazon link invalid; Could not retrieve prices"})
+        return str({"Error": "Item model not found"})
 
 # Create the Flask app
 application = Flask(__name__)
@@ -133,8 +134,7 @@ def query():
         return lambda_handler(retailer, price, item_model, return_type)
 
     except TypeError as e:
-        print(e)
-
+        return flask.abort(500)
 
 # Run app using localhost
 if __name__ == '__main__':
