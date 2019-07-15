@@ -10,6 +10,7 @@ from helpers.gui_generator import gui_generator
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
+import json
 import flask
 import threading
 import time
@@ -111,9 +112,10 @@ def lambda_handler(retailer, price, item_model, return_type):
 
         scrapers.remove_extraneous()
         scrapers.sort_all_scrapers()
-
+        
         if return_type == "json":
-            return str(prices)
+            print(json.dumps(prices))
+            return json.dumps(prices)
         
         elif return_type == "gui":
             return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
@@ -138,4 +140,4 @@ def query():
 
 # Run app using localhost
 if __name__ == '__main__':
-    application.run(host='0.0.0.0', threaded=True, debug=False)
+    application.run(host='0.0.0.0', threaded=True, debug=True)
