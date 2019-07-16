@@ -114,7 +114,6 @@ def lambda_handler(retailer, price, item_model, return_type):
         scrapers.sort_all_scrapers()
         
         if return_type == "json":
-            print(json.dumps(prices))
             return json.dumps(prices)
         
         elif return_type == "gui":
