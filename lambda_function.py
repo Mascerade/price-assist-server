@@ -14,6 +14,7 @@ import json
 import flask
 import threading
 import time
+import requests
 
 iframe = """
 <div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; 
@@ -55,6 +56,7 @@ def lambda_handler(retailer, price, item_model, return_type):
     start_time = time.time()
     searcher = item_model
 
+
     retailer_functions = {
         "amazon_data": scrapers.retrieve_amazon_data,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
@@ -69,58 +71,86 @@ def lambda_handler(retailer, price, item_model, return_type):
         "superbiiz_data": scrapers.retrieve_super_biiz_price
     }
     retailer_functions[retailer.strip().lower() + "_data"] = price
+    try:
+        if searcher is not None:
+            using_cached = True
+            # Make GET request
+            cached_server_data = requests.get("http://localhost:5000?item_model=" + item_model)
+            cached_server_data = cached_server_data.json()
 
-    if searcher is not None:
-        thread_list = []
-        for function in retailer_functions.values():
-            if type(function) == str:
-                continue
-            thread_list.append(threading.Thread(target=function, args=(searcher,)))
+            if cached_server_data["success"]:
+                all_scrapers = []
+                for _, value in cached_server_data.items():
+                    if type(value) == list:
+                        all_scrapers.append(value)
 
-        for thread in thread_list:
-            thread.start()
+                if return_type == "json":
+                    return json.dumps(cached_server_data)
+                
+                elif return_type == "gui":
+                    return str({"iframe": iframe, "head": heading, "body": gui_generator(all_scrapers)})    
 
-        for thread in thread_list:
-            thread.join()
+            else:
+                thread_list = []
+                for function in retailer_functions.values():
+                    if type(function) == str:
+                        continue
+                    thread_list.append(threading.Thread(target=function, args=(searcher,)))
 
-        # Note: prices is for the json format, while all_scrapers is for the gui
-        prices = {
-            "item_model": searcher,
-            "amazon_data": scrapers.amazon_data,
-            "bestbuy_data": scrapers.bestbuy_data,
-            "newegg_data": scrapers.newegg_data,
-            "walmart_data": scrapers.walmart_data,
-            "bandh_data": scrapers.bandh_data,
-            "ebay_data": scrapers.ebay_data,
-            "tigerdirect_data": scrapers.tiger_direct_data,
-            "microcenter_data": scrapers.microcenter_data,
-            "jet_data": scrapers.jet_data,
-            "outletpc_data": scrapers.outletpc_data,
-            "superbiiz_data": scrapers.biiz_data
-        }
+                for thread in thread_list:
+                    thread.start()
 
-        new_retailer = retailer
-        if retailer == "bandh":
-            new_retailer = "B&H"
+                for thread in thread_list:
+                    thread.join()
 
-        prices[retailer.strip().lower() + "_data"] = [new_retailer, price, "#"]
+                # Note: prices is for the json format, while all_scrapers is for the gui
+                prices = {
+                    "item_model": searcher,
+                    "amazon_data": scrapers.amazon_data,
+                    "bestbuy_data": scrapers.bestbuy_data,
+                    "newegg_data": scrapers.newegg_data,
+                    "walmart_data": scrapers.walmart_data,
+                    "bandh_data": scrapers.bandh_data,
+                    "ebay_data": scrapers.ebay_data,
+                    "tigerdirect_data": scrapers.tiger_direct_data,
+                    "microcenter_data": scrapers.microcenter_data,
+                    "jet_data": scrapers.jet_data,
+                    "outletpc_data": scrapers.outletpc_data,
+                    "superbiiz_data": scrapers.biiz_data
+                }
 
-        if retailer == "bandh":
-            retailer = "B&H"
+                new_retailer = retailer
+                if retailer == "bandh":
+                    new_retailer = "B&H"
 
-        scrapers.all_scrapers.insert(0, [retailer, price, "#"])
-        print("Total Elapsed Time: " + str(time.time()-start_time))
+                prices[retailer.strip().lower() + "_data"] = [new_retailer, price, "#"]
 
-        scrapers.remove_extraneous()
-        scrapers.sort_all_scrapers()
-        
-        if return_type == "json":
-            return json.dumps(prices)
-        
-        elif return_type == "gui":
-            return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
-    else:
-        return str({"Error": "Item model not found"})
+                if retailer == "bandh":
+                    retailer = "B&H"
+
+                scrapers.all_scrapers.insert(0, [retailer, price, "#"])
+                print("Total Elapsed Time: " + str(time.time()-start_time))
+
+                scrapers.remove_extraneous()
+                scrapers.sort_all_scrapers()
+                
+                if return_type == "json":
+                    # If the data was not already in the cache
+                    load = flask.jsonify(prices)
+                    requests.post("http://localhost:5000/", json=json.loads(json.dumps(prices)))
+                    return json.dumps(load.json)
+                
+                elif return_type == "gui":
+                    # If the data was not already in the cache
+                    requests.post("http://localhost:5000/", json=json.dumps(prices))
+                    return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
+        else:
+            return str({"Error": "Item model not found"})
+    
+    except Exception as e:
+        print(e)
+        return flask.jsonify({"success": False}), 500
+
 
 # Create the Flask app
 application = Flask(__name__)
@@ -140,4 +170,4 @@ def query():
 
 # Run app using localhost
 if __name__ == '__main__':
-    application.run(host='0.0.0.0', threaded=True, debug=True)
+    application.run(host='localhost', port=5001, threaded=True, debug=True)
