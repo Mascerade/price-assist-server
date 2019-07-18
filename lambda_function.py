@@ -75,7 +75,7 @@ def lambda_handler(retailer, price, item_model, return_type):
         if searcher is not None:
             using_cached = True
             # Make GET request
-            cached_server_data = requests.get("http://localhost:5000?item_model=" + item_model)
+            cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
             cached_server_data = cached_server_data.json()
 
             if cached_server_data["success"]:
@@ -137,12 +137,12 @@ def lambda_handler(retailer, price, item_model, return_type):
                 if return_type == "json":
                     # If the data was not already in the cache
                     load = flask.jsonify(prices)
-                    requests.post("http://localhost:5000/", json=json.loads(json.dumps(prices)))
+                    requests.post("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
                     # If the data was not already in the cache
-                    requests.post("http://localhost:5000/", json=json.dumps(prices))
+                    requests.post("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         else:
             return str({"Error": "Item model not found"})
@@ -170,4 +170,4 @@ def query():
 
 # Run app using localhost
 if __name__ == '__main__':
-    application.run(host='localhost', port=5001, threaded=True, debug=True)
+    application.run(host='localhost', port=5000, threaded=True, debug=True)
