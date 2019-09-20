@@ -107,7 +107,7 @@ def lambda_handler(retailer, price, item_model, return_type):
 
                 # Note: prices is for the json format, while all_scrapers is for the gui
                 prices = {
-                    "item_model": searcher,
+                    "identifier": searcher,
                     "amazon_data": scrapers.amazon_data,
                     "bestbuy_data": scrapers.bestbuy_data,
                     "newegg_data": scrapers.newegg_data,
