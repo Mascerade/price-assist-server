@@ -139,12 +139,12 @@ def lambda_handler(retailer, price, item_model, return_type):
                 if return_type == "json":
                     # If the data was not already in the cache
                     load = flask.jsonify(prices)
-                    requests.post("http://localhost:5001/", json=json.loads(json.dumps(prices)))
+                    requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
                     # If the data was not already in the cache
-                    requests.post("http://localhost:5001/", json=json.loads(json.dumps(prices)))
+                    requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         else:
             return str({"Error": "Item model not found"})
