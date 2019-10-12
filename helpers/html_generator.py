@@ -16,7 +16,7 @@ def generate_gui(dict_data):
         </button>
     </nav>
         
-    <div id="card-container" style="margin-top: 17px;">
+    <div id="card-container" style="margin-top: 98px;">
                     
     
     """
