@@ -1,4 +1,3 @@
-
 base_html = """
 <nav id="nav" class="navbar fixed-top navbar-dark bg-dark" style="margin-bottom: 13px;">
     <a class="navbar-brand" href="http://www.timeless-apps.com" target="_blank">
@@ -10,7 +9,7 @@ base_html = """
     </button>
 </nav>
 
-<div id="card-container" style="margin-top: 17px;">
+<div id="card-container" style="margin-top: 98px;">
 
 
 

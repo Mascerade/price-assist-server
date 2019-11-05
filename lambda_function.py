@@ -77,9 +77,12 @@ def lambda_handler(retailer, price, item_model, return_type):
         if searcher is not None:
             # Make GET request
             start = time.time()
+
             cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
             print(time.time() - start)
             cached_server_data = cached_server_data.json()
+
+            cached_server_data = {"success": False}
 
             if cached_server_data["success"]:
                 for _, value in cached_server_data.items():
