@@ -1,0 +1,15 @@
+from amazon_scraper.amazon_scraper import Amazon
+from newegg_scraper.newegg_scraper import NeweggProduct
+from bestbuy_scraper.bestbuy_scraper import BestBuy
+from walmart_scraper.walmart_scraper import Walmart
+from bandh_scraper.bandh_scraper import BandH
+from ebay_scraper.ebay_scraper import Ebay
+from tigerdirect_scraper.tigerdirect_scraper import TigerDirect
+from microcenter_scraper.microcenter_scraper import Microcenter
+from target_scraper.target_scraper import TargetScraper
+from rakuten_scraper.rakuten_scraper import Rakuten
+from jet_scraper.jet_scraper import Jet
+from outletpc_scraper.outletpc_scraper import OutletPC
+from superbiiz_scraper.superbiizz_scraper import SuperBiiz
+
+
