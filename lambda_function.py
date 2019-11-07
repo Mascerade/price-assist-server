@@ -8,8 +8,6 @@ from amazon_scraper.amazon_scraper import AmazonProduct
 from helpers.gui_generator import gui_generator
 import helpers.all_imports
 
-BestBuy("abc")
-
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
 import json
