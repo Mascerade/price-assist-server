@@ -23,7 +23,7 @@ class Ebay(Scraper):
         self.product_address = self.search_address
         self.data = requests.get(self.search_address, headers=self.user_agent).text
         self.soup = BeautifulSoup(self.data, Scraper.parser)
-
+    
     def retrieve_product_price(self):
         try:
             self.price = self.soup.find_all('span', 's-item__price')[0].text

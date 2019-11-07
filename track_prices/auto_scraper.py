@@ -3,13 +3,8 @@ import json
 import flask
 import time
 import requests
-
-if __name__ == "__main__":
-    import sys
-    import os    
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-    from amazon_scraper.amazon_scraper import Amazon
-
+import sys, os
+sys.path.append(os.getcwd())
 
 """ 
 This is the auto-price checker

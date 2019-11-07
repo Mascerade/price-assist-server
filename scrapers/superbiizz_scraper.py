@@ -44,7 +44,7 @@ class SuperBiiz(Scraper):
 
     def retrieve_product_address(self):
         try:
-            self.product_address = "https://www.superbiiz.com" + self.soup.find_all("tr")[45].find("a")["href"]
+            self.product_address = "https://www.superbiiz.com/" + self.soup.find_all("tr")[45].find("a")["href"]
 
         except AttributeError as e:
             self.product_address = "None"

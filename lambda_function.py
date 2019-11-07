@@ -54,6 +54,7 @@ def lambda_handler(retailer, price, item_model, return_type):
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
+    print(retailer)
 
 
     retailer_functions = {

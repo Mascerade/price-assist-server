@@ -1,23 +1,28 @@
 import selenium.webdriver
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import sys
+import os
+sys.path.append(os.getcwd())
+from master_scraper.master_scraper import Scraper
 
-
-class TargetScraper:
+class TargetScraper(Scraper):
     def __init__(self, product_model):
-        self.price = ""
-        self.product_model = product_model
-        self.product_search_address = 'https://www.target.com/s?searchTerm={}'.format(product_model, product_model)
-        self.product_address = ""
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
         }
+        super().__init__(name="Target",
+                    search_address='https://www.target.com/s?searchTerm={}'.format(product_model, product_model),
+                    product_model=product_model,
+                    user_agent=self.headers,
+                    data="")
+                    
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--log-level=3')
         chrome_path = r"C:\Users\Ultim\Documents\PriceCheccer-Python-Minified\target_scraper\chromedriver.exe"
         self.driver = selenium.webdriver.Chrome(chrome_path, options=options, service_log_path="NUL")
-        self.driver.get(self.product_search_address)
+        self.driver.get(self.search_address)
 
     def retrieve_product_price(self):
         try:

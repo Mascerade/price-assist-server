@@ -211,3 +211,4 @@ def sort_by(e):
     parameter = parameter.replace("$", "")
     parameter = parameter.replace(",", "")
     return float(parameter)
+    

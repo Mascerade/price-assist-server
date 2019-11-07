@@ -35,7 +35,7 @@ class Walmart(Scraper):
     def retrieve_product_price(self):
         if self.product_address is not "None":
             try:
-                self.price = self.soup.find("span", attrs={"class": "price-group", "role": "text"})["aria-label"]
+                self.price = self.soup.find("span", attrs={"class": "price-group"}).text
 
             except AttributeError:
                 self.price = "Could Not Find Price"
