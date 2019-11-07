@@ -4,9 +4,8 @@ Developed by Jason Acheampong of Timeless Apps
 
 """ LOCAL IMPORTS """
 from helpers.scraper_functions import ScraperHelpers
-from amazon_scraper.amazon_scraper import AmazonProduct
+from scrapers.amazon_scraper import AmazonProduct
 from helpers.gui_generator import gui_generator
-import helpers.all_imports
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
@@ -79,8 +78,7 @@ def lambda_handler(retailer, price, item_model, return_type):
             cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
             print(time.time() - start)
             cached_server_data = cached_server_data.json()
-
-            cached_server_data = {"success": False}
+            print(cached_server_data)
 
             if cached_server_data["success"]:
                 for _, value in cached_server_data.items():

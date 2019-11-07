@@ -2,19 +2,19 @@
 from operator import itemgetter
 
 """" LOCAL IMPORTS """
-from amazon_scraper.amazon_scraper import Amazon
-from newegg_scraper.newegg_scraper import NeweggProduct
-from bestbuy_scraper.bestbuy_scraper import BestBuy
-from walmart_scraper.walmart_scraper import Walmart
-from bandh_scraper.bandh_scraper import BandH
-from ebay_scraper.ebay_scraper import Ebay
-from tigerdirect_scraper.tigerdirect_scraper import TigerDirect
-from microcenter_scraper.microcenter_scraper import Microcenter
-from target_scraper.target_scraper import TargetScraper
-from rakuten_scraper.rakuten_scraper import Rakuten
-from jet_scraper.jet_scraper import Jet
-from outletpc_scraper.outletpc_scraper import OutletPC
-from superbiiz_scraper.superbiizz_scraper import SuperBiiz
+from scrapers.amazon_scraper import Amazon
+from scrapers.newegg_scraper import NeweggProduct
+from scrapers.bestbuy_scraper import BestBuy
+from scrapers.walmart_scraper import Walmart
+from scrapers.bandh_scraper import BandH
+from scrapers.ebay_scraper import Ebay
+from scrapers.tigerdirect_scraper import TigerDirect
+from scrapers.microcenter_scraper import Microcenter
+from scrapers.target_scraper import TargetScraper
+from scrapers.rakuten_scraper import Rakuten
+from scrapers.jet_scraper import Jet
+from scrapers.outletpc_scraper import OutletPC
+from scrapers.superbiizz_scraper import SuperBiiz
 
 
 class ScraperHelpers:
