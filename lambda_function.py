@@ -56,7 +56,8 @@ def lambda_handler(retailer, price, item_model, return_type):
     searcher = item_model
     print(retailer)
 
-
+    # Created dictionary that contains all the generated data for retailer
+    # [Name, Price, Product Address]
     retailer_functions = {
         "amazon_data": scrapers.retrieve_amazon_data,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
@@ -70,6 +71,10 @@ def lambda_handler(retailer, price, item_model, return_type):
         "outletpc_data": scrapers.retrieve_outletpc_price,
         "superbiiz_data": scrapers.retrieve_super_biiz_price
     }
+
+    # Set the retailer that the info is coming from in the retailer_function
+    # dictionary to the price. This is so that the program does not try
+    # To run a thread for it unnecessarily
     retailer_functions[retailer.strip().lower() + "_data"] = price
     try:
         CACHE = False
@@ -78,10 +83,13 @@ def lambda_handler(retailer, price, item_model, return_type):
             start = time.time()
             
             if CACHE:
+                # Make a request to the caching server
                 cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
                 print(time.time() - start)
                 cached_server_data = cached_server_data.json()
 
+                # If stored data was in the cache and it is valid [Name, Price, Product Address]
+                # Then return those values
                 if cached_server_data["success"]:
                     for _, value in cached_server_data.items():
                         if type(value) == list and len(value) == 3:
@@ -96,6 +104,8 @@ def lambda_handler(retailer, price, item_model, return_type):
                         return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})    
 
             else:
+                # Neat way of appending each function to the thread_list
+                # And then simultaneously start them
                 thread_list = []
                 for function in retailer_functions.values():
                     if type(function) == str:
@@ -108,7 +118,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                 for thread in thread_list:
                     thread.join()
 
-                # Note: prices is for the json format, while all_scrapers is for the gui
+                # Note: prices is for the json format, while scrapers.all_scrapers is for the gui
                 prices = {
                     "identifier": searcher,
                     "amazon_data": scrapers.amazon_data,
@@ -124,30 +134,39 @@ def lambda_handler(retailer, price, item_model, return_type):
                     "superbiiz_data": scrapers.biiz_data
                 }
 
-                new_retailer = retailer
+                # Use the actual retailer's name if it had to reformatted to abide by
+                # Python variable naming conventions (like B&H --> bandh)
+                correct_retailer_name = retailer
                 if retailer == "bandh":
-                    new_retailer = "B&H"
+                    correct_retailer_name = "B&H"
 
-                prices[retailer.strip().lower() + "_data"] = [new_retailer, price, "#"]
+                # Set the source retailer information to the price given and "#" as it's address
+                # To stay on the page its on
+                prices[retailer.strip().lower() + "_data"] = [correct_retailer_name, price, "#"]
 
-                if retailer == "bandh":
-                    retailer = "B&H"
-
-                scrapers.all_scrapers.insert(0, [retailer, price, "#"])
+                # Insert the source scrapers to all_scrapers
+                # This is because it didn't enter the scraper functions 
+                # Where it gets added to all_scrapers
+                scrapers.all_scrapers.insert(0, [correct_retailer_name, price, "#"])
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
+                # Removes all the scrapers that didn't give valid information
                 scrapers.remove_extraneous()
+
+                # Sort the scrapers by price (low --> high)
                 scrapers.sort_all_scrapers()
                 
                 if return_type == "json":
-                    # If the data was not already in the cache
+                    # Jsonify the data to return it
                     load = flask.jsonify(prices)
+
+                    # If the data was not already in the cache
                     if CACHE:
                         requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
-                    # If the data was not already in the cache
+                    # If the data was not already in the cache                    
                     if CACHE:
                         requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
@@ -165,6 +184,7 @@ application = Flask(__name__)
 
 @application.route('/api/query')
 def query():
+    # Get all the required information from the parameters in the URL
     retailer = request.args.get('retailer')
     price = request.args.get('price')
     item_model = request.args.get('item_model')

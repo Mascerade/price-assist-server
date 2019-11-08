@@ -116,3 +116,8 @@ class Amazon(Scraper):
 
         except Exception as e:
             self.product_address = "None"
+
+amazon = Amazon("YD270XBGAFBOX")
+amazon.retrieve_product_address()
+amazon.retrieve_product_price()
+print(amazon.price, amazon.product_address)
