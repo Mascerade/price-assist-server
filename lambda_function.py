@@ -72,27 +72,28 @@ def lambda_handler(retailer, price, item_model, return_type):
     }
     retailer_functions[retailer.strip().lower() + "_data"] = price
     try:
+        CACHE = False
         if searcher is not None:
             # Make GET request
             start = time.time()
+            
+            if CACHE:
+                cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
+                print(time.time() - start)
+                cached_server_data = cached_server_data.json()
 
-            cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
-            print(time.time() - start)
-            cached_server_data = cached_server_data.json()
-            print(cached_server_data)
+                if cached_server_data["success"]:
+                    for _, value in cached_server_data.items():
+                        if type(value) == list and len(value) == 3:
+                            scrapers.all_scrapers.append(value)
 
-            if cached_server_data["success"]:
-                for _, value in cached_server_data.items():
-                    if type(value) == list and len(value) == 3:
-                        scrapers.all_scrapers.append(value)
-
-                if return_type == "json":
-                    return json.dumps(cached_server_data)
-                
-                elif return_type == "gui":
-                    scrapers.remove_extraneous()
-                    scrapers.sort_all_scrapers()
-                    return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})    
+                    if return_type == "json":
+                        return json.dumps(cached_server_data)
+                    
+                    elif return_type == "gui":
+                        scrapers.remove_extraneous()
+                        scrapers.sort_all_scrapers()
+                        return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})    
 
             else:
                 thread_list = []
@@ -141,12 +142,14 @@ def lambda_handler(retailer, price, item_model, return_type):
                 if return_type == "json":
                     # If the data was not already in the cache
                     load = flask.jsonify(prices)
-                    requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
+                    if CACHE:
+                        requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
                     # If the data was not already in the cache
-                    requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
+                    if CACHE:
+                        requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
         else:
             return str({"Error": "Item model not found"})

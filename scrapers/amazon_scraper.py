@@ -11,7 +11,7 @@ from master_scraper.master_scraper import Scraper
 class AmazonProduct(Scraper):
     def __init__(self, address):
         try:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_refined.txt'), "r") as scrapers:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_source.txt'), "r") as scrapers:
                 user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
             super().__init__(name="Amazon", search_address=address, product_model=None, user_agent=user_agent, data="")
             self.entry_list = []
@@ -71,9 +71,16 @@ class AmazonProduct(Scraper):
 
 
 class Amazon(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_refined.txt'), "r") as scrapers:
-            header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    """
+    We now have 4 scrapers that are essentially gaurenteed to work
+    """
+    def __init__(self, product_model, pheader = None):
+        if pheader is None:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_product.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+        
+        else:
+            header = {"User-Agent": pheader}
 
         super().__init__(name="Amazon",
                          search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),
@@ -81,6 +88,7 @@ class Amazon(Scraper):
                          user_agent=header,
                          data="")
         try:
+            proxies = {"https": "208.118.229.134:8080"}
             data = requests.get(self.search_address, headers=self.user_agent).text
             self.soup = BeautifulSoup(data, Scraper.parser)
 
@@ -101,8 +109,8 @@ class Amazon(Scraper):
     def retrieve_product_address(self):
         try:
             self.product_address = "https://www.amazon.com" + \
-                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[0]['href']
-
+                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[1]['href']
+        
         except AttributeError as e:
             self.product_address = "None"
 
