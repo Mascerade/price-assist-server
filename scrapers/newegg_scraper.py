@@ -8,17 +8,22 @@ from master_scraper.master_scraper import Scraper
 
 
 class NeweggProduct(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents.txt'), "r") as scrapers:
-            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    def __init__(self, product_model, pheader = None):
+        if pheader is None:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        else:
+            header = {"User-Agent": pheader}   
+        
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(product_model),
                          product_model=product_model,
-                         user_agent=headers,
+                         user_agent=header,
                          data="")
-
+        
         self.data = requests.get(self.search_address, headers=self.user_agent).text
         self.soup = BeautifulSoup(self.data, Scraper.parser)
 
