@@ -16,8 +16,6 @@ class Walmart(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:
@@ -48,3 +46,8 @@ class Walmart(Scraper):
 
         else:
             self.price = "Could Not Find Price"
+
+
+if __name__ == "__main__":
+    walmart = walmart("BX80684I99900K")
+    walmart.test()

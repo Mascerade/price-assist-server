@@ -1,6 +1,7 @@
 import time
 from sys import platform
-
+import requests
+from bs4 import BeautifulSoup
 
 class Scraper:
     """
@@ -13,10 +14,12 @@ class Scraper:
 
     # For linux OS
     REQUIRED_PACKAGES_INSTALLED = True
+    USING_PROXY = False
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
         parser = "lxml"
+
 
     else:
         parser = "html5lib"
@@ -32,6 +35,15 @@ class Scraper:
         self.title = None
         self.data = data
 
+        if Scraper.USING_PROXY:        
+            payload = {'api_key': '71ed1c68ca01210f236f353690f74549', 'url':self.search_address}
+            self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timout=5).text
+
+        else:
+            self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
+
+        self.soup = BeautifulSoup(self.data, Scraper.parser)
+
     def retrieve_product_address(self):
         pass
 
@@ -40,3 +52,8 @@ class Scraper:
 
     def get_elapsed_time(self):
         print(str(self.name) + " " + str(time.time() - self.time))
+
+    def test(self):
+        self.retrieve_product_address()
+        self.retrieve_product_price()
+        print(self.price, self.product_address)

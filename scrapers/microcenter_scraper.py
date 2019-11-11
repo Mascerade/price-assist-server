@@ -17,13 +17,6 @@ class Microcenter(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        try:
-            data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(data, Scraper.parser)
-
-        except Exception as e:
-            print(e)
-            self.price = "Could not find price"
 
     def retrieve_product_price(self):
         try:
@@ -48,3 +41,7 @@ class Microcenter(Scraper):
         except Exception as e:
             self.price = "Could not find price"
 
+# micro = Microcenter("BX80684I99900K")
+# micro.retrieve_product_address()
+# micro.retrieve_product_price()
+# print(micro.price, micro.product_address)

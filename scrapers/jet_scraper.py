@@ -16,14 +16,12 @@ class Jet(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-        self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
         try:
             self.product_address = "https://www.jet.com" + self.soup.findAll("a", attrs={"class":
-                "base__BaseStyledComponent-djfk5g-0 "
-                "base__Link-djfk5g-2 BaseProductTile__ItemLink-mors47-0 kIPima"})[0]["href"]
+                "base__BaseStyledComponent-sc-1l64hnd-0 base__Link-sc-1l64hnd-2 " +
+                "BaseProductTile__ItemLink-sc-1h29u1u-0 cBMJRO"})[0]["href"]
 
         except AttributeError:
             self.product_address = "None"
@@ -36,8 +34,8 @@ class Jet(Scraper):
 
     def retrieve_product_price(self):
         try:
-            self.price = self.soup.findAll("span", attrs={"class":"core__Box-avlav9-0 typography__"
-                                                                  "Text-sc-13794y4-0 jOrchV"})[0].text
+            self.price = self.soup.findAll("span", attrs={"class":"base__BaseStyledComponent-sc-1l64hnd-0 " +
+            "typography__Text-sc-1lwzhqv-0 hIuNJJ"})[0].text
 
         except AttributeError:
             self.price = "Could Not Find Price"
@@ -47,3 +45,7 @@ class Jet(Scraper):
 
         except Exception as e:
             self.price = "Could Not Find Price"
+
+if __name__ == "__main__":
+    jet = Jet("BX80684I99900K")
+    jet.test()

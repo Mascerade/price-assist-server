@@ -17,13 +17,6 @@ class SuperBiiz(Scraper):
                          product_model=product_model,
                          user_agent=header,
                          data="")
-        try:
-            data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(data, Scraper.parser)
-
-        except Exception as e:
-            self.price = "Could not find price"
-            self.product_address = "None"
 
     def retrieve_product_price(self):
         try:

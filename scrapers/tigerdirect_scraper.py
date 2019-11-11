@@ -18,13 +18,6 @@ class TigerDirect(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        try:
-            self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-            self.soup = BeautifulSoup(self.data, Scraper.parser)
-
-        except Exception as e:
-            print(e)
-            self.price = "Could not find price"
 
     def retrieve_product_price(self):
         try:
@@ -61,3 +54,7 @@ class TigerDirect(Scraper):
 
         except Exception as e:
             self.product_address = "None"
+
+if __name__ == "__main__":
+    tiger = TigerDirect("BX80684I99900K")
+    tiger.test()

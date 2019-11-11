@@ -6,6 +6,7 @@ Developed by Jason Acheampong of Timeless Apps
 from helpers.scraper_functions import ScraperHelpers
 from scrapers.amazon_scraper import AmazonProduct
 from helpers.gui_generator import gui_generator
+from master_scraper.master_scraper import Scraper
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
@@ -114,6 +115,8 @@ def lambda_handler(retailer, price, item_model, return_type):
 
                 for thread in thread_list:
                     thread.start()
+                    if Scraper.USING_PROXY:
+                        time.sleep(0.5)
 
                 for thread in thread_list:
                     thread.join()

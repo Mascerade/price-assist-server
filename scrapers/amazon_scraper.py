@@ -87,14 +87,6 @@ class Amazon(Scraper):
                          product_model=product_model,
                          user_agent=header,
                          data="")
-        try:
-            proxies = {"https": "208.118.229.134:8080"}
-            data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(data, Scraper.parser)
-
-        except Exception as e:
-            self.price = "Could not find price"
-            self.product_address = "None"
 
     def retrieve_product_price(self):
         try:
@@ -117,7 +109,6 @@ class Amazon(Scraper):
         except Exception as e:
             self.product_address = "None"
 
-amazon = Amazon("YD270XBGAFBOX")
-amazon.retrieve_product_address()
-amazon.retrieve_product_price()
-print(amazon.price, amazon.product_address)
+if __name__ == "__main__":
+    amazon = amazon("BX80684I99900K")
+    amazon.test()

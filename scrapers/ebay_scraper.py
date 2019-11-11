@@ -20,9 +20,6 @@ class Ebay(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
-        self.product_address = self.search_address
-        self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, Scraper.parser)
     
     def retrieve_product_price(self):
         try:

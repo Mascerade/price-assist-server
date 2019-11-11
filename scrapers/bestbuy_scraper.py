@@ -17,9 +17,6 @@ class BestBuy(Scraper):
                          user_agent=headers,
                          data="")
 
-        data = requests.get(self.search_address, headers=headers, timeout=2.7).text
-        self.soup = BeautifulSoup(data, Scraper.parser)
-
     def retrieve_product_address(self):
         try:
             sku_header = self.soup.find('h4', 'sku-header')

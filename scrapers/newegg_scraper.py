@@ -10,7 +10,7 @@ from master_scraper.master_scraper import Scraper
 class NeweggProduct(Scraper):
     def __init__(self, product_model, pheader = None):
         if pheader is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents.txt'), "r") as scrapers:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents2.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         else:
@@ -24,9 +24,6 @@ class NeweggProduct(Scraper):
                          user_agent=header,
                          data="")
         
-        self.data = requests.get(self.search_address, headers=self.user_agent).text
-        self.soup = BeautifulSoup(self.data, Scraper.parser)
-
     def retrieve_product_address(self):
         try:
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
@@ -69,3 +66,7 @@ class NeweggProduct(Scraper):
 
         except Exception as e:
             self.price = "Could Not Find Price"
+
+if __name__ == "__main__":
+    newegg = NeweggProduct("BX80684I99900K")
+    newegg.test()
