@@ -14,6 +14,8 @@ class Scraper:
 
     # For linux OS
     REQUIRED_PACKAGES_INSTALLED = True
+
+    # Parameter for if we want to use the proxy
     USING_PROXY = False
 
     parser = ""

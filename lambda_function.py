@@ -16,41 +16,6 @@ import threading
 import time
 import requests
 
-iframe = """
-<div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; 
-align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; 
-z-index: 100000000; border: none;">
-    <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none;">
-    </iframe>
-</div>
-"""
-
-heading = """
-    <style>
-        ::-webkit-scrollbar {
-            width: 10;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #7D7D7D;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #4D4D4D;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,500" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://raw.githack.com/BinaryWiz/Price-Assist/master/css/retailers-popup.css"> 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/lux/bootstrap.min.css">
-"""
-
-
 def lambda_handler(retailer, price, item_model, return_type):
     scrapers = ScraperHelpers()
     start_time = time.time()
@@ -102,7 +67,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                     elif return_type == "gui":
                         scrapers.remove_extraneous()
                         scrapers.sort_all_scrapers()
-                        return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})    
+                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})    
 
             else:
                 # Neat way of appending each function to the thread_list
@@ -172,7 +137,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                     # If the data was not already in the cache                    
                     if CACHE:
                         requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
-                    return str({"iframe": iframe, "head": heading, "body": gui_generator(scrapers.all_scrapers)})
+                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
         else:
             return str({"Error": "Item model not found"})
     
