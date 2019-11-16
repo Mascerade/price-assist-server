@@ -83,7 +83,7 @@ def lambda_handler(retailer, price, item_model, return_type):
 
                     # So the proproxy doesn't see it as "concurrent"
                     if Scraper.USING_PROXY:
-                        time.sleep(0.5)
+                        time.sleep(1)
 
                 for thread in thread_list:
                     thread.join()

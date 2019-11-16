@@ -16,7 +16,7 @@ class Scraper:
     REQUIRED_PACKAGES_INSTALLED = True
 
     # Parameter for if we want to use the proxy
-    USING_PROXY = False
+    USING_PROXY = True
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
@@ -39,7 +39,7 @@ class Scraper:
 
         if Scraper.USING_PROXY:        
             payload = {'api_key': '71ed1c68ca01210f236f353690f74549', 'url':self.search_address}
-            self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timout=5).text
+            self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timeout=5).text
 
         else:
             self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
