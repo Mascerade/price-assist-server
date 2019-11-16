@@ -59,3 +59,13 @@ class Scraper:
         self.retrieve_product_address()
         self.retrieve_product_price()
         print(self.price, self.product_address)
+
+    def retrieve_all_information(self):
+        scraper_info = []
+        self.retrieve_product_address()
+        self.retrieve_product_price()
+        scraper_info.append(self.name)
+        scraper_info.append(self.price)
+        scraper_info.append(self.product_address)
+        self.get_elapsed_time()
+        return scraper_info

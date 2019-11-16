@@ -20,6 +20,8 @@ class Ebay(Scraper):
                          product_model=product_model,
                          user_agent=headers,
                          data="")
+
+        self.product_address = self.search_address
     
     def retrieve_product_price(self):
         try:

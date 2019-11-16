@@ -80,6 +80,8 @@ def lambda_handler(retailer, price, item_model, return_type):
 
                 for thread in thread_list:
                     thread.start()
+
+                    # So the proproxy doesn't see it as "concurrent"
                     if Scraper.USING_PROXY:
                         time.sleep(0.5)
 
@@ -115,7 +117,8 @@ def lambda_handler(retailer, price, item_model, return_type):
                 # Insert the source scrapers to all_scrapers
                 # This is because it didn't enter the scraper functions 
                 # Where it gets added to all_scrapers
-                scrapers.all_scrapers.insert(0, [correct_retailer_name, price, "#"])
+                scrapers.add_source_retailer([correct_retailer_name, price, "#"])
+                
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
                 # Removes all the scrapers that didn't give valid information
@@ -137,7 +140,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                     # If the data was not already in the cache                    
                     if CACHE:
                         requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
-                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
+                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
         else:
             return str({"Error": "Item model not found"})
     

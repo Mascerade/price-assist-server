@@ -12,7 +12,7 @@ class TargetScraper(Scraper):
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
         }
         super().__init__(name="Target",
-                    search_address='https://www.target.com/s?searchTerm={}'.format(product_model, product_model),
+                    search_address='https://www.target.com/s?searchTerm={}'.format(product_model),
                     product_model=product_model,
                     user_agent=self.headers,
                     data="")
