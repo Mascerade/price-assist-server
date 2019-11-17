@@ -16,7 +16,7 @@ class Scraper:
     REQUIRED_PACKAGES_INSTALLED = True
 
     # Parameter for if we want to use the proxy
-    USING_PROXY = True
+    USING_PROXY = False
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
