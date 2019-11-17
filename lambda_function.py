@@ -22,8 +22,7 @@ def lambda_handler(retailer, price, item_model, return_type):
     searcher = item_model
     print(retailer)
 
-    # Created dictionary that contains all the generated data for retailer
-    # [Name, Price, Product Address]
+    # Runs each 
     retailer_functions = {
         "amazon_data": scrapers.retrieve_amazon_data,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
@@ -67,9 +66,12 @@ def lambda_handler(retailer, price, item_model, return_type):
                     elif return_type == "gui":
                         scrapers.remove_extraneous()
                         scrapers.sort_all_scrapers()
-                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})    
+                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
 
-            else:
+                else:
+                    CACHE = False    
+
+            elif not CACHE:
                 # Neat way of appending each function to the thread_list
                 # And then simultaneously start them
                 thread_list = []
@@ -89,6 +91,8 @@ def lambda_handler(retailer, price, item_model, return_type):
                     thread.join()
 
                 # Note: prices is for the json format, while scrapers.all_scrapers is for the gui
+                # Created dictionary that contains all the generated data for retailer
+                # [Name, Price, Product Address]
                 prices = {
                     "identifier": searcher,
                     "amazon_data": scrapers.amazon_data,
