@@ -22,7 +22,8 @@ def lambda_handler(retailer, price, item_model, return_type):
     searcher = item_model
     print(retailer)
 
-    # Runs each 
+    # Runs each scraper and it makes it easier to know which scraper function
+    # Is for which retailer
     retailer_functions = {
         "amazon_data": scrapers.retrieve_amazon_data,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,

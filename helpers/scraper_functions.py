@@ -23,7 +23,7 @@ class ScraperHelpers:
     <div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; 
     align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; 
     z-index: 100000000; border: none;">
-        <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none;">
+        <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none; border-radius: 10px;">
         </iframe>
     </div>
     """
