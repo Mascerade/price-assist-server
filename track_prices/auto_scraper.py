@@ -61,6 +61,20 @@ def main():
             outlet text,
             superbiiz text) '''.format(item_model))
 
+        all_items = []
+        with open("track_prices/all_items.txt", "r") as file:
+            all_items = file.readlines()
+
+        with open("track_prices/all_items.txt", "a+") as file:
+            found = False
+            for line in all_items:
+                if line.strip().lower() == item_model:
+                    found = True
+
+            if not found:
+                file.write(item_model + "\n")
+
+
         return json.dumps({"success": True}), 204
 
 if __name__ == "__main__":
