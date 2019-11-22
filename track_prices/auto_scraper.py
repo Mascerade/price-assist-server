@@ -3,8 +3,10 @@ import json
 import flask
 import time
 import requests
-import sys, os
-sys.path.append(os.getcwd())
+import sys
+import os
+import sqlite3
+
 
 """ 
 This is the auto-price checker
@@ -36,8 +38,30 @@ def main():
         pass
 
     if request.method == "PUT":
-        """ Create new price history in database OR update existing one with new date and price """
-        pass    
+        """
+        Create new price history in database OR update existing one with new date and price
+        Data should be in the form of a JSON:
+        {'item_model': some_item_model, 'prices': another_json_of_prices} 
+        """
+
+        data = request.json
+        item_model = data['item_model'].lower()
+
+        with sqlite3.connect("track_prices/prices.db") as c:
+            c.execute(''' CREATE TABLE IF NOT EXISTS {} (id integer PRIMARY KEY,
+            amazon text,
+            bestbuy text,
+            newegg text,
+            walmart text,
+            bandh text,
+            ebay text,
+            tigerdirect text,
+            microcenter text,
+            jet text,
+            outlet text,
+            superbiiz text) '''.format(item_model))
+
+        return json.dumps({"success": True}), 204
 
 if __name__ == "__main__":
     app.run("localhost", port=5003, threaded=True)
