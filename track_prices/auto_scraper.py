@@ -66,16 +66,24 @@ def main():
 
         # TODO: Parse the request data and put it in the database
         insert_prices = [datetime.now().strftime("%m-%Y-%d")]
+
+        # Get only the actual information about each retailer from the data dict
+        # Note: We're treating 0's as invalid information
         for _, value in data["data"].items():
             try:
+                # The item model is part of the data, so don't include that
                 if type(value) == str:
                     continue
 
-                elif value == '':
+                # If there was just blank price information, don't include it
+                elif value[1] == '':
                     insert_prices.append("0")
                     continue
-
+                
                 print(value)
+                
+                # Convert the price to a float to make sure it's actual price information
+                # Convert it back to a string to add to the database
                 insert_prices.append(str(float(value[1][1:])))
             
             except:
@@ -89,22 +97,22 @@ def main():
         c.execute(insert_data)
         c.commit()
 
-        # all_items = []
+        all_items = []
 
-        # # Gets all the items already in the database
-        # with open("track_prices/all_items.txt", "r") as file:
-        #     all_items = file.readlines()
+        # Gets all the items already in the database
+        with open("track_prices/all_items.txt", "r") as file:
+            all_items = file.readlines()
 
-        # # Checks if the item PUT is already in the database
-        # with open("track_prices/all_items.txt", "a+") as file:
-        #     found = False
-        #     for line in all_items:
-        #         if line.strip().lower() == item_model:
-        #             found = True
+        # Checks if the item PUT is already in the database
+        with open("track_prices/all_items.txt", "a+") as file:
+            found = False
+            for line in all_items:
+                if line.strip().lower() == item_model:
+                    found = True
 
-        #     # Add the item to the text file if it hasn't been tracked yet
-        #     if not found:
-        #         file.write(item_model + "\n")
+            # Add the item to the text file if it hasn't been tracked yet
+            if not found:
+                file.write(item_model + "\n")
 
 
         return json.dumps({"success": True}), 204
