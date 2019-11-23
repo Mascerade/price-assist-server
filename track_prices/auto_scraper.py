@@ -6,6 +6,7 @@ import requests
 import sys
 import os
 import sqlite3
+from datetime import datetime
 
 
 """ 
@@ -49,30 +50,61 @@ def main():
 
         with sqlite3.connect("track_prices/prices.db") as c:
             c.execute(''' CREATE TABLE IF NOT EXISTS {} (id integer PRIMARY KEY,
-            amazon text,
-            bestbuy text,
-            newegg text,
-            walmart text,
-            bandh text,
-            ebay text,
-            tigerdirect text,
-            microcenter text,
-            jet text,
-            outlet text,
-            superbiiz text) '''.format(item_model))
+            date text,
+            amazon float,
+            bestbuy float,
+            newegg float,
+            walmart float,
+            bandh float,
+            ebay float,
+            tigerdirect float,
+            microcenter float,
+            jet float,
+            outlet float,
+            superbiiz float) '''.format(item_model))
 
-        all_items = []
-        with open("track_prices/all_items.txt", "r") as file:
-            all_items = file.readlines()
 
-        with open("track_prices/all_items.txt", "a+") as file:
-            found = False
-            for line in all_items:
-                if line.strip().lower() == item_model:
-                    found = True
+        # TODO: Parse the request data and put it in the database
+        insert_prices = [datetime.now().strftime("%m-%Y-%d")]
+        for _, value in data["data"].items():
+            try:
+                if type(value) == str:
+                    continue
 
-            if not found:
-                file.write(item_model + "\n")
+                elif value == '':
+                    insert_prices.append("0")
+                    continue
+
+                print(value)
+                insert_prices.append(str(float(value[1][1:])))
+            
+            except:
+                insert_prices.append("0")
+
+        insert_data = ''' INSERT INTO {} (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) 
+        VALUES({})'''.format(item_model, ','.join(insert_prices))
+
+        print(insert_data)
+
+        c.execute(insert_data)
+        c.commit()
+
+        # all_items = []
+
+        # # Gets all the items already in the database
+        # with open("track_prices/all_items.txt", "r") as file:
+        #     all_items = file.readlines()
+
+        # # Checks if the item PUT is already in the database
+        # with open("track_prices/all_items.txt", "a+") as file:
+        #     found = False
+        #     for line in all_items:
+        #         if line.strip().lower() == item_model:
+        #             found = True
+
+        #     # Add the item to the text file if it hasn't been tracked yet
+        #     if not found:
+        #         file.write(item_model + "\n")
 
 
         return json.dumps({"success": True}), 204

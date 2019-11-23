@@ -7,8 +7,8 @@ while True:
         pass
 
     elif user_input.lower() == "put":
-        data = requests.get("http://localhost:5000/api/query?retailer=Amazon&price=$471.99&item_model=BX80684I99900K&return_type=json").json()
-        requests.put("http://localhost:5003/", json = {"item_model": "BX80684I99900K", "data": data})
+        data = requests.get("http://localhost:5000/api/query?retailer=Amazon&price=$471.99&item_model=YD270XBGAFBOX&return_type=json").json()
+        requests.put("http://localhost:5003/", json = {"item_model": "YD270XBGAFBOX", "data": data})
 
     elif user_input.lower() == "delete":
         pass
