@@ -8,7 +8,6 @@ import os
 import sqlite3
 from datetime import datetime
 
-
 """ 
 This is the auto-price checker
 Essentially, have SQL database where each table name is the product's
@@ -32,12 +31,21 @@ FOR AUTO UPDATING
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "PUT"])
-def main():
-    if request.method == "GET":
-        """ Retrieve all the data from the SQL Database """
-        pass
+@app.route("/", methods=["GET"])
+def get_data():
+    """ Retrieve all the data from the SQL Database """
+    item_model = request.args.get("item_model")
+    with sqlite3.connect("track_prices/prices.db") as conn:
+        get_info = '''SELECT * from {}'''.format(item_model)
+        cur = conn.cursor()
+        cur.execute(get_info)
+        data = cur.fetchall()
+        print(data)
 
+    return json.dumps({"success": True}), 200
+
+@app.route("/", methods=["PUT"])
+def put_date():
     if request.method == "PUT":
         """
         Create new price history in database OR update existing one with new date and price
@@ -50,7 +58,7 @@ def main():
 
         with sqlite3.connect("track_prices/prices.db") as c:
             c.execute(''' CREATE TABLE IF NOT EXISTS {} (id integer PRIMARY KEY,
-            date text,
+            date DATE,
             amazon float,
             bestbuy float,
             newegg float,
@@ -63,9 +71,8 @@ def main():
             outlet float,
             superbiiz float) '''.format(item_model))
 
-
-        # TODO: Parse the request data and put it in the database
-        insert_prices = [datetime.now().strftime("%m-%Y-%d")]
+        # List used to insert the date and prices into the database
+        insert_prices = [datetime.now().strftime("%Y-%m-%d")]
 
         # Get only the actual information about each retailer from the data dict
         # Note: We're treating 0's as invalid information
@@ -79,9 +86,7 @@ def main():
                 elif value[1] == '':
                     insert_prices.append("0")
                     continue
-                
-                print(value)
-                
+                                
                 # Convert the price to a float to make sure it's actual price information
                 # Convert it back to a string to add to the database
                 insert_prices.append(str(float(value[1][1:])))
