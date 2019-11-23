@@ -94,9 +94,11 @@ def main():
 
         print(insert_data)
 
+        # Add the data to the databse
         c.execute(insert_data)
         c.commit()
 
+        # Contains all the items already in the list of item_models
         all_items = []
 
         # Gets all the items already in the database
@@ -114,7 +116,7 @@ def main():
             if not found:
                 file.write(item_model + "\n")
 
-
+        # Return the fact that data was successfully added to the database
         return json.dumps({"success": True}), 204
 
 if __name__ == "__main__":
