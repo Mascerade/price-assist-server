@@ -28,6 +28,8 @@ FOR AUTO UPDATING
     dictionary of all the product addresses along with the retailer name)
 """
 
+# What is used to create the dict of each entry
+RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz"]
 
 app = Flask(__name__)
 
@@ -37,12 +39,24 @@ def get_data():
     item_model = request.args.get("item_model")
     with sqlite3.connect("track_prices/prices.db") as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
+        # The cursor is what actaully gets data from the database
         cur = conn.cursor()
-        cur.execute(get_info)
-        data = cur.fetchall()
-        print(data)
 
-    return json.dumps({"success": True}), 200
+        # Execute the selection of data
+        cur.execute(get_info)
+
+        # Get the data
+        sql_data = cur.fetchall()
+
+        # List of dictionaries to return
+        return_data = []
+
+        # Zip the retailer_order with each entry to get a dict of each retailer's prices
+        for entry in sql_data:
+            return_data.append(dict(zip(RETAILER_ORDER, entry)))
+        
+        # return the data with a 200 success error code
+        return json.dumps(return_data), 200
 
 @app.route("/", methods=["PUT"])
 def put_date():
@@ -57,7 +71,7 @@ def put_date():
         item_model = data['item_model'].lower()
 
         with sqlite3.connect("track_prices/prices.db") as c:
-            c.execute(''' CREATE TABLE IF NOT EXISTS {} (id integer PRIMARY KEY,
+            c.execute(''' CREATE TABLE IF NOT EXISTS {} (
             date DATE,
             amazon float,
             bestbuy float,
