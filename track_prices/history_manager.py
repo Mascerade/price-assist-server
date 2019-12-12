@@ -74,7 +74,7 @@ def put_date():
 
         cursor = conn.cursor()
         cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (
-        date date,
+        date DATE,
         amazon float,
         bestbuy float,
         newegg float,
@@ -88,7 +88,7 @@ def put_date():
         superbiiz float); '''.format(item_model))
 
         # List used to insert the date and prices into the database
-        insert_prices = [str(datetime.date.today())]
+        insert_prices = [datetime.date.today()]
 
         # Get only the actual information about each retailer from the data dict
         # Note: We're treating 0's as invalid information
@@ -110,13 +110,15 @@ def put_date():
             except:
                 insert_prices.append("0")
 
-        insert_data = ''' INSERT INTO {} (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) 
-        VALUES({})'''.format(item_model, ','.join(insert_prices))
+        insert_prices = tuple(insert_prices)
+        insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) 
+        VALUES(''' + "?, " * len(RETAILER_ORDER) + ''')'''
 
+        print(type(insert_prices))
         print(insert_data)
 
         # Add the data to the databse
-        cursor.execute(insert_data)
+        cursor.execute(''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', insert_prices)
         conn.commit()
 
         # Close the connections
