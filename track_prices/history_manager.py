@@ -6,7 +6,7 @@ import requests
 import sys
 import os
 import sqlite3
-from datetime import datetime
+import datetime
 
 """ 
 This is the auto-price checker
@@ -70,23 +70,25 @@ def put_date():
         data = request.json
         item_model = data['item_model'].lower()
 
-        with sqlite3.connect("track_prices/prices.db") as c:
-            c.execute(''' CREATE TABLE IF NOT EXISTS {} (
-            date DATE,
-            amazon float,
-            bestbuy float,
-            newegg float,
-            walmart float,
-            bandh float,
-            ebay float,
-            tigerdirect float,
-            microcenter float,
-            jet float,
-            outlet float,
-            superbiiz float) '''.format(item_model))
+        conn = sqlite3.connect("track_prices/prices.db")
+
+        cursor = conn.cursor()
+        cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (
+        date date,
+        amazon float,
+        bestbuy float,
+        newegg float,
+        walmart float,
+        bandh float,
+        ebay float,
+        tigerdirect float,
+        microcenter float,
+        jet float,
+        outlet float,
+        superbiiz float); '''.format(item_model))
 
         # List used to insert the date and prices into the database
-        insert_prices = [datetime.now().strftime("%Y-%m-%d")]
+        insert_prices = [str(datetime.date.today())]
 
         # Get only the actual information about each retailer from the data dict
         # Note: We're treating 0's as invalid information
@@ -114,8 +116,12 @@ def put_date():
         print(insert_data)
 
         # Add the data to the databse
-        c.execute(insert_data)
-        c.commit()
+        cursor.execute(insert_data)
+        conn.commit()
+
+        # Close the connections
+        cursor.close()
+        conn.close()
 
         # Contains all the items already in the list of item_models
         all_items = []
