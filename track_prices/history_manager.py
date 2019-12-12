@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 import flask
+from flask_cors import cross_origin
 import time
 import requests
 import sys
@@ -34,6 +35,7 @@ RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "eba
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
+@cross_origin()
 def get_data():
     """ Retrieve all the data from the SQL Database """
     item_model = request.args.get("item_model")
