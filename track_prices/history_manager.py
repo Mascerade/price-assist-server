@@ -112,13 +112,13 @@ def put_date():
 
         insert_prices = tuple(insert_prices)
         insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) 
-        VALUES(''' + "?, " * len(RETAILER_ORDER) + ''')'''
+        VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
 
-        print(type(insert_prices))
+        # Just to check that everything is working
         print(insert_data)
 
         # Add the data to the databse
-        cursor.execute(''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', insert_prices)
+        cursor.execute(insert_data, insert_prices)
         conn.commit()
 
         # Close the connections
