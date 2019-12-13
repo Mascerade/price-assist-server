@@ -9,7 +9,7 @@ num_values = int(num_values)
 
 table_name = input("What would you like the table name to be? ")
 
-conn = sqlite3.connect("track_prices/fake_date.db")
+conn = sqlite3.connect("track_prices/fake_data.db")
 cursor = conn.cursor()
 cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (xval INTEGER, price INTEGER)'''.format(table_name))
 

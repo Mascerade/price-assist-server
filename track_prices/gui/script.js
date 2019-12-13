@@ -1,9 +1,16 @@
+var USING_FAKE_DATE = true
+
 const http = new XMLHttpRequest();
-const url = 'http://localhost:5003?item_model=bx80684i99900k'
+
+let url = 'http://localhost:5003?item_model=bx80684i99900k'
+
+if(USING_FAKE_DATE) {
+    url = 'http://localhost:5003/fake_data'
+}
+
 http.open("GET", url)
 http.responseType = "json"
 http.send()
-
 
 http.onreadystatechange=(e)=> {
     data = http.response

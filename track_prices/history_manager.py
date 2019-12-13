@@ -34,6 +34,29 @@ RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "eba
 
 app = Flask(__name__)
 
+@app.route("/fake_data", methods=["GET"])
+@cross_origin()
+def get_fake_data():
+    """ Used to test the graph of the GUI """
+
+    # Opens a connection to the fake data database
+    conn = sqlite3.connect("track_prices/fake_data.db")
+    cursor = conn.cursor()
+
+    # Get all the data from the table "fake_data1"
+    get_info = "SELECT * from fake_data1"
+    cursor.execute(get_info)
+
+    # Data to be returned
+    return_data = []
+
+    # Zips the entries with "date" and "amazon" because that is what the GUI uses
+    for entry in cursor.fetchall():
+        return_data.append(dict(zip(['date', 'amazon'], entry)))
+
+    # Return the data with error code 200
+    return json.dumps(return_data), 200
+
 @app.route("/", methods=["GET"])
 @cross_origin()
 def get_data():
