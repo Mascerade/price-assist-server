@@ -26,7 +26,7 @@ http.onreadystatechange=(e)=> {
             datasets: [{
                 label: 'My First dataset',
                 backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(201, 46, 111)',
                 data: prices
             }]
         },
