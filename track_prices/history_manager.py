@@ -8,6 +8,7 @@ import sys
 import os
 import sqlite3
 import datetime
+import plyvel
 
 """ 
 This is the auto-price checker
@@ -62,13 +63,24 @@ def get_fake_data():
 def get_data():
     """ Retrieve all the data from the SQL Database """
     item_model = request.args.get("item_model")
+    
+    ply_db = plyvel.DB('track_prices/item_model_db/', create_if_missing = False)
+    for key, value in ply_db:
+        print(key, value)
+
+    ply_db.close()
+
     with sqlite3.connect("track_prices/prices.db") as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
 
-        # Execute the selection of data
-        cur.execute(get_info)
+        try: 
+            # Execute the selection of data
+            cur.execute(get_info)
+        
+        except sqlite3.OperationalError as e:
+            return json.dumps({'success': False, 'msg': str(e)}), 500
 
         # Get the data
         sql_data = cur.fetchall()
@@ -136,8 +148,8 @@ def put_date():
                 insert_prices.append("0")
 
         insert_prices = tuple(insert_prices)
-        insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, ebay, tigerdirect, microcenter, jet, outlet, superbiiz) 
-        VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
+        insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
+        ebay, tigerdirect, microcenter, jet, outlet, superbiiz) VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
 
         # Just to check that everything is working
         print(insert_data)
@@ -150,25 +162,12 @@ def put_date():
         cursor.close()
         conn.close()
 
-        # Contains all the items already in the list of item_models
-        all_items = []
+        ply_db = plyvel.DB('track_prices/item_model_db/', create_if_missing = True)
 
-        # Gets all the items already in the database
-        with open("track_prices/all_items.txt", "r") as file:
-            all_items = file.readlines()
+        ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
+        
+        ply_db.close()
 
-        # Checks if the item PUT is already in the database
-        with open("track_prices/all_items.txt", "a+") as file:
-            found = False
-            for line in all_items:
-                if line.strip().lower() == item_model:
-                    found = True
-
-            # Add the item to the text file if it hasn't been tracked yet
-            if not found:
-                file.write(item_model + "\n")
-
-        # Return the fact that data was successfully added to the database
         return json.dumps({"success": True}), 204
 
 if __name__ == "__main__":
