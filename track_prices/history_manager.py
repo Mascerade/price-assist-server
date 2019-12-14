@@ -108,8 +108,11 @@ def put_data():
         item_model = data['item_model'].lower()
 
         conn = sqlite3.connect("prices.db")
-
+        
+        # Use the cursor to execute tasks
         cursor = conn.cursor()
+
+        # Create the table with all the retailers 
         cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (
         date DATE,
         amazon float,
@@ -147,6 +150,7 @@ def put_data():
             except:
                 insert_prices.append("0")
 
+        # Need a tuple because that's how the prices get inserted into the "?"
         insert_prices = tuple(insert_prices)
         insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
         ebay, tigerdirect, microcenter, jet, outlet, superbiiz) VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
