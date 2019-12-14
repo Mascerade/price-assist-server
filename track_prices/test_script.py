@@ -11,4 +11,6 @@ while True:
         requests.put("http://localhost:5003/", json = {"item_model": "bx80684i99900k", "data": data})
 
     elif user_input.lower() == "delete":
-        pass
+        item_model = 'bx80684i99900k'
+        requests.delete("http://localhost:5003/", json = {"item_model": item_model})
+        

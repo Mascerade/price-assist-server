@@ -41,7 +41,7 @@ def get_fake_data():
     """ Used to test the graph of the GUI """
 
     # Opens a connection to the fake data database
-    conn = sqlite3.connect("track_prices/fake_data.db")
+    conn = sqlite3.connect("fake_data.db")
     cursor = conn.cursor()
 
     # Get all the data from the table "fake_data1"
@@ -64,13 +64,13 @@ def get_data():
     """ Retrieve all the data from the SQL Database """
     item_model = request.args.get("item_model")
     
-    ply_db = plyvel.DB('track_prices/item_model_db/', create_if_missing = False)
+    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
     for key, value in ply_db:
         print(key, value)
 
     ply_db.close()
 
-    with sqlite3.connect("track_prices/prices.db") as conn:
+    with sqlite3.connect("prices.db") as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
@@ -96,7 +96,7 @@ def get_data():
         return json.dumps(return_data), 200
 
 @app.route("/", methods=["PUT"])
-def put_date():
+def put_data():
     if request.method == "PUT":
         """
         Create new price history in database OR update existing one with new date and price
@@ -107,7 +107,7 @@ def put_date():
         data = request.json
         item_model = data['item_model'].lower()
 
-        conn = sqlite3.connect("track_prices/prices.db")
+        conn = sqlite3.connect("prices.db")
 
         cursor = conn.cursor()
         cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (
@@ -162,13 +162,42 @@ def put_date():
         cursor.close()
         conn.close()
 
-        ply_db = plyvel.DB('track_prices/item_model_db/', create_if_missing = True)
+        ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
 
         ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
         
         ply_db.close()
 
         return json.dumps({"success": True}), 204
+
+@app.route("/", methods=["DELETE"])
+def delete_data():
+    item_model = request.json['item_model'].lower().strip()
+    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+
+    # We check if "check" is equal to None (meaning the item model is not in the database)
+    check = ply_db.get(bytes(item_model, encoding='utf-8'))
+    
+    # As long as there is something in "check" the item_model exists
+    if check is not None:
+        # Establish the connection to the prices database
+        conn = sqlite3.connect("prices.db")
+        cursor = conn.cursor()
+
+        # DROP TABLE essentially will delete the table
+        delete_str = "DROP TABLE " + item_model
+
+        # Execute the deletion of the table and close the connection
+        cursor.execute(delete_str)
+        conn.commit()
+        conn.close()
+
+        # Delete the item_model in the plyvel database as well
+        ply_db.delete(bytes(item_model, encoding='utf-8'))
+    
+        return json.dumps({'success': True}), 202
+
+    return json.dumps({'success': False, "msg":"Item model not found"}), 400
 
 if __name__ == "__main__":
     app.run("localhost", port=5003, threaded=True)
