@@ -1,6 +1,6 @@
 function generateChart(userInput) {
     console.log(userInput)
-    var USING_FAKE_DATE = true;
+    var USING_FAKE_DATE = false;
 
     const http = new XMLHttpRequest();
 
@@ -24,6 +24,10 @@ function generateChart(userInput) {
             prices.push(day['amazon']);
         });
 
+        prices.pop(prices.length - 1);
+        dates.pop(data.length - 1);
+        item_model = data[data.length - 1]
+
         var max = calcMax(prices);
         var min = calcMin(prices);
         var std = Math.round(calcStd(prices))
@@ -37,7 +41,7 @@ function generateChart(userInput) {
             data: {
                 labels: dates,
                 datasets: [{
-                    label: 'Fake Data',
+                    label: item_model,
                     // backgroundColor: 'rgb(255, 99, 132)',
                     fill: false,
                     borderColor: 'rgb(201, 46, 111)',
