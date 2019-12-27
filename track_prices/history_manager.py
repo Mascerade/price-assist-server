@@ -28,6 +28,8 @@ FOR AUTO UPDATING
   to do this)
     - This can be a seperate route (/update or something with a
     dictionary of all the product addresses along with the retailer name)
+
+* Run this from the track_prices directory
 """
 
 # What is used to create the dict of each entry

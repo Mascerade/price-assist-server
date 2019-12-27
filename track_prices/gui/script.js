@@ -21,7 +21,7 @@ http.onreadystatechange=(e)=> {
         dates.push(day['date']);
         prices.push(day['amazon']);
     });
-    
+
     var ctx = document.getElementById('retailer_chart').getContext('2d');
     var chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -32,14 +32,24 @@ http.onreadystatechange=(e)=> {
             labels: dates,
             datasets: [{
                 label: 'My First dataset',
-                backgroundColor: 'rgb(255, 99, 132)',
+                // backgroundColor: 'rgb(255, 99, 132)',
+                fill: false,
                 borderColor: 'rgb(201, 46, 111)',
                 data: prices
             }]
         },
 
         // Configuration options go here
-        options: {}
+        options: {
+          scales: {
+            yAxes: [{
+              display: true,
+              ticks: {
+                suggestedMin: 400, // The minimum y-value
+                suggestedMax: 600 // The maximum y-value
+              }
+            }]
+          }
+        }
     });
 }
-
