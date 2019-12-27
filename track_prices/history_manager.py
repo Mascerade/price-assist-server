@@ -93,6 +93,8 @@ def get_data():
         # Zip the retailer_order with each entry to get a dict of each retailer's prices
         for entry in sql_data:
             return_data.append(dict(zip(RETAILER_ORDER, entry)))
+
+        return_data.append({'item_model': item_model})
         
         # return the data with a 200 success error code
         return json.dumps(return_data), 200
