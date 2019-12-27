@@ -23,6 +23,7 @@ http.onreadystatechange=(e)=> {
 
     var max = calcMax(prices);
     var min = calcMin(prices);
+    var std = Math.round(calcStd(prices))
 
     var ctx = document.getElementById('retailer_chart').getContext('2d');
     var chart = new Chart(ctx, {
@@ -47,8 +48,8 @@ http.onreadystatechange=(e)=> {
             yAxes: [{
               display: true,
               ticks: {
-                suggestedMin: min - 50, // The minimum y-value
-                suggestedMax: max + 50 // The maximum y-value
+                suggestedMin: min - std, // The minimum y-value
+                suggestedMax: max + std // The maximum y-value
               }
             }]
           }
@@ -78,4 +79,25 @@ function calcMin(prices) {
     });
 
     return min;
+}
+
+function calcAvg(prices) {
+    var sum = 0
+
+    prices.forEach(price => {
+        sum += price;
+    });
+
+    return sum / prices.length;
+}
+
+function calcStd(prices) {
+    var mean = calcAvg(prices);
+    var sqSum = 0;
+
+    prices.forEach(price => {
+        sqSum += Math.pow(price - mean, 2);
+    });
+
+    return Math.sqrt(sqSum / (prices.length - 1));
 }
