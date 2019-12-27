@@ -57,6 +57,9 @@ def get_fake_data():
     for entry in cursor.fetchall():
         return_data.append(dict(zip(['date', 'amazon'], entry)))
 
+    # Essentially the title of the eventual graph
+    return_data.append("Fake Data")
+
     # Return the data with error code 200
     return json.dumps(return_data), 200
 
@@ -94,7 +97,7 @@ def get_data():
         for entry in sql_data:
             return_data.append(dict(zip(RETAILER_ORDER, entry)))
 
-        return_data.append({'item_model': item_model})
+        return_data.append(item_model)
         
         # return the data with a 200 success error code
         return json.dumps(return_data), 200

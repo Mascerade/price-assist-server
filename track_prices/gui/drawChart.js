@@ -1,14 +1,16 @@
-var USING_FAKE_DATE = true
+function generateChart(userInput) {
+    console.log(userInput)
+    var USING_FAKE_DATE = true;
 
-const http = new XMLHttpRequest();
+    const http = new XMLHttpRequest();
 
-let url = 'http://localhost:5003?item_model=bx80684i99900k'
+    let url = 'http://localhost:5003?item_model=' + userInput
 
-if(USING_FAKE_DATE) {
-    url = 'http://localhost:5003/fake_data'
-}
+    if(USING_FAKE_DATE) {
+        url = 'http://localhost:5003/fake_data'
+    }
 
-function generateChart() {
+
     http.open("GET", url)
     http.responseType = "json"
     http.send()
@@ -26,7 +28,7 @@ function generateChart() {
         var min = calcMin(prices);
         var std = Math.round(calcStd(prices))
 
-        var ctx = document.getElementById('retailer_chart').getContext('2d');
+        var ctx = document.getElementById('retailer-chart').getContext('2d');
         var chart = new Chart(ctx, {
             // The type of chart we want to create
             type: 'line',
@@ -59,7 +61,18 @@ function generateChart() {
     }
 }
 
-generateChart();
+function getProduct() {
+    var searchButton = document.getElementById("product-search-button");
+    searchButton.disabled = true;
+
+    var searchForm = document.getElementById("user-search")
+    var product = searchForm.value
+
+    generateChart(product)
+
+    searchButton.disabled = false;
+    searchForm.value = "";
+}
 
 function calcMax(prices) {
     var max = 0;
