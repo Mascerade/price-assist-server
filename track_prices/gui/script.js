@@ -17,10 +17,12 @@ http.onreadystatechange=(e)=> {
     var dates = []
     var prices = []
     data.forEach(day => {
-        console.log(day['date'], day['amazon']);
         dates.push(day['date']);
         prices.push(day['amazon']);
     });
+
+    var max = calcMax(prices);
+    var min = calcMin(prices);
 
     var ctx = document.getElementById('retailer_chart').getContext('2d');
     var chart = new Chart(ctx, {
@@ -45,11 +47,35 @@ http.onreadystatechange=(e)=> {
             yAxes: [{
               display: true,
               ticks: {
-                suggestedMin: 400, // The minimum y-value
-                suggestedMax: 600 // The maximum y-value
+                suggestedMin: min - 50, // The minimum y-value
+                suggestedMax: max + 50 // The maximum y-value
               }
             }]
           }
         }
     });
+}
+
+function calcMax(prices) {
+    var max = 0;
+
+    prices.forEach(price => {
+        if (price > max) {
+            max = price;
+        }
+    });
+
+    return max;
+}
+
+function calcMin(prices) {
+    var min = prices[0];
+
+    prices.forEach(price => {
+        if (price < min) {
+            min = price;
+        }
+    });
+
+    return min;
 }
