@@ -24,7 +24,7 @@ def lambda_handler(retailer, price, item_model, return_type):
 
     if retailer == "None":
         USING_SOURCE_RETAILER = True
-        
+
     print(retailer)
 
     # Runs each scraper and it makes it easier to know which scraper function
@@ -140,6 +140,9 @@ def lambda_handler(retailer, price, item_model, return_type):
 
                 # Sort the scrapers by price (low --> high)
                 scrapers.sort_all_scrapers()
+
+                # Send the item model to the item model database
+                requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model})
                 
                 if return_type == "json":
                     # Jsonify the data to return it
