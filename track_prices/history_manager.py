@@ -182,7 +182,7 @@ def put_price_data():
         # Close the plyvel database
         ply_db.close()
 
-        return json.dumps({"success": True}), 204
+        return json.dumps({"success": True}), 201
 
 @app.route("/item_model_data", methods=["GET"])
 def print_item_model_data():
@@ -213,7 +213,7 @@ def put_item_model():
     # Close the item model database
     ply_db.close()
 
-    return json.dumps({"success": True}), 204
+    return json.dumps({"success": True}), 201
 
 @app.route("/item_model_data", methods=["DELETE"])
 def delete_item_model():
@@ -221,8 +221,19 @@ def delete_item_model():
     In reality, this function should never be used, but its useful
     for testing
     """
+    item_model = request.json['item_model'].lower().strip()
 
-    pass
+    # Don't create the database if you are trying to delete an item_model from
+    # a database that is already non-existent
+    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+    
+    # Delete the item model from the database
+    ply_db.delete(bytes(item_model, encoding='utf-8'))
+
+    # Close the item model database
+    ply_db.close()
+
+    return json.dumps({"success": True}), 200
 
 @app.route("/", methods=["DELETE"])
 def delete_data():
@@ -254,7 +265,7 @@ def delete_data():
         # Close the item model database
         ply_db.close()
     
-        return json.dumps({'success': True}), 202
+        return json.dumps({'success': True}), 200
 
     return json.dumps({'success': False, "msg":"Item model not found"}), 400
 
