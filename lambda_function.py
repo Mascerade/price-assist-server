@@ -17,9 +17,14 @@ import time
 import requests
 
 def lambda_handler(retailer, price, item_model, return_type):
+    USING_SOURCE_RETAILER = False
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
+
+    if retailer == "None":
+        USING_SOURCE_RETAILER = True
+        
     print(retailer)
 
     # Runs each scraper and it makes it easier to know which scraper function
@@ -41,7 +46,10 @@ def lambda_handler(retailer, price, item_model, return_type):
     # Set the retailer that the info is coming from in the retailer_function
     # dictionary to the price. This is so that the program does not try
     # To run a thread for it unnecessarily
-    retailer_functions[retailer.strip().lower() + "_data"] = price
+
+    if USING_SOURCE_RETAILER:
+        retailer_functions[retailer.strip().lower() + "_data"] = price
+
     try:
         CACHE = False
         if searcher is not None:
@@ -109,20 +117,21 @@ def lambda_handler(retailer, price, item_model, return_type):
                     "superbiiz_data": scrapers.biiz_data
                 }
 
-                # Use the actual retailer's name if it had to reformatted to abide by
-                # Python variable naming conventions (like B&H --> bandh)
-                correct_retailer_name = retailer
-                if retailer == "bandh":
-                    correct_retailer_name = "B&H"
+                if USING_SOURCE_RETAILER:
+                    # Use the actual retailer's name if it had to reformatted to abide by
+                    # Python variable naming conventions (like B&H --> bandh)
+                    correct_retailer_name = retailer
+                    if retailer == "bandh":
+                        correct_retailer_name = "B&H"
 
-                # Set the source retailer information to the price given and "#" as it's address
-                # To stay on the page its on
-                prices[retailer.strip().lower() + "_data"] = [correct_retailer_name, price, "#"]
+                    # Set the source retailer information to the price given and "#" as it's address
+                    # To stay on the page its on
+                    prices[retailer.strip().lower() + "_data"] = [correct_retailer_name, price, "#"]
 
-                # Insert the source scrapers to all_scrapers
-                # This is because it didn't enter the scraper functions 
-                # Where it gets added to all_scrapers
-                scrapers.add_source_retailer([correct_retailer_name, price, "#"])
+                    # Insert the source scrapers to all_scrapers
+                    # This is because it didn't enter the scraper functions 
+                    # Where it gets added to all_scrapers
+                    scrapers.add_source_retailer([correct_retailer_name, price, "#"])
                 
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
