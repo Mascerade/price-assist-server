@@ -103,7 +103,7 @@ def get_data():
         return json.dumps(return_data), 200
 
 @app.route("/", methods=["PUT"])
-def put_data():
+def put_price_data():
     if request.method == "PUT":
         """
         Create new price history in database OR update existing one with new date and price
@@ -184,9 +184,51 @@ def put_data():
 
         return json.dumps({"success": True}), 204
 
+@app.route("/item_model_data", methods=["GET"])
+def print_item_model_data():
+    """
+    Prints the item models to the terminal
+    """
+
+    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+
+    for key, value in ply_db:
+        print(key, value)
+
+    return json.dumps({"success": True}), 200
+
+@app.route("/item_model_data", methods=["PUT"])
+def put_item_model():
+    """
+    This function will simply put an item model into the plyvel database
+    """
+    item_model = request.json['item_model'].lower().strip()
+
+    # Connect to the plyvel db of item models
+    ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
+
+    # Put the item model into the db
+    ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
+
+    # Close the item model database
+    ply_db.close()
+
+    return json.dumps({"success": True}), 204
+
+@app.route("/item_model_data", methods=["DELETE"])
+def delete_item_model():
+    """
+    In reality, this function should never be used, but its useful
+    for testing
+    """
+
+    pass
+
 @app.route("/", methods=["DELETE"])
 def delete_data():
     item_model = request.json['item_model'].lower().strip()
+
+    # If its missing, we don't want to create a new one until we PUT data, not delete data
     ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
 
     # We check if "check" is equal to None (meaning the item model is not in the database)
@@ -208,6 +250,9 @@ def delete_data():
 
         # Delete the item_model in the plyvel database as well
         ply_db.delete(bytes(item_model, encoding='utf-8'))
+
+        # Close the item model database
+        ply_db.close()
     
         return json.dumps({'success': True}), 202
 
