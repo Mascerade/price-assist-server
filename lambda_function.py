@@ -133,6 +133,12 @@ def lambda_handler(retailer, price, item_model, return_type):
                     # Where it gets added to all_scrapers
                     scrapers.add_source_retailer([correct_retailer_name, price, "#"])
                 
+                else:
+                    if len(prices["newegg_data"]) == 4:
+                        prices["title"] = prices["newegg_data"][3]
+
+                    del prices["newegg_data"][3]
+
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
                 # Removes all the scrapers that didn't give valid information
@@ -142,7 +148,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                 scrapers.sort_all_scrapers()
 
                 # Send the item model to the item model database
-                requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model})
+                requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
                 
                 if return_type == "json":
                     # Jsonify the data to return it

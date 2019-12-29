@@ -203,12 +203,13 @@ def put_item_model():
     This function will simply put an item model into the plyvel database
     """
     item_model = request.json['item_model'].lower().strip()
+    title = request.json['title'].lower().strip()
 
     # Connect to the plyvel db of item models
     ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
 
     # Put the item model into the db
-    ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
+    ply_db.put(bytes(item_model, encoding='utf-8'), bytes(title, encoding='utf-8'))
 
     # Close the item model database
     ply_db.close()
