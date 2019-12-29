@@ -17,13 +17,13 @@ import time
 import requests
 
 def lambda_handler(retailer, price, item_model, return_type):
-    USING_SOURCE_RETAILER = False
+    USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
 
     if retailer == "None":
-        USING_SOURCE_RETAILER = True
+        USING_SOURCE_RETAILER = False
 
     print(retailer)
 

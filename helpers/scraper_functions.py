@@ -78,6 +78,7 @@ class ScraperHelpers:
     def retrieve_newegg_data(self, item_model):
         newegg = NeweggProduct(item_model)
         self.newegg_data = newegg.retrieve_all_information()
+        self.newegg_data.append(newegg.title)
         self.all_scrapers.append(self.newegg_data)
         return
 

@@ -26,6 +26,7 @@ class NeweggProduct(Scraper):
         
     def retrieve_product_address(self):
         try:
+            self.title = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"}).text
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
         except AttributeError as e:

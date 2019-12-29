@@ -92,6 +92,7 @@ class Amazon(Scraper):
         try:
             self.price = self.soup.find_all("span", attrs={"class": "a-offscreen"})[0].text
 
+
         except AttributeError as e:
             self.price = "Could not find price"
 
