@@ -135,6 +135,9 @@ def lambda_handler(retailer, price, item_model, title, return_type):
 
                     # If we're using the source retailer, then get the title from the url
                     prices["title"] = title
+
+                    # Only put the item model and title into the database if it is from a source retailer
+                    requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
                 
                 else:
                     # If we are not using the source retailer, get the title from the newegg scraper
@@ -152,10 +155,9 @@ def lambda_handler(retailer, price, item_model, title, return_type):
                 scrapers.sort_all_scrapers()
 
                 # Send the item model to the item model database
-                requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
                 
                 # Send the price data to the track prices database
-                requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
+                # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
 
 
                 if return_type == "json":

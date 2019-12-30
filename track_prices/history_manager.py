@@ -191,11 +191,12 @@ def print_item_model_data():
     """
 
     ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
-
+    return_data = {"item_models": []}
     for key, value in ply_db:
+        return_data["item_models"].append(key.decode("utf-8"))
         print(key, value)
 
-    return json.dumps({"success": True}), 200
+    return json.dumps(return_data), 200
 
 @app.route("/item_model_data", methods=["PUT"])
 def put_item_model():
