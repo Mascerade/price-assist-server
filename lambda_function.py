@@ -154,6 +154,10 @@ def lambda_handler(retailer, price, item_model, title, return_type):
                 # Send the item model to the item model database
                 requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
                 
+                # Send the price data to the track prices database
+                requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
+
+
                 if return_type == "json":
                     # Jsonify the data to return it
                     load = flask.jsonify(prices)
@@ -196,4 +200,4 @@ def query():
 
 # Run app using localhost
 if __name__ == '__main__':
-    application.run(host='localhost', port=5000, threaded=True, debug=True)
+    application.run(host='0.0.0.0', port=5000, threaded=True, debug=False)

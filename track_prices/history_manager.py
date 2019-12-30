@@ -173,14 +173,14 @@ def put_price_data():
         cursor.close()
         conn.close()
 
-        # Open a connection the the plyvel database
-        ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
+        # # Open a connection the the plyvel database
+        # ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
 
-        # Put the item_model into the database/do nothing if its already there
-        ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
+        # # Put the item_model into the database/do nothing if its already there
+        # ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
         
-        # Close the plyvel database
-        ply_db.close()
+        # # Close the plyvel database
+        # ply_db.close()
 
         return json.dumps({"success": True}), 201
 
