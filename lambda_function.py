@@ -16,7 +16,7 @@ import threading
 import time
 import requests
 
-def lambda_handler(retailer, price, item_model, return_type):
+def lambda_handler(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
@@ -132,8 +132,12 @@ def lambda_handler(retailer, price, item_model, return_type):
                     # This is because it didn't enter the scraper functions 
                     # Where it gets added to all_scrapers
                     scrapers.add_source_retailer([correct_retailer_name, price, "#"])
+
+                    # If we're using the source retailer, then get the title from the url
+                    prices["title"] = title
                 
                 else:
+                    # If we are not using the source retailer, get the title from the newegg scraper
                     if len(prices["newegg_data"]) == 4:
                         prices["title"] = prices["newegg_data"][3]
 
@@ -183,8 +187,9 @@ def query():
     price = request.args.get('price')
     item_model = request.args.get('item_model')
     return_type = request.args.get('return_type')
+    title = request.args.get('title')
     try:
-        return lambda_handler(retailer, price, item_model, return_type)
+        return lambda_handler(retailer, price, item_model, title, return_type)
 
     except TypeError as e:
         return flask.abort(500)
