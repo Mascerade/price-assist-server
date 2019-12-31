@@ -51,16 +51,17 @@ def lambda_handler(retailer, price, item_model, title, return_type):
         retailer_functions[retailer.strip().lower() + "_data"] = price
 
     try:
-        CACHE = False
+        CACHE = True
+        check = False
         if searcher is not None:
             # Make GET request
             start = time.time()
             
             if CACHE:
                 # Make a request to the caching server
-                cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model)
+                cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model).json()
+                print(cached_server_data)
                 print(time.time() - start)
-                cached_server_data = cached_server_data.json()
 
                 # If stored data was in the cache and it is valid [Name, Price, Product Address]
                 # Then return those values
@@ -78,9 +79,9 @@ def lambda_handler(retailer, price, item_model, title, return_type):
                         return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
 
                 else:
-                    CACHE = False    
+                    check = True
 
-            elif not CACHE:
+            if not CACHE or check:
                 # Neat way of appending each function to the thread_list
                 # And then simultaneously start them
                 thread_list = []
@@ -174,6 +175,7 @@ def lambda_handler(retailer, price, item_model, title, return_type):
                     if CACHE:
                         requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
+
         else:
             return str({"Error": "Item model not found"})
     
