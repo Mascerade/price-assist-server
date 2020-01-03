@@ -195,14 +195,22 @@ def print_item_model_data():
     return_data = {"item_models": []}
     for key, value in ply_db:
         return_data["item_models"].append({key.decode("utf-8"): value.decode('utf-8')})
-        print(key, value)
 
     return json.dumps(return_data), 200
 
 @app.route("/search_item_models", methods=["GET"])
+@cross_origin()
 def search_item_models():
     search_title = request.args.get("search")
-    return json.dumps(get_similar_titles(search_title))
+    item_model_data = requests.get("http://localhost:5003/item_model_data").json()
+    return_data = {}
+    for x in item_model_data['item_models']:
+        for key, value in x.items():
+            return_data[key] = value
+    title_data = get_similar_titles(search_title, item_model_data)
+
+    title_data["item_model_data"] = return_data
+    return json.dumps(title_data), 200
 
 @app.route("/item_model_data", methods=["PUT"])
 def put_item_model():

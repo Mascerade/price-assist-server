@@ -65,17 +65,46 @@ function generateChart(userInput) {
     }
 }
 
-function getProduct() {
+function getMatches() {
     var searchButton = document.getElementById("product-search-button");
-    searchButton.disabled = true;
 
     var searchForm = document.getElementById("user-search")
-    var product = searchForm.value
+    var title = searchForm.value
 
-    generateChart(product)
+    const http = new XMLHttpRequest();
 
-    searchButton.disabled = false;
-    searchForm.value = "";
+    let url = 'http://localhost:5003/search_item_models?search=' + title
+
+    document.getElementById("title-list").innerHTML = "";
+
+
+    http.open("GET", url)
+    http.responseType = "json"
+    http.send()
+
+    http.onreadystatechange=(e)=> {
+        data = http.response
+        console.log(data)
+        show_titles = []
+        item_models = []
+        count = 0
+        console.log(data["sorted_similarity"])
+        for (const [key, value] of Object.entries(data["sorted_similarity"])) {
+            if (value > 0.2 && count < 5) {
+                console.log(key)
+                show_titles.push(data["item_model_data"][key])
+                item_models.push(key)
+            }
+        }
+
+        title_list = document.getElementById("title-list");
+        console.log(show_titles)
+
+        for (let i = 0; i < show_titles.length; i++) {
+            title_list.innerHTML += '<button type="button" onClick="generateChart(\'' + item_models[i] + '\')" class="list-group-item list-group-item-action">'+ show_titles[i] + '</but' + 'ton>'
+        }
+    }
+
 }
 
 function calcMax(prices) {

@@ -28,9 +28,15 @@
 	</div>
 </nav>
 
-<div id="search-contianer">
-    <input type="input" class="form-control col-lg-6 mx-sm-4 mb-3" id="user-search" placeholder="Search a Product...">
-    <button id="product-search-button" class="btn btn-dark mb-3" onclick="getProduct()">Search</button>
+<div id="search-container">
+    <div id="search-product">
+        <input type="input" class="form-control col-lg-6 mx-sm-4 mb-3" id="user-search" placeholder="Search a Product...">
+        <button id="product-search-button" class="btn btn-dark mb-3" onclick="getMatches()">Search</button>
+    </div>
+
+    <div class="list-group-flush" id="title-list">
+
+    </div>
 </div>
 
 <div id="chart-container">
