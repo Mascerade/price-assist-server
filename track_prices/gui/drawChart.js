@@ -1,4 +1,4 @@
-function generateChart(userInput) {
+function generateChart(userInput, title) {
     console.log(userInput)
     var USING_FAKE_DATE = false;
 
@@ -41,7 +41,7 @@ function generateChart(userInput) {
             data: {
                 labels: dates,
                 datasets: [{
-                    label: item_model,
+                    label: title,
                     // backgroundColor: 'rgb(255, 99, 132)',
                     fill: false,
                     borderColor: 'rgb(201, 46, 111)',
@@ -84,7 +84,6 @@ function getMatches() {
 
     http.onreadystatechange=(e)=> {
         data = http.response
-        console.log(data)
         show_titles = []
         item_models = []
         count = 0
@@ -101,7 +100,7 @@ function getMatches() {
         console.log(show_titles)
 
         for (let i = 0; i < show_titles.length; i++) {
-            title_list.innerHTML += '<button type="button" onClick="generateChart(\'' + item_models[i] + '\')" class="list-group-item list-group-item-action">'+ show_titles[i] + '</but' + 'ton>'
+            title_list.innerHTML += '<button type="button" onClick="generateChart(\'' + item_models[i] + '\', \'' + show_titles[i] + '\')" class="list-group-item list-group-item-action">'+ show_titles[i] + '</but' + 'ton>'
         }
     }
 

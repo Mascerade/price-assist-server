@@ -71,8 +71,6 @@ def get_data():
     item_model = request.args.get("item_model")
     
     ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
-    for key, value in ply_db:
-        print(key, value)
 
     ply_db.close()
 
@@ -188,13 +186,14 @@ def put_price_data():
 @app.route("/item_model_data", methods=["GET"])
 def print_item_model_data():
     """
-    Prints the item models to the terminal
+    Prints the item models with the title to the terminal
+    {"item_model": "title", "item_model2": "title2" ...}
     """
 
     ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
-    return_data = {"item_models": []}
+    return_data = {}
     for key, value in ply_db:
-        return_data["item_models"].append({key.decode("utf-8"): value.decode('utf-8')})
+        return_data[key.decode("utf-8")] = value.decode('utf-8')
 
     return json.dumps(return_data), 200
 
@@ -203,13 +202,8 @@ def print_item_model_data():
 def search_item_models():
     search_title = request.args.get("search")
     item_model_data = requests.get("http://localhost:5003/item_model_data").json()
-    return_data = {}
-    for x in item_model_data['item_models']:
-        for key, value in x.items():
-            return_data[key] = value
     title_data = get_similar_titles(search_title, item_model_data)
-
-    title_data["item_model_data"] = return_data
+    title_data["item_model_data"] = item_model_data
     return json.dumps(title_data), 200
 
 @app.route("/item_model_data", methods=["PUT"])

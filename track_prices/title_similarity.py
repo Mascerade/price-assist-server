@@ -25,10 +25,9 @@ def get_similar_titles(title, item_model_dict):
     all_item_models = []
     all_titles = []
 
-    print(item_model_dict)
-    for x in item_model_dict["item_models"]:
-        all_item_models.append(list(x.items())[0][0])
-        all_titles.append(list(x.items())[0][1])
+    for key, value in item_model_dict.items():
+        all_item_models.append(key)
+        all_titles.append(value)
 
     cosine_values = check_similarity([title] + all_titles)
     cosine_values_dict = dict(zip(all_item_models, cosine_values[0][1:]))
