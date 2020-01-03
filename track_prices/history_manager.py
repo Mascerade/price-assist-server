@@ -9,6 +9,7 @@ import os
 import sqlite3
 import datetime
 import plyvel
+from title_similarity import get_similar_titles
 
 """ 
 This is the auto-price checker
@@ -193,10 +194,15 @@ def print_item_model_data():
     ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
     return_data = {"item_models": []}
     for key, value in ply_db:
-        return_data["item_models"].append(key.decode("utf-8"))
+        return_data["item_models"].append({key.decode("utf-8"): value.decode('utf-8')})
         print(key, value)
 
     return json.dumps(return_data), 200
+
+@app.route("/search_item_models", methods=["GET"])
+def search_item_models():
+    search_title = request.args.get("search")
+    return json.dumps(get_similar_titles(search_title))
 
 @app.route("/item_model_data", methods=["PUT"])
 def put_item_model():
