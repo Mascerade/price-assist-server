@@ -1,12 +1,17 @@
+import sys, os
+sys.path.insert(0, os.getcwd())
 from scrapers.amazon_scraper import Amazon
 
-product_address = "https://www.amazon.com/AMD-Ryzen-Processor-Wraith-Cooler/dp/B07B428M7F/ref=sr_1_1?keywords=YD270XBGAFBOX&qid=1573223191&s=electronics&sr=1-1"
-price = "$189.59"
-with open("user_agents/amazon_agents_refined2.txt", "r") as s, open("amazon_agents_refined2.txt", "a") as a:
+product_address = "https://www.amazon.com/Intel-BX80684I99900KF-i9-9900KF-Processor-Unlocked/dp/B07MGBZWDZ/ref=sr_1_1?keywords=bx80684i99900kf&qid=1578097145&sr=8-1"
+price = "$478.89"
+
+user_input = input("What would you like to call the refined user agent file? ")
+
+with open("user_agents/scrapers_master.txt", "r") as s, open("user_agents/" + user_input + ".txt", "a") as a:
     for x in s:
         z = 1
         while z < 11:
-            amazon = Amazon("YD270XBGAFBOX", x.strip())
+            amazon = Amazon("bx80684i99900kf", x.strip())
             try:
                 amazon.retrieve_product_address()
                 amazon.retrieve_product_price()
