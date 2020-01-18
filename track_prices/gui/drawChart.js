@@ -57,21 +57,8 @@ function generateChart(userInput, title) {
                   ticks: {
                     suggestedMin: min - std, // The minimum y-value
                     suggestedMax: max + std, // The maximum y-value
-                    fontSize: 18
                   }
                 }],
-
-                xAxes: [{
-                  ticks: {
-                    fontSize: 18
-                  }
-                }]
-              },
-
-              legend: {
-                labels: {
-                    fontSize: 20
-                }
               }
             }
         });
