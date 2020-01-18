@@ -111,5 +111,5 @@ class Amazon(Scraper):
             self.product_address = "None"
 
 if __name__ == "__main__":
-    amazon = amazon("BX80684I99900K")
+    amazon = Amazon("BX80684I99900K")
     amazon.test()
