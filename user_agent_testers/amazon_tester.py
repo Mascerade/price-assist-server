@@ -15,9 +15,11 @@ try:
 except: 
     pass
 
-with open("user_agents/scrapers_master.txt", "r") as master, open(directory + "/" + file_name + ".txt", "a+") as refined_file:
+user_agent_number = 0
+with open("test/amazon_tor_test.txt", "r") as master, open(directory + "/" + file_name + ".txt", "a+") as refined_file:
     for user_agent in master:
-        print(user_agent + " ___________________________________")
+        user_agent_number += 1
+        print(user_agent_number, user_agent + " ___________________________________")
         count = 0
         while count < 5:
             amazon = Amazon("bx80684i99900kf", user_agent.strip())

@@ -1,6 +1,7 @@
 import time
 from sys import platform
 import requests
+import random
 from bs4 import BeautifulSoup
 
 class Scraper:
@@ -42,7 +43,19 @@ class Scraper:
             self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timeout=5).text
 
         else:
-            self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
+            user = random.randint(1, 100000)
+            proxies = {
+                "http": "socks5h://" + str(user) + ":idk@localhost:9050",
+                "https": "socks5h://" + str(user) + ":idk@localhost:9050"
+                }
+            print(proxies)
+            
+            try:
+                self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=10).text
+
+            except requests.exceptions.ReadTimeout:
+                self.price = "None"
+                self.product_address = "None"
 
         self.soup = BeautifulSoup(self.data, Scraper.parser)
 

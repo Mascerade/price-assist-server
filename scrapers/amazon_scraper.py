@@ -76,7 +76,7 @@ class Amazon(Scraper):
     """
     def __init__(self, product_model, pheader = None):
         if pheader is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'amazon_agents_product.txt'), "r") as scrapers:
+            with open(os.path.join(os.getcwd(), 'tor_agents', 'amazon_tor_refined.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
         
         else:
