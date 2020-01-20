@@ -39,3 +39,7 @@ class BandH(Scraper):
 
         except Exception as e:
             self.product_address = "None"
+
+if __name__ == "__main__":
+    bandh = BandH("BX80684I99900K")
+    bandh.test()

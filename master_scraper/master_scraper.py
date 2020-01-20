@@ -5,6 +5,9 @@ import random
 from bs4 import BeautifulSoup
 
 class Scraper:
+    # TODO: Make the user agent thing universal so I can put it here
+    # TODO: Test user agents for each scraper
+    
     """
     The "Master" scraper
     Creates unified class for all other scrapers to inherit from

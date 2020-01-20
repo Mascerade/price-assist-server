@@ -38,3 +38,7 @@ class BestBuy(Scraper):
 
         else:
             self.price = "Could Not Find Price"
+
+if __name__ == "__main__":
+    best = BestBuy("BX80684I99900K")
+    best.test()

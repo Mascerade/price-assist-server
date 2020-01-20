@@ -44,3 +44,7 @@ class SuperBiiz(Scraper):
 
         except Exception as e:
             self.product_address = "None"
+
+if __name__ == "__main__":
+    superbiiz = SuperBiiz("BX80684I99900K")
+    superbiiz.test()

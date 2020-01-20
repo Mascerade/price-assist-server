@@ -45,3 +45,7 @@ class OutletPC(Scraper):
 
         else:
             self.price = "Could Not Find Price"
+
+if __name__ == "__main__":
+    outlet = OutletPC("BX80684I99900K")
+    outlet.test()
