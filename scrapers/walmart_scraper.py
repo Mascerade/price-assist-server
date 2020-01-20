@@ -12,7 +12,7 @@ class Walmart(Scraper):
         with open(os.path.join(os.getcwd(), 'user_agents', 'walmart_agents.txt'), "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
         super().__init__(name="Walmart",
-                         search_address='https://www.walmart.com/search/?query={}'.format(product_model, product_model),
+                         search_address='https://www.walmart.com/search/?query={}'.format(product_model),
                          product_model=product_model,
                          user_agent=headers,
                          data="")
