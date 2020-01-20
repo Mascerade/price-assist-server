@@ -1,7 +1,7 @@
 import sys, os
 import time
 sys.path.insert(0, os.getcwd())
-from scrapers.newegg_scraper import NeweggProduct
+from scrapers.walmart_scraper import Walmart
 
 file_name = input("What would you like to call the refined user agent file? ")
 directory = input("What directory do you want to put the file in? ")
@@ -19,20 +19,20 @@ with open("user_agents/scrapers_master.txt", "r") as master, open(directory + "/
         print(user_agent_number, user_agent + " ___________________________________")
         count = 0
         while count < 5:
-            scraper = NeweggProduct("bx80684i99900kf", user_agent.strip())
+            walmart = Walmart("bx80684i99900kf", user_agent.strip())
             try:
-                scraper.retrieve_product_address()
-                scraper.retrieve_product_price()
+                walmart.retrieve_product_address()
+                walmart.retrieve_product_price()
 
             except Exception as e:
                 pass
 
-            if scraper.price != "None" or scraper.price is not None or scraper.price != "Could Not Find Price":
-                if scraper.product_address is None or scraper.product_address == "None":
+            if walmart.price != "None" or walmart.price is not None or walmart.price != "Could Not Find Price":
+                if walmart.product_address is None or walmart.product_address == "None":
                     break
                 
                 else:
-                    print("YES", scraper.price, scraper.product_address)
+                    print("YES", walmart.price, walmart.product_address)
                     if count == 4:
                         refined_file.write(user_agent)
 

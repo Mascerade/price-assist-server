@@ -5,6 +5,9 @@ import random
 from bs4 import BeautifulSoup
 
 class Scraper:
+    # TODO: Make the user agent thing universal so I can put it here
+    # TODO: Test user agents for each scraper
+    
     """
     The "Master" scraper
     Creates unified class for all other scrapers to inherit from
@@ -53,7 +56,7 @@ class Scraper:
             try:
                 self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=10).text
 
-            except requests.exceptions.ReadTimeout:
+            except Exception:
                 self.price = "None"
                 self.product_address = "None"
 

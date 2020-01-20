@@ -41,7 +41,7 @@ class Microcenter(Scraper):
         except Exception as e:
             self.price = "Could not find price"
 
-# micro = Microcenter("BX80684I99900K")
-# micro.retrieve_product_address()
-# micro.retrieve_product_price()
-# print(micro.price, micro.product_address)
+if __name__ == "__main__":
+    micro = Microcenter("BX80684I99900K")
+    micro.test()
+    

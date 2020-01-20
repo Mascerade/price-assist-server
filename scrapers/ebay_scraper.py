@@ -35,3 +35,7 @@ class Ebay(Scraper):
 
         except Exception as e:
             self.price = "Could Not Find Price"
+
+if __name__ == "__main__":
+    ebay = Ebay("BX80684I99900K")
+    ebay.test()

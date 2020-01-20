@@ -74,13 +74,13 @@ class Amazon(Scraper):
     """
     We now have 4 scrapers that are essentially gaurenteed to work
     """
-    def __init__(self, product_model, pheader = None):
-        if pheader is None:
+    def __init__(self, product_model, test_header = None):
+        if test_header is None:
             with open(os.path.join(os.getcwd(), 'tor_agents', 'amazon_tor_refined.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
         
         else:
-            header = {"User-Agent": pheader}
+            header = {"User-Agent": test_header}
 
         super().__init__(name="Amazon",
                          search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),

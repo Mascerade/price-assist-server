@@ -3,9 +3,6 @@ import time
 sys.path.insert(0, os.getcwd())
 from scrapers.amazon_scraper import Amazon
 
-product_address = "https://www.amazon.com/Intel-BX80684I99900KF-i9-9900KF-Processor-Unlocked/dp/B07MGBZWDZ/ref=sr_1_1?keywords=bx80684i99900kf&qid=1578097145&sr=8-1"
-price = "$478.89"
-
 file_name = input("What would you like to call the refined user agent file? ")
 directory = input("What directory do you want to put the file in? ")
 
