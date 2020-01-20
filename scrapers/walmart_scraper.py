@@ -49,5 +49,5 @@ class Walmart(Scraper):
 
 
 if __name__ == "__main__":
-    walmart = walmart("BX80684I99900K")
+    walmart = Walmart("Ryzen 9 3900X")
     walmart.test()
