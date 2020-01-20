@@ -8,13 +8,18 @@ from master_scraper.master_scraper import Scraper
 
 
 class Walmart(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'walmart_agents.txt'), "r") as scrapers:
-            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    def __init__(self, product_model, test_header = None):
+        if test_header is None:
+            with open(os.path.join(os.getcwd(), 'tor_agents', 'walmart_tor.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+        
+        else:
+            header = {"User-Agent": test_header}
+
         super().__init__(name="Walmart",
                          search_address='https://www.walmart.com/search/?query={}'.format(product_model),
                          product_model=product_model,
-                         user_agent=headers,
+                         user_agent=header,
                          data="")
 
     def retrieve_product_address(self):

@@ -10,7 +10,7 @@ from master_scraper.master_scraper import Scraper
 class NeweggProduct(Scraper):
     def __init__(self, product_model, pheader = None):
         if pheader is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents2.txt'), "r") as scrapers:
+            with open(os.path.join(os.getcwd(), 'tor_agents', 'newegg_tor.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         else:
