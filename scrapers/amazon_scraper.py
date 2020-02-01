@@ -94,10 +94,10 @@ class Amazon(Scraper):
 
 
         except AttributeError as e:
-            self.price = "Could not find price"
+            self.price = None
 
         except Exception as e:
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_address(self):
         try:
@@ -105,10 +105,10 @@ class Amazon(Scraper):
                                    self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[1]['href']
         
         except AttributeError as e:
-            self.product_address = "None"
+            self.product_address = None
 
         except Exception as e:
-            self.product_address = "None"
+            self.product_address = None
 
 if __name__ == "__main__":
     amazon = Amazon("BX80684I99900K")

@@ -8,15 +8,19 @@ from master_scraper.master_scraper import Scraper
 
 
 class TigerDirect(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'tigerdirect_agents.txt'), "r") as scrapers:
-            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    def __init__(self, product_model, test_header = None):
+        if test_header is None:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'tigerdirect_agents.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        else:
+            header = {"User-Agent": test_header}
 
         super().__init__(name="TigerDirect",
                          search_address='http://www.tigerdirect.com/applications/SearchTools/search.asp?keywords={}'
                          .format(product_model),
                          product_model=product_model,
-                         user_agent=headers,
+                         user_agent=header,
                          data="")
 
     def retrieve_product_price(self):
@@ -31,29 +35,16 @@ class TigerDirect(Scraper):
                     if x == "$":
                         count += 1
 
-        except AttributeError:
-            self.price = "Could not find price"
-
-        except TypeError:
-            self.product_address = "None"
-            self.price = "Could not find price"
-
-        except Exception as e:
-            self.product_address = "None"
-            self.price = "Could not find price"
+        except Exception:
+            self.product_address = None
+            self.price = None
 
     def retrieve_product_address(self):
         try:
             self.product_address = "http://www.tigerdirect.com" + self.soup.find('a', {'class': 'itemImage'})['href']
 
-        except AttributeError:
-            self.product_address = "None"
-
-        except TypeError:
-            self.product_address = "None"
-
-        except Exception as e:
-            self.product_address = "None"
+        except Exception:
+            self.product_address = None
 
 if __name__ == "__main__":
     tiger = TigerDirect("BX80684I99900K")
