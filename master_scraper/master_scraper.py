@@ -51,8 +51,8 @@ class Scraper:
                 self.tor_username = random.randint(1, 100000)
 
             proxies = {
-                "http": "socks5h://" + str(tor_username) + ":idk@localhost:9050",
-                "https": "socks5h://" + str(tor_username) + ":idk@localhost:9050"
+                "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
+                "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 }
             print(proxies)
             
