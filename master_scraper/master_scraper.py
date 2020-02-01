@@ -30,7 +30,7 @@ class Scraper:
     else:
         parser = "html5lib"
 
-    def __init__(self, name, search_address, product_model, user_agent, data):
+    def __init__(self, name, search_address, product_model, user_agent, data, tor_username = None):
         self.time = time.time()
         self.name = name
         self.price = ""
@@ -40,16 +40,19 @@ class Scraper:
         self.user_agent = user_agent
         self.title = None
         self.data = data
+        self.tor_username = tor_username
 
         if Scraper.USING_PROXY:        
             payload = {'api_key': '71ed1c68ca01210f236f353690f74549', 'url':self.search_address}
             self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timeout=5).text
 
         else:
-            user = random.randint(1, 100000)
+            if self.tor_username is None:
+                self.tor_username = random.randint(1, 100000)
+
             proxies = {
-                "http": "socks5h://" + str(user) + ":idk@localhost:9050",
-                "https": "socks5h://" + str(user) + ":idk@localhost:9050"
+                "http": "socks5h://" + str(tor_username) + ":idk@localhost:9050",
+                "https": "socks5h://" + str(tor_username) + ":idk@localhost:9050"
                 }
             print(proxies)
             

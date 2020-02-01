@@ -8,13 +8,13 @@ from master_scraper.master_scraper import Scraper
 
 
 class NeweggProduct(Scraper):
-    def __init__(self, product_model, pheader = None):
-        if pheader is None:
+    def __init__(self, product_model, test_header = None, tor_username = None):
+        if test_header is None:
             with open(os.path.join(os.getcwd(), 'tor_agents', 'newegg_tor.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         else:
-            header = {"User-Agent": pheader}   
+            header = {"User-Agent": test_header}   
         
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
@@ -22,6 +22,7 @@ class NeweggProduct(Scraper):
                                 .format(product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
                          data="")
         
     def retrieve_product_address(self):
@@ -31,15 +32,15 @@ class NeweggProduct(Scraper):
 
         except AttributeError as e:
             self.title = "Unavailable"
-            self.product_address = "None"
+            self.product_address = None
 
         except TypeError as e:
             self.title = "Unavailable"
-            self.product_address = "None"
+            self.product_address = None
 
         except Exception as e:
             self.title = "Unavailable"
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
@@ -63,13 +64,13 @@ class NeweggProduct(Scraper):
                 self.price = self.price.strip(" ")
 
         except AttributeError as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
         except TypeError as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
         except Exception as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
 if __name__ == "__main__":
     newegg = NeweggProduct("BX80684I99900K")

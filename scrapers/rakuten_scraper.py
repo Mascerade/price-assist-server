@@ -38,30 +38,16 @@ class Rakuten(Scraper):
         try:
             self.product_address = self.soup.findAll("a", attrs={"itemprop":"url"})[0]["href"]
 
-        except AttributeError as e:
-            print(e)
-            self.product_address = "None"
-
-        except TypeError as e:
-            print(e)
-            self.product_address = "None"
-
         except Exception as e:
             print(e)
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
             self.price = self.soup.findAll("span", attrs={"class":"r-product__price-text"})[0].text
 
-        except AttributeError as e:
-            self.price = "Could Not Find Price"
-
-        except TypeError as e:
-            self.price = "Could Not Find Price"
-
-        except Exception as e:
-            self.price = "Could Not Find Price"
+        except Exception:
+            self.price = None
 
         finally:
             self.done()

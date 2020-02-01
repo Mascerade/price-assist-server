@@ -74,7 +74,7 @@ class Amazon(Scraper):
     """
     We now have 4 scrapers that are essentially gaurenteed to work
     """
-    def __init__(self, product_model, test_header = None):
+    def __init__(self, product_model, test_header = None, tor_username = None):
         if test_header is None:
             with open(os.path.join(os.getcwd(), 'tor_agents', 'amazon_tor_refined.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
@@ -86,6 +86,7 @@ class Amazon(Scraper):
                          search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
                          data="")
 
     def retrieve_product_price(self):
@@ -94,10 +95,10 @@ class Amazon(Scraper):
 
 
         except AttributeError as e:
-            self.price = "Could not find price"
+            self.price = None
 
         except Exception as e:
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_address(self):
         try:
@@ -105,10 +106,10 @@ class Amazon(Scraper):
                                    self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[1]['href']
         
         except AttributeError as e:
-            self.product_address = "None"
+            self.product_address = None
 
         except Exception as e:
-            self.product_address = "None"
+            self.product_address = None
 
 if __name__ == "__main__":
     amazon = Amazon("BX80684I99900K")

@@ -8,7 +8,7 @@ from master_scraper.master_scraper import Scraper
 
 
 class Walmart(Scraper):
-    def __init__(self, product_model, test_header = None):
+    def __init__(self, product_model, test_header = None, tor_username = None):
         if test_header is None:
             with open(os.path.join(os.getcwd(), 'tor_agents', 'walmart_tor.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
@@ -20,37 +20,27 @@ class Walmart(Scraper):
                          search_address='https://www.walmart.com/search/?query={}'.format(product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
                          data="")
 
     def retrieve_product_address(self):
         try:
             self.product_address = "https://www.walmart.com" + \
                                    self.soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
-        except AttributeError:
-            self.product_address = "None"
 
-        except TypeError:
-            self.product_address = "None"
-
-        except Exception as e:
-            self.product_address = "None"
+        except Exception:
+            self.product_address = None
 
     def retrieve_product_price(self):
         if self.product_address is not "None":
             try:
                 self.price = self.soup.find("span", attrs={"class": "price-group"}).text
 
-            except AttributeError:
-                self.price = "Could Not Find Price"
-
-            except TypeError:
-                self.price = "Could Not Find Price"
-
-            except Exception as e:
-                self.price = "Could Not Find Price"
+            except Exception:
+                self.price = None
 
         else:
-            self.price = "Could Not Find Price"
+            self.price = None
 
 
 if __name__ == "__main__":
