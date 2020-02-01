@@ -8,7 +8,7 @@ from master_scraper.master_scraper import Scraper
 
 
 class BestBuy(Scraper):
-    def __init__(self, product_model, test_header = None):
+    def __init__(self, product_model, test_header = None, tor_username = None):
         if test_header is None:
             with open(os.path.join(os.getcwd(), 'user_agents', 'bestbuy_agents.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
@@ -20,6 +20,7 @@ class BestBuy(Scraper):
                          search_address='https://www.bestbuy.com/site/searchpage.jsp?st={}'.format(product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
                          data="")
 
     def retrieve_product_address(self):

@@ -9,7 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 
 class Ebay(Scraper):
-    def __init__(self, product_model, test_header = None):
+    def __init__(self, product_model, test_header = None, tor_username = None):
         if test_header is None:
             with open(os.path.join(os.getcwd(), 'user_agents', 'ebay_agents.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
@@ -23,6 +23,7 @@ class Ebay(Scraper):
                                'sacat=0'.format(product_model, product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
                          data="")
 
         self.product_address = self.search_address
