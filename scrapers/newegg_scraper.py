@@ -17,7 +17,7 @@ class NeweggProduct(Scraper):
         else:
             header = {"User-Agent": test_header}
 
-        if tor_username is not None:
+        if tor_username is None:
             with open("settings.json") as json_file:
                 settings = json.load(json_file)
 
