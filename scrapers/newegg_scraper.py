@@ -5,6 +5,7 @@ import sys
 import random
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
+import json
 
 
 class NeweggProduct(Scraper):
@@ -14,8 +15,18 @@ class NeweggProduct(Scraper):
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         else:
-            header = {"User-Agent": test_header}   
-        
+            header = {"User-Agent": test_header}
+
+        with open("settings.json") as json_file:
+            settings = json.load(json_file)
+
+            if settings["location"] == "desktop":
+                pass
+                
+            elif settings["location"] == "server":
+                with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
+                    tor_username = random.choice(newegg_tor_ips.read().splitlines())
+
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
