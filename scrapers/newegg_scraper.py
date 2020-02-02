@@ -17,15 +17,16 @@ class NeweggProduct(Scraper):
         else:
             header = {"User-Agent": test_header}
 
-        with open("settings.json") as json_file:
-            settings = json.load(json_file)
+        if tor_username is not None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
 
-            if settings["location"] == "desktop":
-                pass
-                
-            elif settings["location"] == "server":
-                with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
-                    tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
+                if settings["location"] == "desktop":
+                    pass
+                    
+                elif settings["location"] == "server":
+                    with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
+                        tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
 
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
