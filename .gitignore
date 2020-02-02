@@ -6,3 +6,4 @@ venv/
 track_prices/item_model_db
 track_prices/fake_data.db
 track_prices/prices.db
+settings.json
