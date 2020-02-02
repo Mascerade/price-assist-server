@@ -59,7 +59,7 @@ with open(directory + "/" + file_name + ".txt", "a+") as refined_file:
                     # If it worked 5 times, add it to the new file
                     print("YES", scraper.price, scraper.product_address)
                     if count == 4:
-                        refined_file.write(str(user))
+                        refined_file.write(str(user + "\n"))
 
             else:
                 break
