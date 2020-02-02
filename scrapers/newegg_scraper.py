@@ -25,7 +25,7 @@ class NeweggProduct(Scraper):
                 
             elif settings["location"] == "server":
                 with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
-                    tor_username = random.choice(newegg_tor_ips.read().splitlines())
+                    tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
 
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
