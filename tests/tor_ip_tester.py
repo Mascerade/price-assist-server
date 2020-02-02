@@ -47,7 +47,7 @@ with open(directory + "/" + file_name + ".txt", "a+") as refined_file:
                 scraper.retrieve_product_address()
 
             except Exception:
-                break
+                pass
 
             # If the price and product model aren't none, the continue testing the user agent
             # Otherwise, break from this user agent

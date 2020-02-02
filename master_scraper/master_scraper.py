@@ -59,7 +59,8 @@ class Scraper:
             try:
                 self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=10).text
 
-            except Exception:
+            except Exception as e:
+                print(str(e))
                 self.price = "None"
                 self.product_address = "None"
 
