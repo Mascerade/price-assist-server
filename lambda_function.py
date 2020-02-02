@@ -15,6 +15,7 @@ import flask
 import threading
 import time
 import requests
+import traceback
 
 def lambda_handler(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
@@ -60,8 +61,6 @@ def lambda_handler(retailer, price, item_model, title, return_type):
             if CACHE:
                 # Make a request to the caching server
                 cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model).json()
-                print(cached_server_data)
-                print(time.time() - start)
 
                 # If stored data was in the cache and it is valid [Name, Price, Product Address]
                 # Then return those values
@@ -92,10 +91,6 @@ def lambda_handler(retailer, price, item_model, title, return_type):
 
                 for thread in thread_list:
                     thread.start()
-
-                    # So the proproxy doesn't see it as "concurrent"
-                    if Scraper.USING_PROXY:
-                        time.sleep(1)
 
                 for thread in thread_list:
                     thread.join()
@@ -180,7 +175,8 @@ def lambda_handler(retailer, price, item_model, title, return_type):
             return str({"Error": "Item model not found"})
     
     except Exception as e:
-        print(e)
+        print(str(e), "from lambda_function")
+        print(traceback.format_exc())
         return flask.jsonify({"success": False}), 500
 
 
