@@ -1,8 +1,13 @@
 import time
 from sys import platform
+import os
 import requests
 import random
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 
 class Scraper:
     # TODO: Make the user agent thing universal so I can put it here
@@ -20,7 +25,7 @@ class Scraper:
     REQUIRED_PACKAGES_INSTALLED = True
 
     # Parameter for if we want to use the proxy
-    USING_PROXY = False
+    USING_SELENIUM = True
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
@@ -30,7 +35,7 @@ class Scraper:
     else:
         parser = "html5lib"
 
-    def __init__(self, name, search_address, product_model, user_agent, data, tor_username = None):
+    def __init__(self, name, search_address, product_model, user_agent, data, tor_username = None, use_selenium = False):
         self.time = time.time()
         self.name = name
         self.price = ""
@@ -41,25 +46,42 @@ class Scraper:
         self.title = None
         self.data = data
         self.tor_username = tor_username
+        if self.tor_username is None:
+            self.tor_username = random.randint(1, 100000)
+        self.use_selenium = use_selenium
 
-        if Scraper.USING_PROXY:        
-            payload = {'api_key': '71ed1c68ca01210f236f353690f74549', 'url':self.search_address}
-            self.data = requests.get("http://api.scraperapi.com", params=payload, headers=self.user_agent, timeout=5).text
-
-        else:
-            if self.tor_username is None:
-                self.tor_username = random.randint(1, 100000)
-
+        if Scraper.USING_SELENIUM and self.use_selenium:
             proxies = {
                 "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
                 "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 }
-            print(proxies)
             
+            try:
+                caps = DesiredCapabilities().FIREFOX
+                caps["pageLoadStrategy"] = "eager"
+                options = Options()
+                options.add_argument("--headless")
+                proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
+                options.add_argument("--proxy-server=" + proxy)
+                driver = webdriver.Firefox(options=options, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
+                driver.get(self.search_address)
+                self.data = driver.page_source
+
+            except Exception as e:
+                print(str(e))
+                self.price = "None"
+                self.product_address = "None"
+
+        else:        
+            proxies = {
+                "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
+                "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
+                }
+
             try:
                 self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=10).text
 
-            except Exception:
+            except Exception as e:
                 self.price = "None"
                 self.product_address = "None"
 
