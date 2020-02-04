@@ -175,7 +175,7 @@ class ScraperHelpers:
             try:
                 float(self.all_scrapers[index][1].strip().lower().replace("$", "").replace(",", "")) 
             
-            except ValueError:
+            except (ValueError, AttributeError):
                 del self.all_scrapers[index]
                 index = 0
                 length -= 1
