@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+
 
 class Scraper:
     # TODO: Make the user agent thing universal so I can put it here
@@ -51,23 +51,22 @@ class Scraper:
         self.use_selenium = use_selenium
 
         if Scraper.USING_SELENIUM and self.use_selenium:
-            proxies = {
+            
+proxies = {
                 "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
                 "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 }
-
+            
             try:
-                binary = FirefoxBinary("/usr/lib/firefox/firefox")
                 caps = DesiredCapabilities().FIREFOX
                 caps["pageLoadStrategy"] = "eager"
                 options = Options()
                 options.add_argument("--headless")
                 proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 options.add_argument("--proxy-server=" + proxy)
-                driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
+                driver = webdriver.Firefox(options=options, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
                 driver.get(self.search_address)
                 self.data = driver.page_source
-                driver.close()
 
             except Exception as e:
                 print(str(e))
