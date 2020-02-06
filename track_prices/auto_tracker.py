@@ -10,5 +10,5 @@ def price_updater():
 
 
 sched = BlockingScheduler()
-sched.add_job(price_updater, trigger='cron', hour='15', minute='00')
+sched.add_job(price_updater, trigger='cron', hour='15', minute='30')
 sched.start()

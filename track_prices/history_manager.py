@@ -138,17 +138,19 @@ def put_price_data():
 
         # Get only the actual information about each retailer from the data dict
         # Note: We're treating 0's as invalid information
-        for _, value in data["data"].items():
+        for retailer in RETAILER_ORDER[1:]:
             try:
+                value = data["data"][retailer + "_data"]
+                
                 # The item model is part of the data, so don't include that
-                if type(value) == str:
+                if type(value) == str or type(value) == bool:
                     continue
-
+                
                 # If there was just blank price information, don't include it
-                elif value[1] == '':
+                elif value[1] is None or value[1] == '':
                     insert_prices.append("0")
                     continue
-                                
+
                 # Convert the price to a float to make sure it's actual price information
                 # Convert it back to a string to add to the database
                 insert_prices.append(str(float(value[1][1:])))
