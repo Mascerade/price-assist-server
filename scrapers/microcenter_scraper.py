@@ -3,6 +3,7 @@ import requests
 import os
 import random
 import sys
+import json
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -15,6 +16,17 @@ class Microcenter(Scraper):
 
         else:
             header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'microcenter_tor_ips.txt')) as microcenter_tor_ips:
+                        tor_username = int(random.choice(microcenter_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    pass
 
         super().__init__(name="Microcenter",
                          search_address='https://www.microcenter.com/search/search_results.aspx?Ntt={}'

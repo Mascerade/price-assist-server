@@ -22,7 +22,8 @@ class NeweggProduct(Scraper):
                 settings = json.load(json_file)
 
                 if settings["location"] == "desktop":
-                    pass
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
+                        tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
                     
                 elif settings["location"] == "server":
                     with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
@@ -35,7 +36,6 @@ class NeweggProduct(Scraper):
                          product_model=product_model,
                          user_agent=header,
                          tor_username=tor_username,
-                         use_selenium=True,
                          data="")
         
     def retrieve_product_address(self):

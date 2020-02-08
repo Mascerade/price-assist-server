@@ -52,11 +52,10 @@ def lambda_handler(retailer, price, item_model, title, return_type):
         retailer_functions[retailer.strip().lower() + "_data"] = price
 
     try:
-        CACHE = True
+        CACHE = False
         check = False
         if searcher is not None:
             # Make GET request
-            start = time.time()
             
             if CACHE:
                 # Make a request to the caching server

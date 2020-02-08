@@ -4,6 +4,7 @@ import os
 import requests
 import random
 from bs4 import BeautifulSoup
+import time
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -24,8 +25,8 @@ class Scraper:
     # For linux OS
     REQUIRED_PACKAGES_INSTALLED = True
 
-    # Parameter for if we want to use the proxy
-    USING_SELENIUM = True
+    # Parameter for if we want to use selenium
+    USING_SELENIUM = False
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
@@ -34,7 +35,7 @@ class Scraper:
 
     else:
         parser = "html5lib"
-
+    
     def __init__(self, name, search_address, product_model, user_agent, data, tor_username = None, use_selenium = False):
         self.time = time.time()
         self.name = name
@@ -81,7 +82,7 @@ class Scraper:
                 }
 
             try:
-                self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=10).text
+                self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=5).text
 
             except Exception as e:
                 self.price = "None"

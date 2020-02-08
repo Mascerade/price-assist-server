@@ -3,7 +3,7 @@ import requests
 import random
 import os
 import sys
-
+import json
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -81,6 +81,17 @@ class Amazon(Scraper):
         
         else:
             header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'amazon_tor_ips.txt')) as amazon_tor_ips:
+                        tor_username = int(random.choice(amazon_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    pass
 
         super().__init__(name="Amazon",
                          search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),

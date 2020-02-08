@@ -4,6 +4,7 @@ import requests
 import random
 import os
 import sys
+import json
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -16,6 +17,17 @@ class Ebay(Scraper):
 
         else:
             header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'ebay_tor_ips.txt')) as ebay_tor_ips:
+                        tor_username = int(random.choice(ebay_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    pass
 
         super().__init__(name="Ebay",
                          search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \

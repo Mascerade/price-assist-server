@@ -21,7 +21,8 @@ class BestBuy(Scraper):
                          product_model=product_model,
                          user_agent=header,
                          tor_username=tor_username,
-                         data="")
+                         data="",
+                         use_selenium=True)
 
     def retrieve_product_address(self):
         try:

@@ -3,6 +3,7 @@ import random
 import os
 import sys
 import requests
+import json
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
@@ -15,6 +16,18 @@ class BandH(Scraper):
 
         else:
             header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'band_tor_ips.txt')) as bandh_tor_ips:
+                        tor_username = int(random.choice(bandh_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    pass
+
 
         super().__init__(name="B&H",
                          search_address='https://www.bhphotovideo.com/c/search?' \

@@ -10,6 +10,7 @@ from scrapers.microcenter_scraper import Microcenter
 from scrapers.outletpc_scraper import OutletPC
 from scrapers.superbiizz_scraper import SuperBiiz
 from scrapers.tigerdirect_scraper import TigerDirect
+from scrapers.bandh_scraper import BandH
 
 scraper_classes = {
     "amazon": Amazon,
@@ -20,7 +21,8 @@ scraper_classes = {
     "microcenter": Microcenter,
     "outletpc": OutletPC,
     "superbiiz": SuperBiiz,
-    "tigerdirect": TigerDirect
+    "tigerdirect": TigerDirect,
+    "bandh": BandH
 }
 
 # Gets parameters from the terminal and sets the variables
@@ -38,7 +40,7 @@ except:
 with open(directory + "/" + file_name + ".txt", "a+") as refined_file:
     for user in range(1, 1000):
         count = 0
-        print("____________________________________________________________________")
+        print(str(user) + " ____________________________________________________________________")
         while count < 5:
             scraper = scraper_classes[scraper_name](test_item_model, tor_username=user)
 
