@@ -5,6 +5,7 @@ import requests
 import random
 from bs4 import BeautifulSoup
 import time
+import subprocess
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -26,7 +27,7 @@ class Scraper:
     REQUIRED_PACKAGES_INSTALLED = True
 
     # Parameter for if we want to use selenium
-    USING_SELENIUM = False
+    USING_SELENIUM = True
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
@@ -60,20 +61,25 @@ class Scraper:
             try:
                 binary = FirefoxBinary("/usr/lib/firefox/firefox")
                 caps = DesiredCapabilities().FIREFOX
-                caps["pageLoadStrategy"] = "eager"
+                caps["pageLoadStrategy"] = "normal"
                 options = Options()
                 options.add_argument("--headless")
                 proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 options.add_argument("--proxy-server=" + proxy)
+                options.add_argument("--id=" + str(self.tor_username))
                 driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
                 driver.get(self.search_address)
+                if (self.name == "Rakuten"):
+                    time.sleep(3)
                 self.data = driver.page_source
-                driver.close()
 
             except Exception as e:
                 print(str(e))
                 self.price = "None"
                 self.product_address = "None"
+
+            finally:
+                pass
 
         else:        
             proxies = {

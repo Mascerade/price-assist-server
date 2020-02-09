@@ -15,6 +15,7 @@ class TargetScraper(Scraper):
                     search_address='https://www.target.com/s?searchTerm={}'.format(product_model),
                     product_model=product_model,
                     user_agent=self.header,
+                    use_selenium=True,
                     data="")
 
     def retrieve_product_price(self):
@@ -35,5 +36,5 @@ class TargetScraper(Scraper):
             self.product_address = None
 
 if __name__ == "__main__":
-    target = TargetScraper("BX80684I99900K")
+    target = TargetScraper("lg oled tv")
     target.test()

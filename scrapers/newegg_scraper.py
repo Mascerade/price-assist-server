@@ -36,6 +36,7 @@ class NeweggProduct(Scraper):
                          product_model=product_model,
                          user_agent=header,
                          tor_username=tor_username,
+                         use_selenium=False,
                          data="")
         
     def retrieve_product_address(self):

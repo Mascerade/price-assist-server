@@ -41,7 +41,8 @@ def lambda_handler(retailer, price, item_model, title, return_type):
         "microcenter_data": scrapers.retrieve_microcenter_price,
         "jet_data": scrapers.retrieve_jet_price,
         "outletpc_data": scrapers.retrieve_outletpc_price,
-        "superbiiz_data": scrapers.retrieve_super_biiz_price
+        "superbiiz_data": scrapers.retrieve_super_biiz_price,
+        "rakuten_data": scrapers.retrieve_rakuten_price
     }
 
     # Set the retailer that the info is coming from in the retailer_function
@@ -109,7 +110,8 @@ def lambda_handler(retailer, price, item_model, title, return_type):
                     "microcenter_data": scrapers.microcenter_data,
                     "jet_data": scrapers.jet_data,
                     "outletpc_data": scrapers.outletpc_data,
-                    "superbiiz_data": scrapers.biiz_data
+                    "superbiiz_data": scrapers.biiz_data,
+                    "rakuten_data": scrapers.rakuten_data
                 }
 
                 if USING_SOURCE_RETAILER:
