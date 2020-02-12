@@ -97,6 +97,7 @@ class ScraperHelpers:
     def retrieve_bandh_data(self, item_model):
         bandh = BandH(item_model)
         self.bandh_data = bandh.retrieve_all_information()
+        self.bandh_data[0] = "B&H"
         self.all_scrapers.append(self.bandh_data)
         return
 
@@ -118,13 +119,13 @@ class ScraperHelpers:
         self.all_scrapers.append(self.microcenter_data)
         return
 
-    def retrieve_target_price(self, item_model):
+    def retrieve_target_data(self, item_model):
         target = TargetScraper(item_model)
         self.target_data = target.retrieve_all_information()
         self.all_scrapers.append(self.target_data)
         return
 
-    def retrieve_rakuten_price(self, item_model):
+    def retrieve_rakuten_data(self, item_model):
         rakuten = Rakuten(item_model)
         self.rakuten_data = rakuten.retrieve_all_information()
         self.all_scrapers.append(self.rakuten_data)
