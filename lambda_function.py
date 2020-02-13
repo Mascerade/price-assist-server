@@ -51,7 +51,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
         retailer_functions[retailer.strip().lower() + "_data"] = price
 
     try:
-        CACHE = False
+        CACHE = True
         cache_check = False
         if searcher is not None:
             # Make GET request
@@ -130,20 +130,15 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                 # Send the price data to the track prices database
                 # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
 
+                if CACHE:
+                    requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
 
                 if return_type == "json":
                     # Jsonify the data to return it
                     load = flask.jsonify(prices)
-
-                    # If the data was not already in the cache
-                    if CACHE:
-                        requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
-                    # If the data was not already in the cache                    
-                    if CACHE:
-                        requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
                     return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
 
         else:
@@ -159,7 +154,7 @@ def proces_based_scraper(retailer, price, item_model, return_type):
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
-    CACHE = False
+    CACHE = True
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
@@ -200,28 +195,21 @@ def proces_based_scraper(retailer, price, item_model, return_type):
         "target_data": scrapers.target_data
     }
 
-    # Removes all the scrapers that didn't give valid information
-    scrapers.remove_extraneous()
-
-    # Sort the scrapers by price (low --> high)
-    scrapers.sort_all_scrapers()
-
+    if CACHE:
+        requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
+    
     if return_type == "json":
         # Jsonify the data to return it
-        load = flask.jsonify(prices)
-
-        # If the data was not already in the cache
-        if CACHE:
-            requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
-            return json.dumps(load.json)
-        
+        load = flask.jsonify(prices)        
         return json.dumps(load.json)
 
-
     elif return_type == "gui":
-        # If the data was not already in the cache                    
-        if CACHE:
-            requests.put("http://localhost:5001/", json=json.loads(json.dumps(prices)))
+        # Removes all the scrapers that didn't give valid information
+        scrapers.remove_extraneous()
+
+        # Sort the scrapers by price (low --> high)
+        scrapers.sort_all_scrapers()
+
         return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
 
     print(time.time() - start_time)
@@ -257,6 +245,7 @@ def proces_based_scraper_response():
 
     except TypeError:
         return flask.abort(500)
+
 
 # Run app using localhost
 if __name__ == '__main__':
