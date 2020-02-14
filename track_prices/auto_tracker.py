@@ -18,8 +18,6 @@ def price_updater():
         requests.put("http://localhost:5003/", json = {"item_model": item_model, "data": data})
 
 # Sets up the cron scheduler for automatically updating the database
-# sched = BlockingScheduler()
-# sched.add_job(price_updater, trigger='cron', hour='15', minute='30')
-# sched.start()
-
-price_updater()
+sched = BlockingScheduler()
+sched.add_job(price_updater, trigger='cron', hour='15', minute='30')
+sched.start()
