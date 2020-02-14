@@ -9,7 +9,8 @@ import os
 import sqlite3
 import datetime
 import plyvel
-from title_similarity import get_similar_titles
+from helpers.title_similarity import get_similar_titles
+from helpers.help_functions import format_item_model
 
 """ 
 This is the auto-price checker
@@ -34,7 +35,10 @@ FOR AUTO UPDATING
 """
 
 # What is used to create the dict of each entry
-RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz"]
+RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz", "target", "rakuten"]
+ITEM_MODEL_DB = 'databases/item_model_db/'
+PRICES_DB = 'databases/prices.db'
+FAKE_DATA = 'databases/fake_data.db'
 
 app = Flask(__name__)
 
@@ -44,7 +48,7 @@ def get_fake_data():
     """ Used to test the graph of the GUI """
 
     # Opens a connection to the fake data database
-    conn = sqlite3.connect("fake_data.db")
+    conn = sqlite3.connect(FAKE_DATA)
     cursor = conn.cursor()
 
     # Get all the data from the table "fake_data1"
@@ -69,12 +73,14 @@ def get_fake_data():
 def get_data():
     """ Retrieve all the data from the SQL Database """
     item_model = request.args.get("item_model")
-    
-    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
 
+    # This is because the item_model is stored differently in the sql database
+    item_model = format_item_model(item_model)
+
+    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
     ply_db.close()
 
-    with sqlite3.connect("prices.db") as conn:
+    with sqlite3.connect(PRICES_DB) as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
@@ -104,16 +110,11 @@ def get_data():
 @app.route("/", methods=["PUT"])
 def put_price_data():
     if request.method == "PUT":
-        """
-        Create new price history in database OR update existing one with new date and price
-        Data should be in the form of a JSON:
-        {'item_model': some_item_model, 'prices': another_json_of_prices} 
-        """
-
         data = request.json
         item_model = data['item_model'].lower()
+        item_model = format_item_model(item_model)
 
-        conn = sqlite3.connect("prices.db")
+        conn = sqlite3.connect(PRICES_DB)
         
         # Use the cursor to execute tasks
         cursor = conn.cursor()
@@ -131,7 +132,9 @@ def put_price_data():
         microcenter float,
         jet float,
         outlet float,
-        superbiiz float); '''.format(item_model))
+        superbiiz float,
+        target float,
+        rakuten float); '''.format(item_model))
 
         # List used to insert the date and prices into the database
         insert_prices = [datetime.date.today()]
@@ -161,7 +164,7 @@ def put_price_data():
         # Need a tuple because that's how the prices get inserted into the "?"
         insert_prices = tuple(insert_prices)
         insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
-        ebay, tigerdirect, microcenter, jet, outlet, superbiiz) VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
+        ebay, tigerdirect, microcenter, jet, outlet, superbiiz, target, rakuten) VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
 
         # Just to check that everything is working
         print(insert_data)
@@ -175,7 +178,7 @@ def put_price_data():
         conn.close()
 
         # # Open a connection the the plyvel database
-        # ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
+        # ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = True)
 
         # # Put the item_model into the database/do nothing if its already there
         # ply_db.put(bytes(item_model, encoding='utf-8'), bytes(True))
@@ -192,7 +195,7 @@ def print_item_model_data():
     {"item_model": "title", "item_model2": "title2" ...}
     """
 
-    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
     return_data = {}
     for key, value in ply_db:
         return_data[key.decode("utf-8")] = value.decode('utf-8')
@@ -217,7 +220,7 @@ def put_item_model():
     title = request.json['title'].lower().strip()
 
     # Connect to the plyvel db of item models
-    ply_db = plyvel.DB('item_model_db/', create_if_missing = True)
+    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = True)
 
     # Put the item model into the db
     ply_db.put(bytes(item_model, encoding='utf-8'), bytes(title, encoding='utf-8'))
@@ -237,7 +240,7 @@ def delete_item_model():
 
     # Don't create the database if you are trying to delete an item_model from
     # a database that is already non-existent
-    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
     
     # Delete the item model from the database
     ply_db.delete(bytes(item_model, encoding='utf-8'))
@@ -252,7 +255,7 @@ def delete_data():
     item_model = request.json['item_model'].lower().strip()
 
     # If its missing, we don't want to create a new one until we PUT data, not delete data
-    ply_db = plyvel.DB('item_model_db/', create_if_missing = False)
+    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
 
     # We check if "check" is equal to None (meaning the item model is not in the database)
     check = ply_db.get(bytes(item_model, encoding='utf-8'))
@@ -260,7 +263,7 @@ def delete_data():
     # As long as there is something in "check" the item_model exists
     if check is not None:
         # Establish the connection to the prices database
-        conn = sqlite3.connect("prices.db")
+        conn = sqlite3.connect(PRICES_DB)
         cursor = conn.cursor()
 
         # DROP TABLE essentially will delete the table

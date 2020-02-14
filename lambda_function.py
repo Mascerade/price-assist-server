@@ -17,6 +17,8 @@ import time
 import requests
 import traceback
 
+CACHE = True
+
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
@@ -51,7 +53,6 @@ def network_scrapers(retailer, price, item_model, title, return_type):
         retailer_functions[retailer.strip().lower() + "_data"] = price
 
     try:
-        CACHE = True
         cache_check = False
         if searcher is not None:
             # Make GET request
@@ -149,12 +150,11 @@ def network_scrapers(retailer, price, item_model, title, return_type):
         print(traceback.format_exc())
         return flask.jsonify({"success": False}), 500
 
-def proces_based_scraper(retailer, price, item_model, return_type):
+def process_based_scraper(retailer, price, item_model, return_type):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
-    CACHE = True
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
@@ -218,7 +218,7 @@ def proces_based_scraper(retailer, price, item_model, return_type):
 application = Flask(__name__)
 
 
-@application.route('/api/query')
+@application.route('/price-assist/api/network-scrapers')
 def query():
     # Get all the required information from the parameters in the URL
     retailer = request.args.get('retailer')
@@ -233,7 +233,7 @@ def query():
     except TypeError:
         return flask.abort(500)
 
-@application.route('/price-assist/api')
+@application.route('/price-assist/api/process-scrapers')
 def proces_based_scraper_response():
     retailer = request.args.get('retailer')
     price = request.args.get('price')
@@ -241,7 +241,7 @@ def proces_based_scraper_response():
     return_type = request.args.get('return_type')
 
     try:
-        return proces_based_scraper(retailer, price, item_model, return_type)
+        return process_based_scraper(retailer, price, item_model, return_type)
 
     except TypeError:
         return flask.abort(500)
