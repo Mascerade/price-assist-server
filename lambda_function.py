@@ -17,7 +17,7 @@ import time
 import requests
 import traceback
 
-CACHE = True
+CACHE = False
 
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
@@ -163,7 +163,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
     # Is for which retailer
     retailer_functions = {
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
-        "rakuten_data": scrapers.retrieve_rakuten_data,
+        #"rakuten_data": scrapers.retrieve_rakuten_data,
         "target_data": scrapers.retrieve_target_data
     }
 
@@ -191,7 +191,8 @@ def process_based_scraper(retailer, price, item_model, return_type):
     prices = {
         "identifier": searcher,
         "bestbuy_data": scrapers.bestbuy_data,
-        "rakuten_data": scrapers.rakuten_data,
+        #"rakuten_data": scrapers.rakuten_data,
+        "rakuten_data": ["Rakuten", None, None],
         "target_data": scrapers.target_data
     }
 

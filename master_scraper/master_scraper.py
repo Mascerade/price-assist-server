@@ -67,6 +67,7 @@ class Scraper:
                 proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
                 options.add_argument("--proxy-server=" + proxy)
                 options.add_argument("--id=" + str(self.tor_username))
+                options.add_argument("user-agent=" + self.user_agent["User-Agent"])
                 driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
                 driver.get(self.search_address)
 
@@ -80,7 +81,7 @@ class Scraper:
                 self.product_address = "None"
 
             finally:
-                pass
+                driver.close()
 
         else:        
             proxies = {
