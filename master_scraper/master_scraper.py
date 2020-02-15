@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import time
 import subprocess
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
@@ -60,15 +60,15 @@ class Scraper:
 
             try:
                 binary = FirefoxBinary("/usr/lib/firefox/firefox")
-                caps = DesiredCapabilities().FIREFOX
+                caps = DesiredCapabilities().CHROME
                 caps["pageLoadStrategy"] = "normal"
                 options = Options()
-                options.add_argument("--headless")
-                proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
-                options.add_argument("--proxy-server=" + proxy)
-                options.add_argument("--id=" + str(self.tor_username))
-                options.add_argument("user-agent=" + self.user_agent["User-Agent"])
-                driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
+                #options.add_argument("--headless")
+                #proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
+                #options.add_argument("--proxy-server=" + proxy)
+                #options.add_argument("--id=" + str(self.tor_username))
+                driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+                #driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
                 driver.get(self.search_address)
 
                 if (self.name == "Rakuten" or self.name == "Target"):
@@ -82,6 +82,7 @@ class Scraper:
 
             finally:
                 driver.close()
+                pass
 
         else:        
             proxies = {
