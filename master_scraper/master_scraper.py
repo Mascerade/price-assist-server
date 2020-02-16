@@ -29,6 +29,9 @@ class Scraper:
     # Parameter for if we want to use selenium
     USING_SELENIUM = True
 
+    # Parameter to control type of webdriver
+    USING_CHROME = True
+
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
         parser = "lxml"
@@ -59,17 +62,28 @@ class Scraper:
                 }
 
             try:
-                binary = FirefoxBinary("/usr/lib/firefox/firefox")
-                caps = DesiredCapabilities().CHROME
-                caps["pageLoadStrategy"] = "normal"
-                options = Options()
-                #options.add_argument("--headless")
-                #proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
-                #options.add_argument("--proxy-server=" + proxy)
-                #options.add_argument("--id=" + str(self.tor_username))
-                driver = webdriver.Chrome(options=options, desired_capabilities=caps)
-                #driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
-                driver.get(self.search_address)
+                if Scraper.USING_CHROME:
+                    caps = DesiredCapabilities().CHROME
+                    caps["pageLoadStrategy"] = "normal"
+                    options = Options()
+                    options.add_argument('--no-sandbox')
+                    # options.add_argument('--window-size=1420,1080')
+                    # options.add_argument('--headless')
+                    options.add_argument('--disable-gpu')
+                    driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+                    driver.get(self.search_address)
+
+                else:
+                    binary = FirefoxBinary("/usr/lib/firefox/firefox")
+                    caps = DesiredCapabilities().FIREFOX
+                    caps["pageLoadStrategy"] = "normal"
+                    options = webdriver.firefox.options.Options()
+                    options.add_argument("--headless")
+                    proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
+                    options.add_argument("--proxy-server=" + proxy)
+                    options.add_argument("--id=" + str(self.tor_username))
+                    driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
+                    driver.get(self.search_address)
 
                 if (self.name == "Rakuten" or self.name == "Target"):
                     time.sleep(3)
