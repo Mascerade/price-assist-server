@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import time
 import subprocess
 from selenium import webdriver
+from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
@@ -63,6 +64,8 @@ class Scraper:
 
             try:
                 if Scraper.USING_CHROME:
+                    display = Display(visible=0, size=(800, 600))
+                    display.start()
                     caps = DesiredCapabilities().CHROME
                     caps["pageLoadStrategy"] = "normal"
                     options = Options()
@@ -96,6 +99,7 @@ class Scraper:
 
             finally:
                 driver.close()
+                display.stop()
                 pass
 
         else:        
