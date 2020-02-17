@@ -73,7 +73,7 @@ class Scraper:
                     # options.add_argument('--window-size=1420,1080')
                     # options.add_argument('--headless')
                     options.add_argument('--disable-gpu')
-                    driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+                    driver = webdriver.Chrome(options=options, desired_capabilities=caps, executable_path="/usr/local/share/chromedriver")
                     driver.get(self.search_address)
 
                 else:
@@ -99,7 +99,7 @@ class Scraper:
 
             finally:
                 #driver.close()
-                display.stop()
+                #display.stop()
                 pass
 
         else:        
