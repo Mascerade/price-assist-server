@@ -163,7 +163,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
     # Is for which retailer
     retailer_functions = {
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
-        #"rakuten_data": scrapers.retrieve_rakuten_data,
+        "rakuten_data": scrapers.retrieve_rakuten_data,
         "target_data": scrapers.retrieve_target_data
     }
 

@@ -98,7 +98,7 @@ class Scraper:
                 self.product_address = "None"
 
             finally:
-                driver.close()
+                #driver.close()
                 display.stop()
                 pass
 
