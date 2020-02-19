@@ -87,7 +87,6 @@ class Scraper:
                     options.add_argument("--id=" + str(self.tor_username))
                     driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
                     driver.get(self.search_address)
-
                 if (self.name == "Rakuten" or self.name == "Target"):
                     time.sleep(3)
                 self.data = driver.page_source
