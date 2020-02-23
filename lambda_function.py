@@ -17,7 +17,7 @@ import time
 import requests
 import traceback
 
-CACHE = False
+CACHE = True
 
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
@@ -159,6 +159,28 @@ def process_based_scraper(retailer, price, item_model, return_type):
     if retailer == "None":
         USING_SOURCE_RETAILER = False
 
+
+    if searcher is not None:
+        # Make GET request
+        if CACHE:
+            # Make a request to the caching server
+            cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model + "_process").json()
+
+            # If stored data was in the cache and it is valid [Name, Price, Product Address]
+            # Then return those values
+            if cached_server_data["success"]:
+                for _, value in cached_server_data.items():
+                    if type(value) == list and len(value) == 3:
+                        scrapers.all_scrapers.append(value)
+
+                if return_type == "json":
+                    return json.dumps(cached_server_data)
+                
+                elif return_type == "gui":
+                    scrapers.remove_extraneous()
+                    scrapers.sort_all_scrapers()
+                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
+
     # Runs each scraper and it makes it easier to know which scraper function
     # Is for which retailer
     retailer_functions = {
@@ -191,8 +213,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
     prices = {
         "identifier": searcher,
         "bestbuy_data": scrapers.bestbuy_data,
-        #"rakuten_data": scrapers.rakuten_data,
-        "rakuten_data": ["Rakuten", None, None],
+        "rakuten_data": scrapers.rakuten_data,
         "target_data": scrapers.target_data
     }
 
