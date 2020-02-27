@@ -74,7 +74,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                     elif return_type == "gui":
                         scrapers.remove_extraneous()
                         scrapers.sort_all_scrapers()
-                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
+                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
 
                 else:
                     cache_check = True
@@ -140,7 +140,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                     return json.dumps(load.json)
                 
                 elif return_type == "gui":
-                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
+                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), True)})
 
         else:
             return str({"Error": "Item model not found"})
@@ -179,7 +179,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
                 elif return_type == "gui":
                     scrapers.remove_extraneous()
                     scrapers.sort_all_scrapers()
-                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})
+                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, False)})
 
     # Runs each scraper and it makes it easier to know which scraper function
     # Is for which retailer
@@ -232,7 +232,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
         # Sort the scrapers by price (low --> high)
         scrapers.sort_all_scrapers()
 
-        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})
+        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), False)})
 
     print(time.time() - start_time)
 
