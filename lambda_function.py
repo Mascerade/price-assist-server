@@ -49,9 +49,6 @@ def network_scrapers(retailer, price, item_model, title, return_type):
     # dictionary to the price. This is so that the program does not try
     # To run a thread for it unnecessarily
 
-    if USING_SOURCE_RETAILER:
-        retailer_functions[retailer.strip().lower() + "_data"] = price
-
     try:
         cache_check = False
         if searcher is not None:
@@ -65,7 +62,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                 # Then return those values
                 if cached_server_data["success"]:
                     for _, value in cached_server_data.items():
-                        if type(value) == list and len(value) == 3:
+                        if type(value) == list and len(value) >= 3:
                             scrapers.all_scrapers.append(value)
 
                     if return_type == "json":
@@ -78,7 +75,11 @@ def network_scrapers(retailer, price, item_model, title, return_type):
 
                 else:
                     cache_check = True
-
+        
+            if USING_SOURCE_RETAILER:
+                retailer_functions[retailer.strip().lower() + "_data"] = price
+                scrapers.all_scrapers.append([retailer, price, "#"])
+                
             if not CACHE or cache_check:
                 # Neat way of appending each function to the thread_list
                 # And then simultaneously start them
@@ -110,13 +111,16 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                     "outletpc_data": scrapers.outletpc_data,
                     "superbiiz_data": scrapers.biiz_data
                 }
-
+                    
                 if USING_SOURCE_RETAILER:
                     # If we're using the source retailer, then get the title from the url
                     prices["title"] = title
 
                     # Only put the item model and title into the database if it is from a source retailer
                     requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
+
+                    prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
+
 
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
