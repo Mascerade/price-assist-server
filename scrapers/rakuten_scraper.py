@@ -18,53 +18,29 @@ class Rakuten(Scraper):
     def __init__(self, product_model):
         with open(os.getcwd() + "/user_agents/walmart_agents.txt", "r") as scrapers:
             headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
         super().__init__(name="Rakuten",
                          search_address="https://www.rakuten.com/search/" + product_model.replace(" ", "%20"),
                          product_model=product_model,
                          user_agent=headers,
+                         use_selenium=True,
                          data="")
-
-        options = Options()
-        options.add_argument("user-agent=" + self.user_agent["User-Agent"])
-        options.add_argument('--headless')
-        options.add_argument('--log-level=3')
-        chrome_path = os.getcwd() + "\\target_scraper\\chromedriver.exe"
-
-        self.driver = selenium.webdriver.Chrome(executable_path=chrome_path, options=options, service_log_path="NUL")
-        self.driver.get(self.search_address)
-        self.soup = BeautifulSoup(self.driver.page_source, Scraper.parser)
 
     def retrieve_product_address(self):
         try:
-            self.product_address = self.soup.findAll("a", attrs={"itemprop":"url"})[0]["href"]
-
-        except AttributeError as e:
-            print(e)
-            self.product_address = "None"
-
-        except TypeError as e:
-            print(e)
-            self.product_address = "None"
+            self.product_address = self.soup.findAll("div", attrs={"class":"r-product__name r-product__section"})[0].find("a")["href"]
 
         except Exception as e:
             print(e)
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
             self.price = self.soup.findAll("span", attrs={"class":"r-product__price-text"})[0].text
 
-        except AttributeError as e:
-            self.price = "Could Not Find Price"
+        except Exception:
+            self.price = None
 
-        except TypeError as e:
-            self.price = "Could Not Find Price"
-
-        except Exception as e:
-            self.price = "Could Not Find Price"
-
-        finally:
-            self.done()
-
-    def done(self):
-        self.driver.close()
+if __name__ == "__main__":
+    rakuten = Rakuten("BX80684I99900K")
+    rakuten.test()

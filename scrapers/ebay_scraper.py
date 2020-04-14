@@ -4,21 +4,38 @@ import requests
 import random
 import os
 import sys
+import json
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
 
 class Ebay(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'ebay_agents.txt'), "r") as scrapers:
-            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    def __init__(self, product_model, test_header = None, tor_username = None):
+        if test_header is None:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'ebay_agents.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        else:
+            header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'ebay_tor_ips.txt')) as ebay_tor_ips:
+                        tor_username = int(random.choice(ebay_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    pass
 
         super().__init__(name="Ebay",
                          search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
                                'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
                                'sacat=0'.format(product_model, product_model),
                          product_model=product_model,
-                         user_agent=headers,
+                         user_agent=header,
+                         tor_username=tor_username,
                          data="")
 
         self.product_address = self.search_address
@@ -27,11 +44,9 @@ class Ebay(Scraper):
         try:
             self.price = self.soup.find_all('span', 's-item__price')[0].text
 
-        except AttributeError:
-            self.price = "Could Not Find Price"
+        except Exception:
+            self.price = None
 
-        except TypeError:
-            self.price = "Could Not Find Price"
-
-        except Exception as e:
-            self.price = "Could Not Find Price"
+if __name__ == "__main__":
+    ebay = Ebay("BX80684I99900K")
+    ebay.test()

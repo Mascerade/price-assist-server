@@ -21,17 +21,22 @@ ending = """
 """
 
 
-def gui_generator(retailers):
+def gui_generator(retailers, add_base):
     global base_html
     new_html = ""
-    new_html += base_html
+    if add_base:
+        new_html += base_html
+
     for retailer in retailers:
         if len(retailer[1]) == 0:
             pass
 
         else:
             new_html += card_generator(retailer[0], retailer[1], retailer[2])
-    new_html += ending
+    
+    if add_base:
+        new_html += ending
+    
     return new_html
 
 

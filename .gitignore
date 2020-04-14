@@ -3,3 +3,6 @@
 __pychache__/
 venv/
 .vscode/
+track_prices/databases
+settings.json
+geckodriver.log

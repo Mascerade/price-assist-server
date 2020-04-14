@@ -23,7 +23,7 @@ class ScraperHelpers:
     <div id="iframe-wrapper" style="visibility: visible; width: 100%; display: flex; justify-content: center; 
     align-items: center; transform: translateZ(0px); overflow: hidden; background-color: transparent; 
     z-index: 100000000; border: none;">
-        <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none;">
+        <iframe id="iframe" class="scrollbar scrollbar-primary" style="height: 500px; width: 300px; border: none; border-radius: 10px;">
         </iframe>
     </div>
     """
@@ -78,6 +78,7 @@ class ScraperHelpers:
     def retrieve_newegg_data(self, item_model):
         newegg = NeweggProduct(item_model)
         self.newegg_data = newegg.retrieve_all_information()
+        self.newegg_data.append(newegg.title)
         self.all_scrapers.append(self.newegg_data)
         return
 
@@ -96,6 +97,7 @@ class ScraperHelpers:
     def retrieve_bandh_data(self, item_model):
         bandh = BandH(item_model)
         self.bandh_data = bandh.retrieve_all_information()
+        self.bandh_data[0] = "B&H"
         self.all_scrapers.append(self.bandh_data)
         return
 
@@ -117,13 +119,13 @@ class ScraperHelpers:
         self.all_scrapers.append(self.microcenter_data)
         return
 
-    def retrieve_target_price(self, item_model):
+    def retrieve_target_data(self, item_model):
         target = TargetScraper(item_model)
         self.target_data = target.retrieve_all_information()
         self.all_scrapers.append(self.target_data)
         return
 
-    def retrieve_rakuten_price(self, item_model):
+    def retrieve_rakuten_data(self, item_model):
         rakuten = Rakuten(item_model)
         self.rakuten_data = rakuten.retrieve_all_information()
         self.all_scrapers.append(self.rakuten_data)
@@ -174,7 +176,7 @@ class ScraperHelpers:
             try:
                 float(self.all_scrapers[index][1].strip().lower().replace("$", "").replace(",", "")) 
             
-            except ValueError:
+            except (ValueError, AttributeError):
                 del self.all_scrapers[index]
                 index = 0
                 length -= 1

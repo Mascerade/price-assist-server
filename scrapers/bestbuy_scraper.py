@@ -8,14 +8,21 @@ from master_scraper.master_scraper import Scraper
 
 
 class BestBuy(Scraper):
-    def __init__(self, product_model):
-        with open(os.path.join(os.getcwd(), 'user_agents', 'bestbuy_agents.txt'), "r") as scrapers:
-            headers = {"User-Agent": random.choice(scrapers.read().splitlines())}
+    def __init__(self, product_model, test_header = None, tor_username = None):
+        if test_header is None:
+            with open(os.path.join(os.getcwd(), 'user_agents', 'bestbuy_agents.txt'), "r") as scrapers:
+                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+        else:
+            header = {"User-Agent": test_header}
+        
         super().__init__(name="BestBuy",
                          search_address='https://www.bestbuy.com/site/searchpage.jsp?st={}'.format(product_model),
                          product_model=product_model,
-                         user_agent=headers,
-                         data="")
+                         user_agent=header,
+                         tor_username=tor_username,
+                         data="",
+                         use_selenium=True)
 
     def retrieve_product_address(self):
         try:
@@ -23,10 +30,10 @@ class BestBuy(Scraper):
             self.product_address = "https://www.bestbuy.com" + sku_header.find('a')['href']
 
         except AttributeError:
-            self.product_address = "None"
+            self.product_address = None 
 
         except TypeError:
-            self.product_address = "None"
+            self.product_address = None
 
     def retrieve_product_price(self):
         if self.product_address is not None:
@@ -34,7 +41,11 @@ class BestBuy(Scraper):
                 self.price = self.soup.find('div', 'priceView-hero-price priceView-customer-price').find("span").text
 
             except Exception:
-                self.price = "Could Not Find Price"
+                self.price = None
 
         else:
-            self.price = "Could Not Find Price"
+            self.price = None
+
+if __name__ == "__main__":
+    best = BestBuy("BX80684I99900K")
+    best.test()

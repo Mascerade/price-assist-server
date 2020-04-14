@@ -5,37 +5,56 @@ import sys
 import random
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
+import json
 
 
 class NeweggProduct(Scraper):
-    def __init__(self, product_model, pheader = None):
-        if pheader is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'newegg_agents2.txt'), "r") as scrapers:
+    def __init__(self, product_model, test_header = None, tor_username = None):
+        if test_header is None:
+            with open(os.path.join(os.getcwd(), 'tor_agents', 'newegg_tor.txt'), "r") as scrapers:
                 header = {"User-Agent": random.choice(scrapers.read().splitlines())}
 
         else:
-            header = {"User-Agent": pheader}   
-        
+            header = {"User-Agent": test_header}
+
+        if tor_username is None:
+            with open("settings.json") as json_file:
+                settings = json.load(json_file)
+
+                if settings["location"] == "desktop":
+                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
+                        tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
+                    
+                elif settings["location"] == "server":
+                    with open(os.path.join(os.getcwd(), 'server_tor_ips', 'newegg_tor_ips.txt')) as newegg_tor_ips:
+                        tor_username = int(random.choice(newegg_tor_ips.read().splitlines()).strip())
+
         super().__init__(name="Newegg",
                          search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
                                       'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
                                 .format(product_model),
                          product_model=product_model,
                          user_agent=header,
+                         tor_username=tor_username,
+                         use_selenium=False,
                          data="")
         
     def retrieve_product_address(self):
         try:
+            self.title = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"}).text
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
         except AttributeError as e:
-            self.product_address = "None"
+            self.title = "Unavailable"
+            self.product_address = None
 
         except TypeError as e:
-            self.product_address = "None"
+            self.title = "Unavailable"
+            self.product_address = None
 
         except Exception as e:
-            self.product_address = "None"
+            self.title = "Unavailable"
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
@@ -59,13 +78,13 @@ class NeweggProduct(Scraper):
                 self.price = self.price.strip(" ")
 
         except AttributeError as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
         except TypeError as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
         except Exception as e:
-            self.price = "Could Not Find Price"
+            self.price = None
 
 if __name__ == "__main__":
     newegg = NeweggProduct("BX80684I99900K")
