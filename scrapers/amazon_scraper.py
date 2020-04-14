@@ -3,10 +3,7 @@ import requests
 import random
 import os
 import sys
-<<<<<<< HEAD
-=======
 import json
->>>>>>> 72e57abb48ab78fa2acc23f8a2b3ee9451740af7
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 

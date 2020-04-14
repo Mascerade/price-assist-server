@@ -71,11 +71,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                     elif return_type == "gui":
                         scrapers.remove_extraneous()
                         scrapers.sort_all_scrapers()
-<<<<<<< HEAD
-                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})    
-=======
                         return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
->>>>>>> 72e57abb48ab78fa2acc23f8a2b3ee9451740af7
 
                 else:
                     cache_check = True
