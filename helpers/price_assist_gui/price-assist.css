@@ -1,7 +1,8 @@
 body {
-    height: 600px;
+    height: 500px;
     width: 300px;
     font-family: "Muli";
+    font-weight: 300;
 }
 
 #wrapper {
@@ -10,9 +11,6 @@ body {
 }
 
 #heading {
-    background-image: url('img/blue-geometric-cropped.jpg');
-    background-size: cover; 
-    background-repeat: no-repeat;
     display: flex;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -20,6 +18,9 @@ body {
     align-items: center;
     height: 50px;
     width: 100%;
+    background-image: url('img/blue-geometric-cropped.jpg');
+    background-size: cover; 
+    background-repeat: no-repeat;
     border: 1px solid black;
     color: black;
 }
@@ -42,7 +43,67 @@ body {
 }
 
 #content {
+    display: flex;
+    flex-flow: column;
     height: 400px;
+    width: 100%;
+    border: 1px solid black;
+}
+
+.card {
+    font-family: "Quicksand";
+    height: 140px;
+    width: 100%;
+    border: 1px solid green;
+    margin-bottom: 7px;
+    border-radius: 8px;
+}
+
+.inner-card {
+    display: flex;
+    flex-flow: column;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 400;
+    margin-top: 8px;
+    margin-left: 8px;
+    margin-bottom: 0;
+}
+
+.price-img-container {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 8px;
+    margin-top: 5px;
+    padding-top: 8px;
+}
+
+.price-money-img {
+    height: 40px;
+
+}
+
+.product-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 100px;
+    padding-right: 100px;
+    background-color: #42db54;
+    border-radius: 8px;
+}
+
+#footer {
+    height: 50px;
     width: 100%;
     border: 1px solid black;
 }
