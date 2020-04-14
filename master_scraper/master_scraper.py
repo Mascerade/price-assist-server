@@ -22,7 +22,6 @@ class Scraper:
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
         parser = "lxml"
 
-
     else:
         parser = "html5lib"
 

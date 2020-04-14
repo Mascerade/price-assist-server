@@ -67,7 +67,7 @@ def lambda_handler(retailer, price, item_model, return_type):
                     elif return_type == "gui":
                         scrapers.remove_extraneous()
                         scrapers.sort_all_scrapers()
-                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers)})    
+                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers())})    
 
             else:
                 # Neat way of appending each function to the thread_list

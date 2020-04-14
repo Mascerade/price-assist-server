@@ -3,7 +3,6 @@ import requests
 import random
 import os
 import sys
-
 sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
