@@ -8,6 +8,10 @@ body {
 #wrapper {
     height: 100%;
     width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
 }
 
 #heading {
@@ -21,8 +25,7 @@ body {
     background-image: url('img/blue-geometric-cropped.jpg');
     background-size: cover; 
     background-repeat: no-repeat;
-    border: 1px solid black;
-    color: black;
+    color: white;
 }
 
 #logo {
@@ -47,14 +50,43 @@ body {
     flex-flow: column;
     height: 400px;
     width: 100%;
-    border: 1px solid black;
+}
+
+@keyframes scale-small-up {
+    0% { transform: scale(1); }
+    100% { 	transform: scale(1.005); }
+}
+
+@keyframes scale-big-up {
+    0% { transform: scale(1); }
+    100% { 	transform: scale(1.005); }
+}
+
+@keyframes vertical-mover {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-2px); }
+}
+
+#content::before {
+	position: absolute;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	content: '';
+	background: inherit;
+	background-image: url("img/star.svg");
+    background-repeat: no-repeat;
+    background-position: 225px 15px;
+	background-size: 70px;
+	opacity: 0.4;
+	-webkit-animation: scale-small-up 1s infinite  alternate;
+	animation: scale-small-up 1s infinite  alternate;
 }
 
 .card {
     font-family: "Quicksand";
     height: 140px;
     width: 100%;
-    border: 1px solid green;
     margin-bottom: 7px;
     border-radius: 8px;
 }
@@ -90,16 +122,32 @@ body {
 
 .price-money-img {
     height: 40px;
-
+    animation: vertical-mover 1s infinite alternate;
+    margin-left: 10px;
 }
 
 .product-button {
+    color: white;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 100px;
     padding-right: 100px;
-    background-color: #42db54;
+    background-color: #06bcfb;
+    background-image: linear-gradient(315deg, #06bcfb 0%, #4884ee 74%); 
     border-radius: 8px;
+    font-size: 18px;
+}
+
+.product-button:link {
+    text-decoration: none;
+}
+
+hr {
+    width: 90%;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    height: 1px;
 }
 
 #footer {
