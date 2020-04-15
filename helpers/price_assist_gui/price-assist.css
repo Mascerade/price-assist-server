@@ -22,9 +22,9 @@ body {
     align-items: center;
     height: 50px;
     width: 100%;
-    background-image: url('img/blue-geometric-cropped.jpg');
-    background-size: cover; 
-    background-repeat: no-repeat;
+    background-color: #1fd1f9;
+    background-image: linear-gradient(315deg, #1fd1f9 10%, #b621fe 99%);
+    
     color: white;
 }
 
