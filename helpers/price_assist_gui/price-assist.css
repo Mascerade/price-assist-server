@@ -1,13 +1,8 @@
-body {
+#wrapper {
     height: 500px;
     width: 300px;
     font-family: "Muli";
     font-weight: 300;
-}
-
-#wrapper {
-    height: 100%;
-    width: 100%;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -50,6 +45,23 @@ body {
     flex-flow: column;
     height: 400px;
     width: 100%;
+    overflow-y: scroll;
+}
+
+#content::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+}
+
+#content::-webkit-scrollbar {
+    width: 5px;
+    background-color: #60dfcd;
+    background-image: linear-gradient(315deg, #60dfcd 0%, #1e9afe 74%);
+}
+
+#content::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: #60dfcd;
+    background-image: linear-gradient(315deg, #60dfcd 0%, #1e9afe 74%);
 }
 
 @keyframes scale-small-up {
@@ -128,10 +140,11 @@ body {
 
 .product-button {
     color: white;
+    width: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-left: 80px;
+    padding-right: 80px;
     background-color: #06bcfb;
     background-image: linear-gradient(315deg, #06bcfb 0%, #4884ee 74%); 
     border-radius: 8px;
