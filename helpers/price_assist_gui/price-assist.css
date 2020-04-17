@@ -82,8 +82,8 @@
 #content::before {
 	position: absolute;
 	z-index: -1;
-  width: 25%;
-  height: 25%;
+  width: 300px;
+  height: 250px;
 	content: '';
 	background: inherit;
 	background-image: url("img/star.svg");
