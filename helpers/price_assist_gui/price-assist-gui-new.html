@@ -18,28 +18,24 @@
             <i class="material-icons pb-close" id="close-icon">close</i>
         </div>
 
-        <div id="content" >
-            <div class="card" v-for="retailer in retailerData">
-                <div class="inner-card">
-                    <p class="title">{{retailer["title"]}}</p>
-                    <div class="price-img-container">
-                        <p class="price">Price: $ {{retailer["price"]}}</p>
-                        <img class="price-money-img" src="img/money_stack.png" alt="Money">
-                    </div>
-                    <a class="product-button" :href="retailer['link']" target="_blank">Product 💰</a>
-                </div>
-                <hr>
+        <div id="content">
+          <div class="card" v-for="retailer in retailerData">
+              <div class="inner-card">
+                  <p class="title">{{retailer["title"]}}</p>
+                  <div class="price-img-container">
+                      <p class="price">Price: $ {{retailer["price"]}}</p>
+                      <img class="price-money-img" src="img/money_stack.png" alt="Money">
+                  </div>
+                  <a class="product-button" :href="retailer['link']" target="_blank">Product 💰</a>
+              </div>
+              <hr>
             </div>
         </div>
 
         <footer>
-          <a target="_blank" href="https://www.facebook.com/"><i class="fab fa-facebook icons" aria-hidden="true"></i></a>
+          <a target="_blank" href="http://www.timeless-apps/track-prices/index.html">Track Prices</a>
         	<p>|</p>
-        	<a target="_blank" href="https://www.instagram.com/?hl=en"><i class="fab fa-instagram icons" aria-hidden="true"></i></a>
-        	<p>|</p>
-        	<a target="_blank" href="https://www.github.com/BinaryWiz/"><i class="fab fa-github icons" aria-hidden="true"></i></a>
-        	<p>|</p>
-        	<a target="_blank" href="https://twitter.com/?lang=en"><i class="fab fa-twitter icons" aria-hidden="true"></i></a>
+        	<a href="">Save Product</a>
         </footer>
     </div>
 </body>
