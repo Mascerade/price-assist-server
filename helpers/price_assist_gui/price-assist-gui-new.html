@@ -17,48 +17,25 @@
             <i class="material-icons pb-close" id="close-icon">close</i>
         </div>
 
-        <div id="content">
-            <div class="card">
+        <div id="content" >
+            <div class="card" v-for="retailer in retailerData">
                 <div class="inner-card">
-                    <p class="title">Amazon</p>
+                    <p class="title">{{retailer["title"]}}</p>
                     <div class="price-img-container">
-                        <p class="price">Price: $489.99</p>
-                        <img class="price-money-img" src="img/money_stack.png" alt="Money"> 
+                        <p class="price">Price: $ {{retailer["price"]}}</p>
+                        <img class="price-money-img" src="img/money_stack.png" alt="Money">
                     </div>
-                    <a class="product-button" href="http://www.timeless-apps.com/" target="_blank">Product 💰</a>
+                    <a class="product-button" :href="retailer['link']" target="_blank">Product 💰</a>
                 </div>
                 <hr>
             </div>
-
-            <div class="card">
-                <div class="inner-card">
-                    <p class="title">Amazon</p>
-                    <div class="price-img-container">
-                        <p class="price">Price: $489.99</p>
-                        <img class="price-money-img" src="img/money_stack.png" alt=""> 
-                    </div>
-                    <a class="product-button" href="http://www.timeless-apps.com/" target="_blank">Product 💰</a>
-                </div>
-                <hr>
-            </div>
-
-            <div class="card">
-                <div class="inner-card">
-                    <p class="title">Amazon</p>
-                    <div class="price-img-container">
-                        <p class="price">Price: $489.99</p>
-                        <img class="price-money-img" src="img/money_stack.png" alt=""> 
-                    </div>
-                    <a class="product-button" href="http://www.timeless-apps.com/" target="_blank">Product 💰</a>
-                </div>
-                <hr>
-            </div>
-
         </div>
 
         <div id="footer">
-        
+
         </div>
     </div>
 </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="script.js" charset="utf-8"></script>
 </html>
