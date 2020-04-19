@@ -23,7 +23,7 @@
     color: white;
 }
 
-#logo {
+#price-assist-logo {
     height: 50px;
     width: 50px;
     margin-left: 10px;
@@ -34,7 +34,7 @@
     font-size: 25px;
 }
 
-#close-icon {
+#price-assist-close-icon {
     position: absolute;
     margin-left: 250px;
     font-size: 40px;
@@ -95,7 +95,7 @@
 	animation: scale-small-up 1s infinite  alternate;
 }
 
-.card {
+.price-assist-card {
     font-family: "Quicksand";
     height: 140px;
     width: 100%;
@@ -103,14 +103,14 @@
     border-radius: 8px;
 }
 
-.inner-card {
+.price-assist-inner-card {
     display: flex;
     flex-flow: column;
     padding-right: 5px;
     padding-left: 5px;
 }
 
-.title {
+.price-assist-title {
     font-size: 24px;
     font-weight: 400;
     margin-top: 8px;
@@ -118,13 +118,13 @@
     margin-bottom: 0;
 }
 
-.price-img-container {
+.price-assist-price-img-container {
     display: flex;
     flex-flow: row;
     align-items: center;
 }
 
-.price {
+.price-assist-price {
     font-size: 18px;
     font-weight: 400;
     margin-left: 8px;
@@ -132,13 +132,13 @@
     padding-top: 8px;
 }
 
-.price-money-img {
+.price-assist-price-money-img {
     height: 40px;
     animation: vertical-mover 1s infinite alternate;
     margin-left: 10px;
 }
 
-.product-button {
+.price-assist-product-button {
     color: white;
     width: 100px;
     padding-top: 10px;
@@ -151,11 +151,11 @@
     font-size: 18px;
 }
 
-.product-button:link {
+.price-assist-product-button:link {
     text-decoration: none;
 }
 
-hr {
+.price-assist-hr {
     width: 90%;
     border-top: 0;
     border-right: 0;
@@ -163,7 +163,7 @@ hr {
     height: 1px;
 }
 
-footer {
+#price-assist-footer {
 	display: flex;
   height: 40px;
   width: 100%;
@@ -174,13 +174,13 @@ footer {
   border-bottom-right-radius: 10px;
 }
 
-footer > a {
+#price-assist-footer > a {
 	margin-right: 3%;
 	margin-left: 3%;
 	padding: 7px;
 }
 
-footer > p {
+#price-assist-footer > p {
   background-color: #f977ce;
   background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
   -webkit-background-clip: text;
@@ -188,7 +188,7 @@ footer > p {
 	font-size: 25px;
 }
 
-footer > a {
+#price-assist-footer > a {
   background-color: #f977ce;
   background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
   -webkit-background-clip: text;
