@@ -1,5 +1,5 @@
 var app = new Vue({
-  el: '#content',
+  el: '#price-assist-content',
   data: {
     retailerData: [
     ]

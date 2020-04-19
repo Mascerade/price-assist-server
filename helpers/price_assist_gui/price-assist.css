@@ -1,4 +1,4 @@
-#wrapper {
+#price-assist-wrapper {
     height: 500px;
     width: 300px;
     font-family: "Muli";
@@ -10,7 +10,7 @@
     border-bottom-right-radius: 10px;
 }
 
-#heading {
+#price-assist-heading {
     display: flex;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -29,7 +29,7 @@
     margin-left: 10px;
 }
 
-#heading > h3 {
+#price-assist-heading > h3 {
     margin-left: 32px;
     font-size: 25px;
 }
@@ -40,7 +40,7 @@
     font-size: 40px;
 }
 
-#content {
+#price-assist-content {
     display: flex;
     flex-flow: column;
     height: 410px;
@@ -48,17 +48,17 @@
     overflow-y: scroll;
 }
 
-#content::-webkit-scrollbar-track {
+#price-assist-content::-webkit-scrollbar-track {
     background-color: #F5F5F5;
 }
 
-#content::-webkit-scrollbar {
+#price-assist-content::-webkit-scrollbar {
     width: 5px;
     background-color: #60dfcd;
     background-image: linear-gradient(315deg, #60dfcd 0%, #1e9afe 74%);
 }
 
-#content::-webkit-scrollbar-thumb {
+#price-assist-content::-webkit-scrollbar-thumb {
     width: 5px;
     background-color: #60dfcd;
     background-image: linear-gradient(315deg, #60dfcd 0%, #1e9afe 74%);
@@ -79,7 +79,7 @@
     100% { transform: translateY(-2px); }
 }
 
-#content::before {
+#price-assist-content::before {
 	position: absolute;
 	z-index: -1;
   width: 300px;

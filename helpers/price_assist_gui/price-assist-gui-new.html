@@ -11,14 +11,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Muli:wght@200;300&family=Quicksand:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="wrapper">
-        <div id="heading">
+    <div id="price-assist-wrapper">
+        <div id="price-assist-heading">
             <a href="http://www.timeless-apps.com/" target="_blank"><img id="logo" src="https://dl.dropbox.com/s/7vleowye5psd2mj/only_logo_transparent_white.png?raw=0" alt="Logo"></a>
             <h3>Price Assist</h3>
             <i class="material-icons pb-close" id="close-icon">close</i>
         </div>
 
-        <div id="content">
+        <div id="price-assist-content">
           <div class="card" v-for="retailer in retailerData">
               <div class="inner-card">
                   <p class="title">{{retailer["title"]}}</p>
@@ -39,7 +39,7 @@
         </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://dl.dropbox.com/s/zvmy6kfsj8d719f/script.js?dl=0" charset="utf-8"></script>
+    <script src="script.js" charset="utf-8"></script>
 </body>
 
 </html>
