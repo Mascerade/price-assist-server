@@ -162,6 +162,10 @@
     font-size: 18px;
 }
 
+.price-assist-product-button:hover {
+    cursor: pointer;
+}
+
 .price-assist-product-button:link {
     text-decoration: none;
 }
