@@ -19,6 +19,7 @@
 
 #price-assist-heading {
     display: flex;
+    font-family: "Muli";
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     flex-flow: row;
@@ -118,6 +119,7 @@
 }
 
 .price-assist-title {
+    font-family: "Quicksand";
     font-size: 24px;
     font-weight: 400;
     margin-top: 8px;
@@ -132,6 +134,7 @@
 }
 
 .price-assist-price {
+    font-family: "Quicksand";
     font-size: 18px;
     font-weight: 400;
     margin-left: 8px;
@@ -146,6 +149,7 @@
 }
 
 .price-assist-product-button {
+    font-family: "Quicksand";
     color: white;
     width: 100px;
     padding-top: 10px;
