@@ -11,28 +11,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Muli:wght@200;300&family=Quicksand:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="price-assist-wrapper">
-        <div id="price-assist-heading">
+    <div class="unset" id="price-assist-wrapper">
+        <div class="unset" id="price-assist-heading">
             <a href="http://www.timeless-apps.com/" target="_blank"><img id="price-assist-logo" src="https://dl.dropbox.com/s/7vleowye5psd2mj/only_logo_transparent_white.png?raw=0" alt="Logo"></a>
             <h3>Price Assist</h3>
             <i class="material-icons pb-close" id="price-assist-close-icon">close</i>
         </div>
 
-        <div id="price-assist-content">
-          <div class="price-assist-card" v-for="retailer in retailerData">
-              <div class="price-assist-inner-card">
-                  <p class="price-assist-title">{{retailer["title"]}}</p>
-                  <div class="price-assist-price-img-container">
-                      <p class="price-assist-price">Price: $ {{retailer["price"]}}</p>
-                      <img class="price-assist-price-money-img" src="https://dl.dropbox.com/s/mcck683ko4gniuo/money_stack.png?dl=0" alt="Money">
+        <div class="unset" id="price-assist-content">
+          <div class="unset price-assist-card" v-for="retailer in retailerData">
+              <div class="unset price-assist-inner-card">
+                  <p class="unset price-assist-title">{{retailer["title"]}}</p>
+                  <div class="unset price-assist-price-img-container">
+                      <p class="unset price-assist-price">Price: $ {{retailer["price"]}}</p>
+                      <img class="unset price-assist-price-money-img" src="https://dl.dropbox.com/s/mcck683ko4gniuo/money_stack.png?dl=0" alt="Money">
                   </div>
-                  <a class="price-assist-product-button" :href="retailer['link']" target="_blank">Product 💰</a>
+                  <a class="unset price-assist-product-button" :href="retailer['link']" target="_blank">Product 💰</a>
               </div>
-              <hr class="price-assist-hr">
+              <hr class="unset price-assist-hr">
             </div>
         </div>
 
-        <footer id="price-assist-footer">
+        <footer class="unset" id="price-assist-footer">
           <a target="_blank" href="http://www.timeless-apps/track-prices/index.html">Track Prices</a>
         	<p>|</p>
         	<a href="">Save Product</a>

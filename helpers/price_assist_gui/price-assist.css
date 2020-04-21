@@ -1,3 +1,10 @@
+.unset {
+    all: initial;
+    * {
+        all: unset;
+    }
+}
+
 #price-assist-wrapper {
     height: 500px;
     width: 300px;
@@ -80,19 +87,19 @@
 }
 
 #price-assist-content::before {
-	position: absolute;
-	z-index: -1;
-  width: 300px;
-  height: 250px;
-	content: '';
-	background: inherit;
-	background-image: url("https://dl.dropbox.com/s/h55tul7j9ouprxt/star.svg?dl=0https://www.dropbox.com/s/h55tul7j9ouprxt/star.svg?dl=0");
-  background-repeat: no-repeat;
-  background-position: 215px 15px;
-	background-size: 70px;
-	opacity: 0.9;
-	-webkit-animation: scale-small-up 1s infinite  alternate;
-	animation: scale-small-up 1s infinite  alternate;
+    position: absolute;
+    z-index: -1;
+    width: 300px;
+    height: 250px;
+    content: '';
+    background: inherit;
+    background-image: url("https://dl.dropbox.com/s/h55tul7j9ouprxt/star.svg?dl=0https://www.dropbox.com/s/h55tul7j9ouprxt/star.svg?dl=0");
+    background-repeat: no-repeat;
+    background-position: 215px 15px;
+    background-size: 70px;
+    opacity: 0.9;
+    -webkit-animation: scale-small-up 1s infinite  alternate;
+    animation: scale-small-up 1s infinite  alternate;
 }
 
 .price-assist-card {
@@ -164,14 +171,14 @@
 }
 
 #price-assist-footer {
-	display: flex;
-  height: 40px;
-  width: 100%;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+    display: flex;
+    height: 40px;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #price-assist-footer > a {
@@ -181,16 +188,18 @@
 }
 
 #price-assist-footer > p {
-  background-color: #f977ce;
-  background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-	font-size: 25px;
+    font-family: "Muli";
+    background-color: #f977ce;
+    background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 25px;
 }
 
 #price-assist-footer > a {
-  background-color: #f977ce;
-  background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    font-family: "Muli";
+    background-color: #f977ce;
+    background-image: linear-gradient(315deg, #f977ce 0%, #c373f2 74%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
