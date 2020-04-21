@@ -162,6 +162,10 @@
     font-size: 18px;
 }
 
+.price-assist-product-button:active, .price-assist-product-button:link, .price-assist-product-button:visited {
+    color: white;
+}
+
 .price-assist-product-button:hover {
     cursor: pointer;
 }
