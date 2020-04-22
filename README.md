@@ -14,8 +14,8 @@ The retailers supported are:
 * **TigerDirect**
 * **SuperBiiz**
 * **B&H**
-* **Rakuten** (Coming soon. Requires a caching system to be efficient because it requires to be scraped using Selenium)
-* **Target** (Coming soon. Requires a caching system to be efficient because it requires to be scraped using Selenium)
+* **Rakuten**
+* **Target**
 
 # How to Use the API
 
@@ -27,8 +27,10 @@ The API accepts 4 parameters:
  * The return type, a.k.a whether the data would be represented as a *gui* or *json*
  
 Example:
- * http://timeless-apps.com/api/query?retailer=Newegg&price=525&item_model=BX80684I99900K&return_type=gui
- 
+ * http://timeless-apps.com/price-assist/api/network-scrapers?retailer=Amazon&price=$369.99&item_model=BX80684I79700K&title=Intel%20Core%20i7-9700K%20Desktop%20Processor%208%20Cores%20up%20to%204.9%20GHz%20Turbo%20unlocked%20LGA1151%20300%20Series%2095W&return_type=gui
+   * Network scrapers scrape off of **Amazon**, **Walmart**, **Newegg**, **Ebay**, **Microcenter**, **Jet**, **Outlet PC**, **Tigerdirect**, **SuperBiiz**, **B&H**
+ * http://timeless-apps.com/price-assist/api/network-scrapers?retailer=Amazon&price=$369.99&item_model=BX80684I79700K&title=Intel%20Core%20i7-9700K%20Desktop%20Processor%208%20Cores%20up%20to%204.9%20GHz%20Turbo%20unlocked%20LGA1151%20300%20Series%2095W&return_type=gui
+   * Process scrapers scrape off of **BestBuy**, **Rakuten**, **Target**
 # Goals
 
 * Create a very modular design which allows the addition of retailers to be swift ✅
