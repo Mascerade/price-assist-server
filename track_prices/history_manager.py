@@ -13,7 +13,7 @@ from helpers.title_similarity import get_similar_titles
 from helpers.help_functions import format_item_model
 
 """ 
-This is the auto-price checker
+This is the auto-price tracker
 Essentially, have SQL database where each table name is the product's
 model and each is a different date with the price on that date
 
@@ -35,9 +35,16 @@ FOR AUTO UPDATING
 """
 
 # What is used to create the dict of each entry
-RETAILER_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz", "target", "rakuten"]
+DB_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz", "target", "rakuten"]
+
+# ITEM_MODEL_DB stores the item model for a product as the key and the title as a value
+# This database is used for when the user of Track Prices needs to search a product
 ITEM_MODEL_DB = 'databases/item_model_db/'
+
+# SQL database of all the prices of products tracks with the item model as the key
 PRICES_DB = 'databases/prices.db'
+
+# FAKE_DATA is only used for testing the graphing part of Track Prices
 FAKE_DATA = 'databases/fake_data.db'
 
 app = Flask(__name__)
@@ -100,7 +107,7 @@ def get_data():
 
         # Zip the retailer_order with each entry to get a dict of each retailer's prices
         for entry in sql_data:
-            return_data.append(dict(zip(RETAILER_ORDER, entry)))
+            return_data.append(dict(zip(DB_ORDER, entry)))
 
         return_data.append(item_model)
         
@@ -137,11 +144,11 @@ def put_price_data():
         rakuten float); '''.format(item_model))
 
         # List used to insert the date and prices into the database
-        insert_prices = [datetime.date.today()]
+        insert_values = [datetime.date.today()]
 
         # Get only the actual information about each retailer from the data dict
         # Note: We're treating 0's as invalid information
-        for retailer in RETAILER_ORDER[1:]:
+        for retailer in DB_ORDER[1:]:
             try:
                 value = data["data"][retailer + "_data"]
                 
@@ -151,26 +158,26 @@ def put_price_data():
                 
                 # If there was just blank price information, don't include it
                 elif value[1] is None or value[1] == '':
-                    insert_prices.append("0")
+                    insert_values.append("0")
                     continue
 
                 # Convert the price to a float to make sure it's actual price information
                 # Convert it back to a string to add to the database
-                insert_prices.append(str(float(value[1][1:])))
+                insert_values.append(str(float(value[1][1:])))
             
             except:
-                insert_prices.append("0")
+                insert_values.append("0")
 
         # Need a tuple because that's how the prices get inserted into the "?"
-        insert_prices = tuple(insert_prices)
-        insert_data = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
-        ebay, tigerdirect, microcenter, jet, outlet, superbiiz, target, rakuten) VALUES(''' + "?, " * (len(RETAILER_ORDER) - 1) + '''?)'''
+        insert_values = tuple(insert_values)
+        insert_format = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
+        ebay, tigerdirect, microcenter, jet, outlet, superbiiz, target, rakuten) VALUES(''' + "?, " * (len(DB_ORDER) - 1) + '''?)'''
 
         # Just to check that everything is working
-        print(insert_data)
+        print(insert_format)
 
         # Add the data to the databse
-        cursor.execute(insert_data, insert_prices)
+        cursor.execute(insert_format, insert_values)
         conn.commit()
 
         # Close the connections
