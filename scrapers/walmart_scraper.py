@@ -23,7 +23,12 @@ class Walmart(Scraper):
             self.product_address = "https://www.walmart.com" + \
                                    self.soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
 
-        except Exception:
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
     def retrieve_product_price(self):
@@ -31,7 +36,14 @@ class Walmart(Scraper):
             try:
                 self.price = self.soup.find("span", attrs={"class": "price-group"}).text
 
+            except (AttributeError, IndexError, TypeError) as e:
+                # AttributeError most likely means that it was not able to find the span
+                # resulting in a NoneType error
+                self.access_error(function_name="retrieve_product_price()")
+                self.price = None
+
             except Exception:
+                self.unhandled_error(error=e, function_name="retrieve_product_price()")
                 self.price = None
 
         else:

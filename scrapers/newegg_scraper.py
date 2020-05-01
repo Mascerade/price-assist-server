@@ -25,17 +25,16 @@ class NeweggProduct(Scraper):
             self.title = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"}).text
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
-        except AttributeError as e:
-            self.title = "Unavailable"
-            self.product_address = None
 
-        except TypeError as e:
-            self.title = "Unavailable"
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
             self.product_address = None
+            self.title = "Unavailable"
 
         except Exception as e:
-            self.title = "Unavailable"
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
+            self.title = "Unavailable"
 
     def retrieve_product_price(self):
         try:
@@ -58,13 +57,14 @@ class NeweggProduct(Scraper):
             else:
                 self.price = self.price.strip(" ")
 
-        except AttributeError as e:
+        except (AttributeError, IndexError, TypeError) as e:
+            # AttributeError most likely means that it was not able to find the span
+            # resulting in a NoneType error
+            self.access_error(function_name="retrieve_product_price()")
             self.price = None
 
-        except TypeError as e:
-            self.price = None
-
-        except Exception as e:
+        except Exception:
+            self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 
 if __name__ == "__main__":

@@ -22,7 +22,12 @@ class OutletPC(Scraper):
         try:
             self.product_address = self.soup.find('a', 'prod-name')['href']
 
-        except Exception:
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
     def retrieve_product_price(self):
@@ -30,7 +35,14 @@ class OutletPC(Scraper):
             try:
                 self.price = self.soup.find("div", attrs={"id": "nxt-prod-price"}).text
 
-            except Exception as e:
+            except (AttributeError, IndexError, TypeError) as e:
+                # AttributeError most likely means that it was not able to find the span
+                # resulting in a NoneType error
+                self.access_error(function_name="retrieve_product_price()")
+                self.price = None
+
+            except Exception:
+                self.unhandled_error(error=e, function_name="retrieve_product_price()")
                 self.price = None
 
         else:

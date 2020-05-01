@@ -23,7 +23,12 @@ class Jet(Scraper):
                 "base__BaseStyledComponent-sc-1l64hnd-0 base__Link-sc-1l64hnd-2 " +
                 "BaseProductTile__ItemLink-sc-1h29u1u-0 cBMJRO"})[0]["href"]
 
-        except Exception:
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
     def retrieve_product_price(self):
@@ -31,7 +36,14 @@ class Jet(Scraper):
             self.price = self.soup.findAll("span", attrs={"class":"base__BaseStyledComponent-sc-1l64hnd-0 " +
             "typography__Text-sc-1lwzhqv-0 hIuNJJ"})[0].text
 
+        except (AttributeError, IndexError, TypeError) as e:
+            # AttributeError most likely means that it was not able to find the span
+            # resulting in a NoneType error
+            self.access_error(function_name="retrieve_product_price()")
+            self.price = None
+
         except Exception:
+            self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 
 if __name__ == "__main__":

@@ -26,15 +26,26 @@ class Rakuten(Scraper):
         try:
             self.product_address = self.soup.findAll("div", attrs={"class":"r-product__name r-product__section"})[0].find("a")["href"]
 
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
         except Exception as e:
-            print(e)
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
     def retrieve_product_price(self):
         try:
             self.price = self.soup.findAll("span", attrs={"class":"r-product__price-text"})[0].text
 
+        except (AttributeError, IndexError, TypeError) as e:
+            # AttributeError most likely means that it was not able to find the span
+            # resulting in a NoneType error
+            self.access_error(function_name="retrieve_product_price()")
+            self.price = None
+
         except Exception:
+            self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 
 if __name__ == "__main__":

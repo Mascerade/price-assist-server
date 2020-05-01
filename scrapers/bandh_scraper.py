@@ -43,7 +43,7 @@ class BandH(Scraper):
             # AttributeError most likely means that it was not able to find the span
             # resulting in a NoneType error
             self.access_error(function_name="retrieve_product_address()")
-            self.price = None
+            self.product_address = None
 
         except Exception as e:
             self.unhandled_error(error=e, function_name="retrieve_product_address()")

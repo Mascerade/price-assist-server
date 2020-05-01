@@ -26,7 +26,14 @@ class Ebay(Scraper):
         try:
             self.price = self.soup.find_all('span', 's-item__price')[0].text
 
+        except (AttributeError, IndexError, TypeError) as e:
+            # AttributeError most likely means that it was not able to find the span
+            # resulting in a NoneType error
+            self.access_error(function_name="retrieve_product_price()")
+            self.price = None
+
         except Exception:
+            self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 
 if __name__ == "__main__":

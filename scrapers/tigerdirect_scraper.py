@@ -30,15 +30,26 @@ class TigerDirect(Scraper):
                     if x == "$":
                         count += 1
 
+        except (AttributeError, IndexError, TypeError) as e:
+            # AttributeError most likely means that it was not able to find the span
+            # resulting in a NoneType error
+            self.access_error(function_name="retrieve_product_price()")
+            self.price = None
+
         except Exception:
-            self.product_address = None
+            self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 
     def retrieve_product_address(self):
         try:
             self.product_address = "http://www.tigerdirect.com" + self.soup.find('a', {'class': 'itemImage'})['href']
 
-        except Exception:
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
 if __name__ == "__main__":
