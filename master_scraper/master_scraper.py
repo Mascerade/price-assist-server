@@ -1,4 +1,5 @@
 import time
+import json
 from sys import platform
 import os
 import requests
@@ -33,6 +34,14 @@ class Scraper:
     # Parameter to control type of webdriver
     USING_CHROME = True
 
+    # This is going to be a dictionary of all the settings loaded from settings.json
+    SETTINGS = {}
+
+    # Location (from settins.json)
+    with open("settings.json") as json_file:
+        settings = json.load(json_file)
+        SETTINGS = settings
+
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
         parser = "lxml"
@@ -40,19 +49,17 @@ class Scraper:
     else:
         parser = "html5lib"
     
-    def __init__(self, name, search_address, product_model, user_agent, data, tor_username = None, use_selenium = False):
+    def __init__(self, name, search_address, product_model, data, test_user_agent = None, test_tor_username = None, use_selenium = False):
         self.time = time.time()
         self.name = name
         self.price = ""
         self.search_address = search_address
         self.product_address = ""
         self.product_model = product_model
-        self.user_agent = user_agent
+        self.user_agent = test_user_agent
         self.title = None
         self.data = data
-        self.tor_username = tor_username
-        if self.tor_username is None:
-            self.tor_username = random.randint(1, 100000)
+        self.tor_username = test_tor_username
         self.use_selenium = use_selenium
 
         if Scraper.USING_SELENIUM and self.use_selenium:
@@ -100,7 +107,39 @@ class Scraper:
                 #display.stop()
                 pass
 
-        else:        
+        else:
+            # These are files that specify where the tor user agents are and the tor ips are
+            tor_agents_file = self.name.replace(" ", "").lower() + "_tor.txt"
+            tor_ips_file = self.name.replace(" ", "").lower() + "_tor_ips.txt"
+
+            # For testing, we pass in a user agent, so if there is no testing, then find a user agent from the file
+            if test_user_agent is None:
+                try: 
+                    with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
+                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+                        print(self.user_agent)
+
+                except FileNotFoundError:
+                    with open(os.path.join(os.getcwd(), "user_agents"), "r") as scrapers:
+                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+
+            # Only if testing
+            else:
+                self.user_agent = {"User-Agent": test_user_agent}
+
+            # Again, if we're not testing, find the username in the file
+            if test_tor_username is None:
+                try:
+                    with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_ips_dir"], tor_ips_file)) as tor_ips:
+                        self.tor_username = int(random.choice(tor_ips.read().splitlines()).strip())
+                        print(self.tor_username)
+                except:
+                    self.tor_username = random.random(1, 10000)
+
+            # Only if testing
+            else: 
+                self.tor_username = test_tor_username
+
             proxies = {
                 "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
                 "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"

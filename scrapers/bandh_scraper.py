@@ -9,33 +9,14 @@ from master_scraper.master_scraper import Scraper
 
 
 class BandH(Scraper):
-    def __init__(self, product_model, test_header = None, tor_username = None):
-        if test_header is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'bandh_agents.txt'), "r") as scrapers:
-                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
-
-        else:
-            header = {"User-Agent": test_header}
-
-        if tor_username is None:
-            with open("settings.json") as json_file:
-                settings = json.load(json_file)
-
-                if settings["location"] == "desktop":
-                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'band_tor_ips.txt')) as bandh_tor_ips:
-                        tor_username = int(random.choice(bandh_tor_ips.read().splitlines()).strip())
-                    
-                elif settings["location"] == "server":
-                    pass
-
-
+    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
         super().__init__(name="B&H",
                          search_address='https://www.bhphotovideo.com/c/search?' \
                                       'Ntt={}&N=0&InitialSearch=yes' \
                                       '&sts=ma&Top+Nav-Search='.format(product_model),
                          product_model=product_model,
-                         user_agent=header,
-                         tor_username=tor_username,
+                         test_user_agent=test_user_agent,
+                         test_tor_username=test_tor_username,
                          data="")
 
     def retrieve_product_price(self):
