@@ -34,6 +34,7 @@ class Amazon(Scraper):
             self.product_address = None
 
     def retrieve_product_address(self):
+        # TODO: Fix this
         try:
             self.product_address = "https://www.amazon.com" + \
                                    self.soup.find_all("a", attrs={"data-selenium": "miniProductPageProductNameLink"})[0]['href']
