@@ -6,3 +6,4 @@ venv/
 track_prices/databases
 settings.json
 geckodriver.log
+logging/

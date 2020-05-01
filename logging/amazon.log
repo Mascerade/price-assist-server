@@ -1,2 +1,0 @@
-DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.amazon.com:443
-DEBUG:urllib3.connectionpool:https://www.amazon.com:443 "GET /s?k=asus%20vivobook&i=electronics&ref=nb_sb_noss HTTP/1.1" 200 None
