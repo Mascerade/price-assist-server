@@ -29,7 +29,7 @@ The API accepts 4 parameters:
 Example:
  * http://timeless-apps.com/price-assist/api/network-scrapers?retailer=Amazon&price=$369.99&item_model=BX80684I79700K&title=Intel%20Core%20i7-9700K%20Desktop%20Processor%208%20Cores%20up%20to%204.9%20GHz%20Turbo%20unlocked%20LGA1151%20300%20Series%2095W&return_type=gui
    * Network scrapers scrape off of **Amazon**, **Walmart**, **Newegg**, **Ebay**, **Microcenter**, **Jet**, **Outlet PC**, **Tigerdirect**, **SuperBiiz**, **B&H**
- * http://timeless-apps.com/price-assist/api/network-scrapers?retailer=Amazon&price=$369.99&item_model=BX80684I79700K&title=Intel%20Core%20i7-9700K%20Desktop%20Processor%208%20Cores%20up%20to%204.9%20GHz%20Turbo%20unlocked%20LGA1151%20300%20Series%2095W&return_type=gui
+ * http://timeless-apps.com/price-assist/api/process-scrapers?retailer=Amazon&price=$369.99&item_model=BX80684I79700K&title=Intel%20Core%20i7-9700K%20Desktop%20Processor%208%20Cores%20up%20to%204.9%20GHz%20Turbo%20unlocked%20LGA1151%20300%20Series%2095W&return_type=gui
    * Process scrapers scrape off of **BestBuy**, **Rakuten**, **Target**
 # Goals
 

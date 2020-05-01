@@ -37,6 +37,8 @@ class Scraper:
     # This is going to be a dictionary of all the settings loaded from settings.json
     SETTINGS = {}
 
+    SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
+
     # Location (from settins.json)
     with open("settings.json") as json_file:
         settings = json.load(json_file)
@@ -120,7 +122,7 @@ class Scraper:
 
                 except FileNotFoundError:
                     with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
-                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
                 
                 print(self.user_agent)
 
