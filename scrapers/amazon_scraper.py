@@ -18,6 +18,8 @@ class Amazon(Scraper):
                          test_tor_username=test_tor_username,
                          test_user_agent = test_user_agent,
                          data="")
+        
+        print(self.soup.prettify())
 
     def retrieve_product_price(self):
         try:
@@ -34,7 +36,7 @@ class Amazon(Scraper):
     def retrieve_product_address(self):
         try:
             self.product_address = "https://www.amazon.com" + \
-                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[1]['href']
+                                   self.soup.find_all("a", attrs={"data-selenium": "miniProductPageProductNameLink"})[0]['href']
         
         except AttributeError as e:
             print(e)

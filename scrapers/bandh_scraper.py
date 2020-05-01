@@ -21,15 +21,17 @@ class BandH(Scraper):
 
     def retrieve_product_price(self):
         try:
-            self.price = self.soup.find('span', 'itc-you-pay-price bold').text.strip()
+            
+            self.price = self.soup.find('span', attrs={'data-selenium': 'uppedDecimalPriceFirst'}).text.strip() + "." + \
+                self.soup.find('sup', attrs={'data-selenium': 'uppedDecimalPriceSecond'}).text.strip()
 
-        except Exception:
+        except Exception as e:
             self.price = None
             self.product_address = None
 
     def retrieve_product_address(self):
         try:
-            self.product_address = self.soup.find("a", attrs={'class': 'c5', 'data-selenium': 'itemHeadingLink', 'itemprop': 'url'})['href']
+            self.product_address = "https://bhphotovideo.com" + self.soup.find("a", attrs={'data-selenium': 'miniProductPageProductNameLink'})['href']
 
         except Exception:
             self.product_address = None

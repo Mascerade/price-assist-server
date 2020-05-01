@@ -117,11 +117,12 @@ class Scraper:
                 try: 
                     with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
                         self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
-                        print(self.user_agent)
 
                 except FileNotFoundError:
-                    with open(os.path.join(os.getcwd(), "user_agents"), "r") as scrapers:
+                    with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
                         self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+                
+                print(self.user_agent)
 
             # Only if testing
             else:

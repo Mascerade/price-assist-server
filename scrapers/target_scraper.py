@@ -8,13 +8,9 @@ from master_scraper.master_scraper import Scraper
 
 class TargetScraper(Scraper):
     def __init__(self, product_model, test_header = None, tor_username = None):
-        self.header = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:42.0) Gecko/20100101 Firefox/42.0',
-        }
         super().__init__(name="Target",
                     search_address='https://www.target.com/s?searchTerm={}'.format(product_model),
                     product_model=product_model,
-                    user_agent=self.header,
                     use_selenium=True,
                     data="")
 

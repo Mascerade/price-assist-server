@@ -10,14 +10,14 @@ from master_scraper.master_scraper import Scraper
 
 
 class Ebay(Scraper):
-    def __init__(self, product_model, test_header = None, tor_username = None):
+    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
         super().__init__(name="Ebay",
                          search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
                                'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
                                'sacat=0'.format(product_model, product_model),
                          product_model=product_model,
-                         user_agent=header,
-                         tor_username=tor_username,
+                         test_user_AGENT=test_user_agent,
+                         test_tor_username=test_tor_username,
                          data="")
 
         self.product_address = self.search_address

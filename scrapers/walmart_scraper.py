@@ -9,25 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 
 class Walmart(Scraper):
-    def __init__(self, product_model, test_header = None, tor_username = None):
-        if test_header is None:
-            with open(os.path.join(os.getcwd(), 'tor_agents', 'walmart_tor.txt'), "r") as scrapers:
-                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
-        
-        else:
-            header = {"User-Agent": test_header}
-
-        if tor_username is None:
-            with open("settings.json") as json_file:
-                settings = json.load(json_file)
-
-                if settings["location"] == "desktop":
-                    with open(os.path.join(os.getcwd(), 'desktop_tor_ips', 'walmart_tor_ips.txt')) as walmart_tor_ips:
-                        tor_username = int(random.choice(walmart_tor_ips.read().splitlines()).strip())
-                    
-                elif settings["location"] == "server":
-                    pass
-
+    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
         super().__init__(name="Walmart",
                          search_address='https://www.walmart.com/search/?query={}'.format(product_model),
                          product_model=product_model,
