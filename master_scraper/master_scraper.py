@@ -116,7 +116,7 @@ class Scraper:
             if test_user_agent is None:
                 try: 
                     with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
-                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines())}
+                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
 
                 except FileNotFoundError:
                     with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:

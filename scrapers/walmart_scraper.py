@@ -13,11 +13,12 @@ class Walmart(Scraper):
         super().__init__(name="Walmart",
                          search_address='https://www.walmart.com/search/?query={}'.format(product_model),
                          product_model=product_model,
-                         user_agent=header,
-                         tor_username=tor_username,
+                         test_user_agent=test_user_agent,
+                         test_tor_username=test_tor_username,
                          data="")
 
     def retrieve_product_address(self):
+        # TODO: Fix address
         try:
             self.product_address = "https://www.walmart.com" + \
                                    self.soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']

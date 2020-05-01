@@ -16,7 +16,7 @@ class Ebay(Scraper):
                                'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
                                'sacat=0'.format(product_model, product_model),
                          product_model=product_model,
-                         test_user_AGENT=test_user_agent,
+                         test_user_agent=test_user_agent,
                          test_tor_username=test_tor_username,
                          data="")
 

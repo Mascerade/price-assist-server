@@ -22,6 +22,7 @@ class TargetScraper(Scraper):
             self.price = None
 
     def retrieve_product_address(self):
+        # TODO: Returns None for address
         try:
             product_address_attrs = {"class": "Link-sc-1khjl8b-0 styles__StyledTitleLink-e5kry1-5 cPukFm h-display-block h-text-bold h-text-bs flex-grow-one",
                             "data-test": "product-title"}
