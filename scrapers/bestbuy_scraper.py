@@ -22,10 +22,12 @@ class BestBuy(Scraper):
             sku_header = self.soup.find('h4', 'sku-header')
             self.product_address = "https://www.bestbuy.com" + sku_header.find('a')['href']
 
-        except AttributeError:
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
             self.product_address = None 
 
-        except TypeError:
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
             self.product_address = None
 
     def retrieve_product_price(self):
@@ -33,8 +35,12 @@ class BestBuy(Scraper):
             try:
                 self.price = self.soup.find('div', 'priceView-hero-price priceView-customer-price').find("span").text
 
-            except Exception:
+            except (AttributeError, IndexError, TypeError) as e:
+                self.access_error(function_name="retrieve_product_price()")
                 self.price = None
+
+            except Exception as e:
+                self.unhandled_error(error=e, function_name="retrieve_product_price()")
 
         else:
             self.price = None

@@ -7,6 +7,7 @@ import random
 from bs4 import BeautifulSoup
 import time
 import subprocess
+import logging
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
@@ -63,6 +64,7 @@ class Scraper:
         self.data = data
         self.tor_username = test_tor_username
         self.use_selenium = use_selenium
+        logging.basicConfig(filename='logging/' + name.lower() + '.log', level=logging.DEBUG)
 
         if Scraper.USING_SELENIUM and self.use_selenium:
             proxies = {
@@ -180,3 +182,18 @@ class Scraper:
         scraper_info.append(self.product_address)
         self.get_elapsed_time()
         return scraper_info
+
+    def access_error(self, function_name):
+        error_found = False
+        for word in Scraper.SCRAPER_ERROR_WORDS:
+            if (word in str(self.soup).lower()):
+                logging.error('Could not access ' + self.name.lower() + '. User Agent: ' + self.user_agent['User-Agent'] + ' Tor Username: ' + str(self.tor_username) + ". From " + function_name)
+                error_found = True
+                break
+        
+        if not error_found:
+            logging.warning('Did not find the product ' + self.product_model)
+            
+    def unhandled_error(self, error, function_name):
+        logging.error('Unhandled type of error: ' + str(error) + '. ' + function_name)
+
