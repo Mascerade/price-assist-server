@@ -16,7 +16,7 @@ import time
 import requests
 import traceback
 
-CACHE = False
+CACHE = True
 
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
