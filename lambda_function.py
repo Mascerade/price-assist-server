@@ -4,7 +4,6 @@ Developed by Jason Acheampong of Timeless Apps
 
 """ LOCAL IMPORTS """
 from helpers.scraper_functions import ScraperHelpers
-from scrapers.amazon_scraper import AmazonProduct
 from helpers.gui_generator import gui_generator
 from master_scraper.master_scraper import Scraper
 
@@ -17,7 +16,7 @@ import time
 import requests
 import traceback
 
-CACHE = True
+CACHE = False
 
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True

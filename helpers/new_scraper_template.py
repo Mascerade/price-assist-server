@@ -8,26 +8,13 @@ from master_scraper.master_scraper import Scraper
 
 
 class NewScraper(Scraper):
-    def __init__(self, product_model, test_header = None, tor_username = None):
-        if test_header is None:
-            with open(os.path.join(os.getcwd(), 'user_agents', 'scrapers_master.txt'), "r") as scrapers:
-                header = {"User-Agent": random.choice(scrapers.read().splitlines())}
-
-        else: 
-            header = {"User-Agent": test_header}
-
+    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
         super().__init__(name="NAME",
                          search_address='SEARCH ADDRESS {}'.format(product_model),
                          product_model=product_model,
-                         user_agent=header,
+                         test_user_agent=test_user_agent,
+                         test_tor_username=test_tor_username,
                          data="")
-        try:
-            data = requests.get(self.search_address, headers=self.user_agent).text
-            self.soup = BeautifulSoup(data, Scraper.parser)
-
-        except Exception as e:
-            self.price = None
-            self.product_address = None
 
     def retrieve_product_price(self):
         try:

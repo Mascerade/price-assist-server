@@ -64,7 +64,41 @@ class Scraper:
         self.data = data
         self.tor_username = test_tor_username
         self.use_selenium = use_selenium
-        logging.basicConfig(filename='logging/' + name.lower() + '.log', level=logging.DEBUG)
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(logging.DEBUG)
+        fh = logging.FileHandler('logging/' + name.lower() + '.log')
+        self.logger.addHandler(fh)
+
+        # These are files that specify where the tor user agents are and the tor ips are
+        tor_agents_file = self.name.replace(" ", "").lower() + "_tor.txt"
+        tor_ips_file = self.name.replace(" ", "").lower() + "_tor_ips.txt"
+
+        # For testing, we pass in a user agent, so if there is no testing, then find a user agent from the file
+        if test_user_agent is None:
+            try: 
+                with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
+                    self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
+
+            except FileNotFoundError:
+                with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
+                    self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
+            
+        # Only if testing
+        else:
+            self.user_agent = {"User-Agent": test_user_agent}
+
+        # Again, if we're not testing, find the username in the file
+        if test_tor_username is None:
+            try:
+                with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_ips_dir"], tor_ips_file)) as tor_ips:
+                    self.tor_username = int(random.choice(tor_ips.read().splitlines()).strip())
+
+            except:
+                self.tor_username = random.randint(1, 10000)
+
+        # Only if testing
+        else: 
+            self.tor_username = test_tor_username
 
         if Scraper.USING_SELENIUM and self.use_selenium:
             proxies = {
@@ -112,39 +146,6 @@ class Scraper:
                 pass
 
         else:
-            # These are files that specify where the tor user agents are and the tor ips are
-            tor_agents_file = self.name.replace(" ", "").lower() + "_tor.txt"
-            tor_ips_file = self.name.replace(" ", "").lower() + "_tor_ips.txt"
-
-            # For testing, we pass in a user agent, so if there is no testing, then find a user agent from the file
-            if test_user_agent is None:
-                try: 
-                    with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
-                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
-
-                except FileNotFoundError:
-                    with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
-                        self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
-                
-                print(self.user_agent)
-
-            # Only if testing
-            else:
-                self.user_agent = {"User-Agent": test_user_agent}
-
-            # Again, if we're not testing, find the username in the file
-            if test_tor_username is None:
-                try:
-                    with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_ips_dir"], tor_ips_file)) as tor_ips:
-                        self.tor_username = int(random.choice(tor_ips.read().splitlines()).strip())
-                        print(self.tor_username)
-                except:
-                    self.tor_username = random.random(1, 10000)
-
-            # Only if testing
-            else: 
-                self.tor_username = test_tor_username
-
             proxies = {
                 "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
                 "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
@@ -187,13 +188,13 @@ class Scraper:
         error_found = False
         for word in Scraper.SCRAPER_ERROR_WORDS:
             if (word in str(self.soup).lower()):
-                logging.error('Could not access ' + self.name.lower() + '. User Agent: ' + self.user_agent['User-Agent'] + ' Tor Username: ' + str(self.tor_username) + ". From " + function_name)
+                self.logger.error(time.ctime(time.time()) + ': Could not access ' + self.name + '. User Agent: ' + self.user_agent['User-Agent'] + ' Tor Username: ' + str(self.tor_username) + ". From " + function_name)
                 error_found = True
                 break
         
         if not error_found:
-            logging.warning('Did not find the product ' + self.product_model)
-            
+            self.logger.warning(time.ctime(time.time()) + ': Did not find the product ' + self.product_model)
+
     def unhandled_error(self, error, function_name):
-        logging.error('Unhandled type of error: ' + str(error) + '. ' + function_name)
+        self.logger.error(time.ctime(time.time()) + ': Unhandled type of error: ' + str(error) + '. ' + function_name)
 
