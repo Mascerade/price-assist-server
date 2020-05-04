@@ -15,8 +15,15 @@ import threading
 import time
 import requests
 import traceback
+import logging
 
 CACHE = True
+
+# Sets up the logger for when exceptions happen in the server
+logger = logging.getLogger('lambda_function')
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler('logging/lambda_function.log')
+logger.addHandler(fh)
 
 def network_scrapers(retailer, price, item_model, title, return_type):
     USING_SOURCE_RETAILER = True
@@ -77,6 +84,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                         cache_check = True
                 
                 except requests.exceptions.ConnectionError:
+                    logger.warning('Caching server not running right now')
                     CACHE = False
         
             if USING_SOURCE_RETAILER:
@@ -125,7 +133,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                         prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
 
                     except requests.exceptions.ConnectionError:
-                        pass
+                        logger.warning('Track Prices server not running right now')
 
                 print("Total Elapsed Time: " + str(time.time()-start_time))
 
@@ -141,7 +149,11 @@ def network_scrapers(retailer, price, item_model, title, return_type):
                 # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
 
                 if CACHE:
-                    requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
+                    try:
+                        requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
+
+                    except requests.exceptions.ConnectionError:
+                        logger.warning('Caching server not running right now')
 
                 if return_type == "json":
                     # Jsonify the data to return it
@@ -155,8 +167,7 @@ def network_scrapers(retailer, price, item_model, title, return_type):
             return str({"Error": "Item model not found"})
     
     except Exception as e:
-        print(str(e), "from lambda_function")
-        print(traceback.format_exc())
+        logger.error('Unexpected error from lambda function: ' + str(e))
         return flask.jsonify({"success": False}), 500
 
 def process_based_scraper(retailer, price, item_model, return_type):
@@ -192,6 +203,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
                         return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, False)})
 
             except requests.exceptions.ConnectionError:
+                logger.warning('Caching server not running right now')
                 CACHE = False
 
     # Runs each scraper and it makes it easier to know which scraper function
@@ -231,8 +243,12 @@ def process_based_scraper(retailer, price, item_model, return_type):
     }
 
     if CACHE:
-        requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
-    
+        try:
+            requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
+
+        except requests.exceptions.ConnectionError:
+            logger.warning('Caching server not running right now')
+
     if return_type == "json":
         # Jsonify the data to return it
         load = flask.jsonify(prices)        
