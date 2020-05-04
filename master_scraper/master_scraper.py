@@ -40,10 +40,11 @@ class Scraper:
 
     SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
 
-    # Location (from settins.json)
-    with open("settings.json") as json_file:
-        settings = json.load(json_file)
-        SETTINGS = settings
+    if os.path.exists("settings.json"):
+        # Location (from settings.json)
+        with open("settings.json") as json_file:
+            settings = json.load(json_file)
+            SETTINGS = settings
 
     parser = ""
     if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
@@ -79,7 +80,8 @@ class Scraper:
                 with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
                     self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
 
-            except FileNotFoundError:
+            except:
+                self.logger.debug("Using default user agents")
                 with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
                     self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
             
@@ -94,6 +96,7 @@ class Scraper:
                     self.tor_username = int(random.choice(tor_ips.read().splitlines()).strip())
 
             except:
+                self.logger.debug("Using random tor username")
                 self.tor_username = random.randint(1, 10000)
 
         # Only if testing
