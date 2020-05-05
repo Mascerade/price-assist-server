@@ -25,7 +25,7 @@ logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler('logging/lambda_function.log')
 logger.addHandler(fh)
 
-def network_scrapers(retailer, price, item_model, title, return_type):
+def network_scrapers(retailer, price, item_model, title, image, return_type):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
@@ -129,7 +129,9 @@ def network_scrapers(retailer, price, item_model, title, return_type):
 
                     # Only put the item model and title into the database if it is from a source retailer
                     try:
+                        print("here")
                         requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
+                        requests.put("http://localhost:5003/image_data", json={"item_model": item_model, "image": image})
                         prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
 
                     except requests.exceptions.ConnectionError:
@@ -276,10 +278,11 @@ def query():
     price = request.args.get('price')
     item_model = request.args.get('item_model')
     title = request.args.get('title')
+    image = request.args.get('image')
     return_type = request.args.get('return_type')
     
     try:
-        return network_scrapers(retailer, price, item_model, title, return_type)
+        return network_scrapers(retailer, price, item_model, title, image, return_type)
 
     except TypeError:
         return flask.abort(500)

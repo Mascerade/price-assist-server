@@ -34,12 +34,20 @@ FOR AUTO UPDATING
 * Run this from the track_prices directory
 """
 
+# Create the databases directory first
+if not os.path.exists('databases'):
+    os.makedirs('databases')
+
 # What is used to create the dict of each entry
 DB_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz", "target", "rakuten"]
 
 # ITEM_MODEL_DB stores the item model for a product as the key and the title as a value
 # This database is used for when the user of Track Prices needs to search a product
 ITEM_MODEL_DB = 'databases/item_model_db/'
+
+# IMAGE_DB stores the item model for a product as the key and a link to an image
+# for the product as the value
+IMAGE_DB = 'databases/image_db/'
 
 # SQL database of all the prices of products tracks with the item model as the key
 PRICES_DB = 'databases/prices.db'
@@ -237,6 +245,27 @@ def put_item_model():
 
     return json.dumps({"success": True}), 201
 
+@app.route("/image_data", methods=["PUT"])
+def put_image_data():
+    """
+    This function has an item model as a key and a link 
+    to the image as the value
+    Example: {'item_model1': 'link1', 'item_model2': 'link2'...}
+    """
+
+    item_model = request.json['item_model'].lower().strip()
+    image_link = request.json['image'].strip()
+
+    image_db = plyvel.DB(IMAGE_DB, create_if_missing = True)
+
+    # Put the image into the database
+    image_db.put(bytes(item_model, encoding='utf-8'), bytes(image_link, encoding='utf-8'))
+
+    # Close the database
+    image_db.close()
+
+    return json.dumps({"success": True}), 201
+
 @app.route("/item_model_data", methods=["DELETE"])
 def delete_item_model():
     """
@@ -292,4 +321,4 @@ def delete_data():
     return json.dumps({'success': False, "msg":"Item model not found"}), 400
 
 if __name__ == "__main__":
-    app.run("localhost", port=5003, threaded=True)
+    app.run(host="0.0.0.0", port=5003, threaded=True)
