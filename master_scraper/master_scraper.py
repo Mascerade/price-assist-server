@@ -1,6 +1,7 @@
 import time
 import json
 from sys import platform
+import sys
 import os
 import requests
 import random
@@ -13,6 +14,9 @@ from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+sys.path.append(os.getcwd())
+from common.common_path import CommonPaths
+
 
 class Scraper:
     # TODO: Make the user agent thing universal so I can put it here
@@ -70,34 +74,21 @@ class Scraper:
         fh = logging.FileHandler('logging/' + name.lower() + '.log')
         self.logger.addHandler(fh)
 
-        # These are files that specify where the tor user agents are and the tor ips are
-        tor_agents_file = self.name.replace(" ", "").lower() + "_tor.txt"
-        tor_ips_file = self.name.replace(" ", "").lower() + "_tor_ips.txt"
-
         # For testing, we pass in a user agent, so if there is no testing, then find a user agent from the file
         if test_user_agent is None:
-            try: 
-                with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_user_agents_dir"], tor_agents_file), "r") as scrapers:
-                    self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
+            self.user_agent = {"User-Agent": random.choice(CommonPaths.SCRAPER_USER_AGENTS[self.name.lower()]), "referer": "https://www.google.com/"}
 
-            except:
-                self.logger.debug("Using default user agents")
-                with open(os.path.join(os.getcwd(), "user_agents/scrapers_master.txt"), "r") as scrapers:
-                    self.user_agent = {"User-Agent": random.choice(scrapers.read().splitlines()), "referer": "https://www.google.com/"}
-            
         # Only if testing
         else:
             self.user_agent = {"User-Agent": test_user_agent}
 
         # Again, if we're not testing, find the username in the file
         if test_tor_username is None:
-            try:
-                with open(os.path.join(os.getcwd(), Scraper.SETTINGS["tor_ips_dir"], tor_ips_file)) as tor_ips:
-                    self.tor_username = int(random.choice(tor_ips.read().splitlines()).strip())
-
-            except:
-                self.logger.debug("Using random tor username")
+            if CommonPaths.SCRAPER_TOR_IPS[name.lower()] is None:
                 self.tor_username = random.randint(1, 10000)
+
+            else:
+                self.tor_username = int(random.choice(CommonPaths.SCRAPER_TOR_IPS[self.name.lower()]).replace(" ", ""))
 
         # Only if testing
         else: 
@@ -161,6 +152,7 @@ class Scraper:
                 self.price = "None"
                 self.product_address = "None"
 
+        print(self.user_agent, self.tor_username)
         self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):

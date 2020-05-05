@@ -14,7 +14,7 @@ from scrapers.target_scraper import TargetScraper
 from scrapers.rakuten_scraper import Rakuten
 from scrapers.jet_scraper import Jet
 from scrapers.outletpc_scraper import OutletPC
-from scrapers.superbiizz_scraper import SuperBiiz
+from scrapers.superbiiz_scraper import SuperBiiz
 
 
 class ScraperHelpers:
