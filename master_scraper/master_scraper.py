@@ -74,7 +74,7 @@ class Scraper:
         fh = logging.FileHandler('logging/' + name.lower() + '.log')
         self.logger.addHandler(fh)
 
-        # For testing, we pass in a user agent, so if there is no testing, then find a user agent from the file
+        # For testing, we pass in a user agent, so if there is no testing, then find a user agent from CommonPaths
         if test_user_agent is None:
             self.user_agent = {"User-Agent": random.choice(CommonPaths.SCRAPER_USER_AGENTS[self.name.lower()]), "referer": "https://www.google.com/"}
 
@@ -82,7 +82,7 @@ class Scraper:
         else:
             self.user_agent = {"User-Agent": test_user_agent}
 
-        # Again, if we're not testing, find the username in the file
+        # Again, if we're not testing, use the username from CommonPaths
         if test_tor_username is None:
             if CommonPaths.SCRAPER_TOR_IPS[name.lower()] is None:
                 self.tor_username = random.randint(1, 10000)
@@ -152,7 +152,6 @@ class Scraper:
                 self.price = "None"
                 self.product_address = "None"
 
-        print(self.user_agent, self.tor_username)
         self.soup = BeautifulSoup(self.data, Scraper.parser)
 
     def retrieve_product_address(self):
@@ -192,4 +191,3 @@ class Scraper:
 
     def unhandled_error(self, error, function_name):
         self.logger.error(time.ctime(time.time()) + ': Unhandled type of error: ' + str(error) + '. ' + function_name)
-
