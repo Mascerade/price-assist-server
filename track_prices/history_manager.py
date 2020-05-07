@@ -92,8 +92,15 @@ def get_data():
     # This is because the item_model is stored differently in the sql database
     item_model = format_item_model(item_model)
 
-    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
-    ply_db.close()
+    try:
+        ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
+        image_db = plyvel.DB(IMAGE_DB, create_if_missing = False)
+        title = ply_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
+        image = image_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
+
+    except AttributeError:
+        ply_db.close()
+        image_db.close()
 
     with sqlite3.connect(PRICES_DB) as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
@@ -105,20 +112,24 @@ def get_data():
             cur.execute(get_info)
         
         except sqlite3.OperationalError as e:
+            print(str(e))
             return json.dumps({'success': False, 'msg': str(e)}), 500
 
         # Get the data
         sql_data = cur.fetchall()
 
         # List of dictionaries to return
-        return_data = []
+        price_data = []
 
         # Zip the retailer_order with each entry to get a dict of each retailer's prices
         for entry in sql_data:
-            return_data.append(dict(zip(DB_ORDER, entry)))
+            price_data.append(dict(zip(DB_ORDER, entry)))
+        return_data = {}
+        return_data['prices'] = price_data
+        return_data['item_model'] = item_model
+        return_data['title'] = title
+        return_data['image'] = image
 
-        return_data.append(item_model)
-        
         # return the data with a 200 success error code
         return json.dumps(return_data), 200
 
