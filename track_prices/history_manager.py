@@ -98,9 +98,10 @@ def get_data():
         title = ply_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
         image = image_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
 
-    except AttributeError:
+    except AttributeError as e:
         ply_db.close()
         image_db.close()
+        return json.dumps({'success': False, 'msg': str(e)}), 404
 
     with sqlite3.connect(PRICES_DB) as conn:
         get_info = '''SELECT * from {}'''.format(item_model)
@@ -113,7 +114,7 @@ def get_data():
         
         except sqlite3.OperationalError as e:
             print(str(e))
-            return json.dumps({'success': False, 'msg': str(e)}), 500
+            return json.dumps({'success': False, 'msg': str(e)}), 404
 
         # Get the data
         sql_data = cur.fetchall()
