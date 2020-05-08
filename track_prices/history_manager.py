@@ -103,8 +103,8 @@ def get_data():
         image_db.close()
         return json.dumps({'success': False, 'msg': str(e)}), 404
 
-    with sqlite3.connect(PRICES_DB) as conn:
-        get_info = '''SELECT * from {}'''.format(item_model)
+    with sqlite3.connect(FAKE_DATA) as conn:
+        get_info = '''SELECT * from "{}"'''.format(item_model)
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
 
