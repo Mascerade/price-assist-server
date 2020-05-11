@@ -8,7 +8,7 @@ from scrapers.jet_scraper import Jet
 from scrapers.ebay_scraper import Ebay
 from scrapers.microcenter_scraper import Microcenter
 from scrapers.outletpc_scraper import OutletPC
-from scrapers.superbiizz_scraper import SuperBiiz
+from scrapers.superbiiz_scraper import SuperBiiz
 from scrapers.tigerdirect_scraper import TigerDirect
 from scrapers.bandh_scraper import BandH
 
@@ -24,6 +24,8 @@ scraper_classes = {
     "tigerdirect": TigerDirect,
     "bandh": BandH
 }
+
+print("scraper_name file_name directory test_item_model")
 
 # Gets parameters from the terminal and sets the variables
 scraper_name = sys.argv[1].lower()
@@ -42,7 +44,7 @@ with open(directory + "/" + file_name + ".txt", "a+") as refined_file:
         count = 0
         print(str(user) + " ____________________________________________________________________")
         while count < 5:
-            scraper = scraper_classes[scraper_name](test_item_model, tor_username=user)
+            scraper = scraper_classes[scraper_name](test_item_model, test_tor_username=user)
 
             try:
                 scraper.retrieve_product_price()

@@ -14,7 +14,7 @@ class Amazon(Scraper):
     """
     def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
         super().__init__(name="Amazon",
-                         search_address='https://www.amazon.com/s?k={}&i=electronics&ref=nb_sb_noss'.format(product_model),
+                         search_address='https://www.amazon.com/s?k={}&i=electronics'.format(product_model),
                          product_model=product_model,
                          test_tor_username=test_tor_username,
                          test_user_agent = test_user_agent,

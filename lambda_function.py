@@ -9,6 +9,7 @@ from master_scraper.master_scraper import Scraper
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
+from flask_cors import cross_origin
 import json
 import flask
 import threading
@@ -272,6 +273,7 @@ application = Flask(__name__)
 
 
 @application.route('/price-assist/api/network-scrapers')
+@cross_origin()
 def query():
     # Get all the required information from the parameters in the URL
     retailer = request.args.get('retailer')
@@ -288,6 +290,7 @@ def query():
         return flask.abort(500)
 
 @application.route('/price-assist/api/process-scrapers')
+@cross_origin()
 def proces_based_scraper_response():
     retailer = request.args.get('retailer')
     price = request.args.get('price')
