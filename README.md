@@ -38,3 +38,7 @@ Example:
 * Generate the HTML for the information for the Price Assist GUI ✅
 * Be able to get the same exact product on different retailers (working on algorithms for this) ❌
  
+# Notes
+
+* Amazon seems to have blocked almost all of the US tor exit nodes
+   * Going to try to use other countries' tor exit nodes
