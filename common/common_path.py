@@ -5,11 +5,14 @@ import random
 sys.path.append(os.getcwd())
 
 class CommonPaths():
-
+    print('here')
     RETAILER_LIST = ["Amazon", "B&H", "BestBuy", "Ebay", "Jet", "Microcenter", "Newegg", "OutletPC", "Rakuten", "Superbiiz", "Target"]
 
     # This is going to be a dictionary of all the settings loaded from settings.json
     SETTINGS = {}
+
+    # For when there is no auto-generated user agents to use from settings
+    DEFAULT_USER_AGENTS_DIR = "user_agents/default_user_agents"
 
     # Dictionary for the scrapers Tor usernames
     SCRAPER_TOR_IPS = {}
@@ -46,5 +49,5 @@ class CommonPaths():
                 SCRAPER_USER_AGENTS[scraper] = f.read().splitlines()
             
         except FileNotFoundError:
-            with open(os.path.join(os.getcwd(), 'user_agents/scrapers_master.txt')) as f:
+            with open(os.path.join(os.getcwd(), DEFAULT_USER_AGENTS_DIR, 'scrapers_master.txt')) as f:
                 SCRAPER_USER_AGENTS[scraper] = f.read().splitlines()
