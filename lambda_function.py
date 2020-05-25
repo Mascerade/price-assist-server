@@ -6,6 +6,7 @@ Developed by Jason Acheampong of Timeless Apps
 from helpers.scraper_functions import ScraperHelpers
 from helpers.gui_generator import gui_generator
 from master_scraper.master_scraper import Scraper
+from common.common_path import CommonPaths
 
 """ OUTSIDE IMPORTS """
 from flask import Flask, request
@@ -17,8 +18,6 @@ import time
 import requests
 import traceback
 import logging
-
-CACHE = True
 
 # Sets up the logger for when exceptions happen in the server
 logger = logging.getLogger('lambda_function')
@@ -57,11 +56,10 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
     # To run a thread for it unnecessarily
 
     try:
-        cache_check = False
         if searcher is not None:
-            # Make GET request
-            global CACHE
-            if CACHE:
+            # This block is only run if the caching server is online
+            # Otherwise, go through with scraping the websites
+            if CommonPaths.CACHE:
                 # Make a request to the caching server
                 try:
                     cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model).json()
@@ -80,92 +78,86 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
                             scrapers.remove_extraneous()
                             scrapers.sort_all_scrapers()
                             return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
-
-                    else:
-                        cache_check = True
                 
                 except requests.exceptions.ConnectionError:
                     logger.warning('Caching server not running right now')
-                    CACHE = False
-        
+
+            # This makes it so that if we already have the retailer's data, we don't run the scraper
             if USING_SOURCE_RETAILER:
                 print(retailer, price)
                 retailer_functions[retailer.strip().lower() + "_data"] = price
                 scrapers.all_scrapers.append([retailer, price, "#"])
                 
-            if not CACHE or cache_check:
-                # Neat way of appending each function to the thread_list
-                # And then simultaneously start them
-                thread_list = []
-                for function in retailer_functions.values():
-                    if type(function) == str:
-                        continue
-                    thread_list.append(threading.Thread(target=function, args=(searcher,)))
+            # Neat way of appending each function to the thread_list
+            # And then simultaneously start them
+            thread_list = []
+            for function in retailer_functions.values():
+                if type(function) == str:
+                    continue
+                thread_list.append(threading.Thread(target=function, args=(searcher,)))
 
-                for thread in thread_list:
-                    thread.start()
+            for thread in thread_list:
+                thread.start()
 
-                for thread in thread_list:
-                    thread.join()
+            for thread in thread_list:
+                thread.join()
 
-                # Note: prices is for the json format, while scrapers.all_scrapers is for the gui
-                # Created dictionary that contains all the generated data for retailer
-                # [Name, Price, Product Address]
-                prices = {
-                    "identifier": searcher,
-                    "amazon_data": scrapers.amazon_data,
-                    "walmart_data": scrapers.walmart_data,
-                    "newegg_data": scrapers.newegg_data,
-                    "bandh_data": scrapers.bandh_data,
-                    "ebay_data": scrapers.ebay_data,
-                    "tigerdirect_data": scrapers.tiger_direct_data,
-                    "microcenter_data": scrapers.microcenter_data,
-                    "jet_data": scrapers.jet_data,
-                    "outletpc_data": scrapers.outletpc_data,
-                    "superbiiz_data": scrapers.biiz_data
-                }
-                    
-                if USING_SOURCE_RETAILER:
-                    # If we're using the source retailer, then get the title from the url
-                    prices["title"] = title
-                    prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
-
-                    # Only put the item model and title into the database if it is from a source retailer
-                    try:
-                        print("here")
-                        requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
-                        requests.put("http://localhost:5003/image_data", json={"item_model": item_model, "image": image})
-
-                    except requests.exceptions.ConnectionError:
-                        logger.warning('Track Prices server not running right now')
-
-                print("Total Elapsed Time: " + str(time.time()-start_time))
-
-                # Removes all the scrapers that didn't give valid information
-                scrapers.remove_extraneous()
-
-                # Sort the scrapers by price (low --> high)
-                scrapers.sort_all_scrapers()
-
-                # Send the item model to the item model database
+            # Note: prices is for the json format, while scrapers.all_scrapers is for the gui
+            # Created dictionary that contains all the generated data for retailer
+            # [Name, Price, Product Address]
+            prices = {
+                "identifier": searcher,
+                "amazon_data": scrapers.amazon_data,
+                "walmart_data": scrapers.walmart_data,
+                "newegg_data": scrapers.newegg_data,
+                "bandh_data": scrapers.bandh_data,
+                "ebay_data": scrapers.ebay_data,
+                "tigerdirect_data": scrapers.tiger_direct_data,
+                "microcenter_data": scrapers.microcenter_data,
+                "jet_data": scrapers.jet_data,
+                "outletpc_data": scrapers.outletpc_data,
+                "superbiiz_data": scrapers.biiz_data
+            }
                 
-                # Send the price data to the track prices database
-                # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
+            if USING_SOURCE_RETAILER:
+                # If we're using the source retailer, then get the title from the url
+                prices["title"] = title
+                prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
 
-                if CACHE:
-                    try:
-                        requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
+                # Only put the item model and title into the database if it is from a source retailer
+                try:
+                    requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
+                    requests.put("http://localhost:5003/image_data", json={"item_model": item_model, "image": image})
 
-                    except requests.exceptions.ConnectionError:
-                        logger.warning('Caching server not running right now')
+                except requests.exceptions.ConnectionError:
+                    logger.warning('Track Prices server not running right now')
 
-                if return_type == "json":
-                    # Jsonify the data to return it
-                    load = flask.jsonify(prices)
-                    return json.dumps(load.json)
-                
-                elif return_type == "gui":
-                    return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), True)})
+            print("Total Elapsed Time: " + str(time.time()-start_time))
+
+            # Removes all the scrapers that didn't give valid information
+            scrapers.remove_extraneous()
+
+            # Sort the scrapers by price (low --> high)
+            scrapers.sort_all_scrapers()
+
+            # Send the item model to the item model database
+            
+            # Send the price data to the track prices database
+            # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
+            if CommonPaths.CACHE:
+                try:
+                    requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
+
+                except requests.exceptions.ConnectionError:
+                    logger.warning('Caching server not running right now')
+
+            if return_type == "json":
+                # Jsonify the data to return it
+                load = flask.jsonify(prices)
+                return json.dumps(load.json)
+            
+            elif return_type == "gui":
+                return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), True)})
 
         else:
             return str({"Error": "Item model not found"})
@@ -185,8 +177,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
 
     if searcher is not None:
         # Make GET request
-        global CACHE
-        if CACHE:
+        if CommonPaths.CACHE:
             try:
                 # Make a request to the caching server
                 cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model + "_process").json()
@@ -208,7 +199,6 @@ def process_based_scraper(retailer, price, item_model, return_type):
 
             except requests.exceptions.ConnectionError:
                 logger.warning('Caching server not running right now')
-                CACHE = False
 
     # Runs each scraper and it makes it easier to know which scraper function
     # Is for which retailer
@@ -246,7 +236,7 @@ def process_based_scraper(retailer, price, item_model, return_type):
         "target_data": scrapers.target_data
     }
 
-    if CACHE:
+    if CommonPaths.CACHE:
         try:
             requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
 

@@ -22,6 +22,9 @@ class CommonPaths():
 
     SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
 
+    # Whether we are using the caching server or not
+    CACHE = True
+
     if os.path.exists("settings.json"):
         # Location (from settings.json)
         with open("settings.json") as json_file:
