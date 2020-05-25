@@ -68,3 +68,7 @@ The date is used for the x-axis of the graph for the Track Prices front-end
 `DELETE` http://localhost:5003/item_model=ITEM_MODEL
 * Deletes the table in the SQL database with the item model as the name
 * Also deletes the item model from the Plyvel database
+
+### Notes
+* When storing titles in the DB, do NOT make them lowercase
+   * When displayed to the user, we don't want a title to be completely lowercase (it looks weird)

@@ -89,6 +89,7 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
                     CACHE = False
         
             if USING_SOURCE_RETAILER:
+                print(retailer, price)
                 retailer_functions[retailer.strip().lower() + "_data"] = price
                 scrapers.all_scrapers.append([retailer, price, "#"])
                 
@@ -127,13 +128,13 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
                 if USING_SOURCE_RETAILER:
                     # If we're using the source retailer, then get the title from the url
                     prices["title"] = title
+                    prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
 
                     # Only put the item model and title into the database if it is from a source retailer
                     try:
                         print("here")
                         requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
                         requests.put("http://localhost:5003/image_data", json={"item_model": item_model, "image": image})
-                        prices[retailer.strip().lower() + "_data"] = [retailer, price, "#"]
 
                     except requests.exceptions.ConnectionError:
                         logger.warning('Track Prices server not running right now')

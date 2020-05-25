@@ -42,3 +42,10 @@ Example:
 
 * Amazon seems to have blocked almost all of the US tor exit nodes
    * Going to try to use other countries' tor exit nodes
+
+* When getting prices and product addresses from Amazon, be sure to first get the "card" and then retrieve the product price and address from that card
+   * What can happen is that some products listed will not have a price attributed to it, so it will just skip them
+   * This could mean inaccurate products are sent
+
+* Certain item models actually have a mf-ing space in them, so we might not be able to replace the spaces in them with nothing
+
