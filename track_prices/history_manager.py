@@ -147,7 +147,7 @@ def put_price_data():
         cursor = conn.cursor()
 
         # Create the table with all the retailers 
-        cursor.execute(''' CREATE TABLE IF NOT EXISTS {} (
+        cursor.execute(''' CREATE TABLE IF NOT EXISTS "{}" (
         date DATE,
         amazon float,
         bestbuy float,
@@ -190,7 +190,7 @@ def put_price_data():
 
         # Need a tuple because that's how the prices get inserted into the "?"
         insert_values = tuple(insert_values)
-        insert_format = ''' INSERT INTO ''' + item_model + ''' (date, amazon, bestbuy, newegg, walmart, bandh, 
+        insert_format = ''' INSERT INTO "''' + item_model + '''" (date, amazon, bestbuy, newegg, walmart, bandh, 
         ebay, tigerdirect, microcenter, jet, outlet, superbiiz, target, rakuten) VALUES(''' + "?, " * (len(DB_ORDER) - 1) + '''?)'''
 
         # Just to check that everything is working
@@ -308,29 +308,41 @@ def delete_data():
     # We check if "check" is equal to None (meaning the item model is not in the database)
     check = ply_db.get(bytes(item_model, encoding='utf-8'))
     
-    # As long as there is something in "check" the item_model exists
-    if check is not None:
-        # Establish the connection to the prices database
-        conn = sqlite3.connect(PRICES_DB)
-        cursor = conn.cursor()
+    print(item_model, check)
 
-        # DROP TABLE essentially will delete the table
-        delete_str = "DROP TABLE " + item_model
-
-        # Execute the deletion of the table and close the connection
-        cursor.execute(delete_str)
-        conn.commit()
-        conn.close()
-
-        # Delete the item_model in the plyvel database as well
-        ply_db.delete(bytes(item_model, encoding='utf-8'))
-
-        # Close the item model database
-        ply_db.close()
     
-        return json.dumps({'success': True}), 200
+    try:
+        # Establish the connection to the prices database
+        conn = sqlite3.connect(FAKE_DATA)
+        cursor = conn.cursor()
+        # As long as there is something in "check" the item_model exists
+        if check is not None:
+            # Delete the item_model in the plyvel database as well
+            ply_db.delete(bytes(item_model, encoding='utf-8'))
 
-    return json.dumps({'success': False, "msg":"Item model not found"}), 400
+            # DROP TABLE essentially will delete the table
+            delete_str = 'DROP TABLE "' + format_item_model(item_model) + '"'
+
+            # Execute the deletion of the table and close the connection
+            cursor.execute(delete_str)
+            conn.commit()
+            conn.close()
+
+            # Close the item model database
+            ply_db.close()
+        
+            return json.dumps({'success': True}), 200
+            
+    except sqlite3.OperationalError:
+        ply_db.close()
+        conn.close()
+        return json.dumps({'success': False, "msg":"Item model not in the sql database"}), 400
+    
+    finally:
+        ply_db.close()
+        conn.close()
+    
+    return json.dumps({'success': True, "msg": "Item model not found (plyvel db)"}), 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5003, threaded=True)
