@@ -12,8 +12,9 @@ while True:
         requests.put("http://localhost:5003/item_model_data", json={"item_model": data["item_model"], "title": data["title"]})
 
     elif user_input.lower() == "delete":
+        user_input = input('What is the item model you want to delete? ')
         item_model = 'bx80684i99900k'
-        requests.delete("http://localhost:5003/", json = {"item_model": item_model})
+        requests.delete("http://localhost:5003/", json = {"item_model": user_input})
 
     elif user_input.lower() == "put item model":
         item_model = input("What item model do you want to put into the database? ")
