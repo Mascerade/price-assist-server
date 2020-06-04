@@ -90,9 +90,8 @@ def get_data():
     item_model = request.args.get("item_model")
 
     # This is because the item_model is stored differently in the sql database
-    item_model = format_item_model(item_model)
-
     try:
+        print(item_model)
         ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
         image_db = plyvel.DB(IMAGE_DB, create_if_missing = False)
         title = ply_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
@@ -104,6 +103,8 @@ def get_data():
         return json.dumps({'success': False, 'msg': str(e)}), 404
 
     with sqlite3.connect(FAKE_DATA) as conn:
+        # Have to change the item model to the version that is formatted for the SQL database
+        item_model = format_item_model(item_model)
         get_info = '''SELECT * from "{}"'''.format(item_model)
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
@@ -244,7 +245,7 @@ def put_item_model():
     This function will simply put an item model into the plyvel database
     """
     item_model = request.json['item_model'].lower().strip()
-    title = request.json['title'].lower().strip()
+    title = request.json['title'].strip()
 
     # Connect to the plyvel db of item models
     ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = True)

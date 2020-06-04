@@ -2,6 +2,7 @@ import requests
 import random
 import sqlite3
 import datetime
+from help_functions import format_item_model
 
 NUM_RETAILERS = 13
 
@@ -16,6 +17,7 @@ cursor = conn.cursor()
 item_models = requests.get('http://localhost:5003/item_model_data').json()
 
 for item_model, _ in item_models.items():
+    item_model = format_item_model(item_model)
     create_table = (''' CREATE TABLE IF NOT EXISTS "{}"(
         date DATE,
         amazon float,
@@ -30,7 +32,8 @@ for item_model, _ in item_models.items():
         outlet float,
         superbiiz float,
         target float,
-        rakuten float);'''.format(item_model))
+        rakuten float);'''.format(item_model)
+    )
 
     cursor.execute(create_table)
 
