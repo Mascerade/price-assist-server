@@ -4,6 +4,7 @@ __pychache__/
 venv/
 .vscode/
 track_prices/databases
+user_database_controller/databases
 settings.json
 geckodriver.log
 logging/
