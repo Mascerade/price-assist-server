@@ -28,16 +28,21 @@ def add_user():
 def update_item_models():
     uid_token = request.json['uid_token']
     item_model = request.json['item_model']
-    item_models = json.loads(ply_db.get(bytes(uid_token, encoding='utf-8')).decode('utf-8'))
+    item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
+    if item_models is None:
+        return json.dumps({'success': False, 'msg': 'User does not exists'}), 404
+    item_models = json.loads(item_models.decode('utf-8'))
     item_models['item_models'].append(item_model)
-    print(item_models)
     ply_db.put(bytes(uid_token, encoding='utf-8'), bytes(json.dumps(item_models), encoding='utf-8'))
     return json.dumps({'success': True, 'msg': 'Updated Item Models'}), 204
 
 @app.route('/', methods=['GET'])
 def get_user():
     uid_token = request.args.get('uid_token')
-    item_models = json.loads(ply_db.get(bytes(uid_token, encoding='utf-8')).decode('utf-8'))
+    item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
+    if item_models is None:
+        return json.dumps({'success': False, 'msg': 'User does not exist'})
+    item_models = json.loads(item_models.decode('utf-8'))
     item_models['success'] = True
     return json.dumps(item_models), 200
 
