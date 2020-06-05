@@ -20,8 +20,12 @@ USER_DB = 'databases/user_db'
 
 ply_db = plyvel.DB(USER_DB, create_if_missing = True)
 
-
 app = Flask(__name__)
+
+def process_token(token):
+    decoded_token = auth.verify_id_token(token)
+    uid = decoded_token['uid']
+    return uid
 
 @app.route('/test', methods=['GET'])
 @cross_origin()
@@ -35,14 +39,14 @@ def test():
 @app.route('/', methods=['POST'])
 @cross_origin()
 def add_user():
-    uid_token = request.json['uid_token']
+    uid_token = process_token(request.json['uid_token'])
     ply_db.put(bytes(uid_token, encoding='utf-8'), bytes(json.dumps({'item_models': []}), encoding='utf-8'))
     return json.dumps({'success': True, 'msg': 'User Created'}), 201
 
 @app.route('/', methods=['PUT'])
 @cross_origin()
 def update_item_models():
-    uid_token = request.json['uid_token']
+    uid_token = process_token(request.json['uid_token'])
     item_model = request.json['item_model']
     item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
     if item_models is None:
@@ -55,7 +59,7 @@ def update_item_models():
 @app.route('/', methods=['GET'])
 @cross_origin()
 def get_user():
-    uid_token = request.args.get('uid_token')
+    uid_token = process_token(request.args.get('uid_token'))
     item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
     if item_models is None:
         return json.dumps({'success': False, 'msg': 'User does not exist'}), 404
