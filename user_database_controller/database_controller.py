@@ -41,7 +41,7 @@ def get_user():
     uid_token = request.args.get('uid_token')
     item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
     if item_models is None:
-        return json.dumps({'success': False, 'msg': 'User does not exist'})
+        return json.dumps({'success': False, 'msg': 'User does not exist'}), 404
     item_models = json.loads(item_models.decode('utf-8'))
     item_models['success'] = True
     return json.dumps(item_models), 200
