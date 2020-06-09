@@ -87,7 +87,7 @@ def get_fake_data():
 @cross_origin()
 def get_data():
     """ Retrieve all the data from the SQL Database """
-    item_model = request.args.get("item_model")
+    item_model = request.args.get("item_model").lower()
 
     # This is because the item_model is stored differently in the sql database
     try:
