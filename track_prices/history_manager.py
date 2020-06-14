@@ -6,6 +6,7 @@ import time
 import requests
 import sys
 import os
+import signal
 import sqlite3
 import datetime
 import plyvel
@@ -55,6 +56,9 @@ PRICES_DB = 'databases/prices.db'
 # FAKE_DATA is only used for testing the graphing part of Track Prices
 FAKE_DATA = 'databases/fake_data.db'
 
+ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
+image_db = plyvel.DB(IMAGE_DB, create_if_missing = False)
+
 app = Flask(__name__)
 
 @app.route("/fake_data", methods=["GET"])
@@ -92,14 +96,10 @@ def get_data():
     # This is because the item_model is stored differently in the sql database
     try:
         print(item_model)
-        ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
-        image_db = plyvel.DB(IMAGE_DB, create_if_missing = False)
         title = ply_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
         image = image_db.get(bytes(item_model, encoding='utf-8')).decode('utf-8')
 
     except AttributeError as e:
-        ply_db.close()
-        image_db.close()
         return json.dumps({'success': False, 'msg': str(e)}), 404
 
     with sqlite3.connect(FAKE_DATA) as conn:
@@ -223,7 +223,6 @@ def print_item_model_data():
     {"item_model": "title", "item_model2": "title2" ...}
     """
 
-    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
     return_data = {}
     for key, value in ply_db:
         return_data[key.decode("utf-8")] = value.decode('utf-8')
@@ -247,14 +246,9 @@ def put_item_model():
     item_model = request.json['item_model'].lower().strip()
     title = request.json['title'].strip()
 
-    # Connect to the plyvel db of item models
-    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = True)
-
     # Put the item model into the db
     ply_db.put(bytes(item_model, encoding='utf-8'), bytes(title, encoding='utf-8'))
 
-    # Close the item model database
-    ply_db.close()
 
     return json.dumps({"success": True}), 201
 
@@ -269,13 +263,8 @@ def put_image_data():
     item_model = request.json['item_model'].lower().strip()
     image_link = request.json['image'].strip()
 
-    image_db = plyvel.DB(IMAGE_DB, create_if_missing = True)
-
     # Put the image into the database
     image_db.put(bytes(item_model, encoding='utf-8'), bytes(image_link, encoding='utf-8'))
-
-    # Close the database
-    image_db.close()
 
     return json.dumps({"success": True}), 201
 
@@ -287,24 +276,15 @@ def delete_item_model():
     """
     item_model = request.json['item_model'].lower().strip()
 
-    # Don't create the database if you are trying to delete an item_model from
-    # a database that is already non-existent
-    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
-    
     # Delete the item model from the database
     ply_db.delete(bytes(item_model, encoding='utf-8'))
 
-    # Close the item model database
-    ply_db.close()
 
     return json.dumps({"success": True}), 200
 
 @app.route("/", methods=["DELETE"])
 def delete_data():
     item_model = request.json['item_model'].lower().strip()
-
-    # If its missing, we don't want to create a new one until we PUT data, not delete data
-    ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
 
     # We check if "check" is equal to None (meaning the item model is not in the database)
     check = ply_db.get(bytes(item_model, encoding='utf-8'))
@@ -329,21 +309,26 @@ def delete_data():
             conn.commit()
             conn.close()
 
-            # Close the item model database
-            ply_db.close()
-        
             return json.dumps({'success': True}), 200
             
     except sqlite3.OperationalError:
-        ply_db.close()
         conn.close()
         return json.dumps({'success': False, "msg":"Item model not in the sql database"}), 400
     
     finally:
-        ply_db.close()
         conn.close()
     
     return json.dumps({'success': True, "msg": "Item model not found (plyvel db)"}), 200
+
+@app.route('/shutdown', methods=['GET'])
+def stopServer():
+    ply_db.close()
+    image_db.close()
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Server not running with Werkzeug Server')
+    func()
+    return json.dumps({'success': True, 'msg': 'Server is shutting down'})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5003, threaded=True)
