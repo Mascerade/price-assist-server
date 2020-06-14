@@ -23,6 +23,7 @@ class NeweggProduct(Scraper):
     def retrieve_product_address(self):
         try:
             self.title = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"}).text
+            self.title = self.title.replace('"', '\\\"')
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
 
 
@@ -68,5 +69,5 @@ class NeweggProduct(Scraper):
             self.price = None
 
 if __name__ == "__main__":
-    newegg = NeweggProduct("BX80684I99900K")
+    newegg = NeweggProduct("P2719H")
     newegg.test()
