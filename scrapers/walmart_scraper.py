@@ -21,7 +21,7 @@ class Walmart(Scraper):
         # TODO: Fix address
         try:
             self.product_address = "https://www.walmart.com" + \
-                                   self.soup.find('a', 'product-title-link line-clamp line-clamp-2')['href']
+                                   self.soup.find('a', {'data-type': 'itemTitles'})['href']
 
         except (AttributeError, IndexError, TypeError) as e:
             self.access_error(function_name="retrieve_product_address()")

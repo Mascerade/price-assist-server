@@ -46,7 +46,7 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
         "ebay_data": scrapers.retrieve_ebay_data,
         "tigerdirect_data": scrapers.retrieve_tiger_direct_data,
         "microcenter_data": scrapers.retrieve_microcenter_price,
-        "jet_data": scrapers.retrieve_jet_price,
+        #"jet_data": scrapers.retrieve_jet_price,
         "outletpc_data": scrapers.retrieve_outletpc_price,
         "superbiiz_data": scrapers.retrieve_super_biiz_price
     }
@@ -114,7 +114,7 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
                 "ebay_data": scrapers.ebay_data,
                 "tigerdirect_data": scrapers.tiger_direct_data,
                 "microcenter_data": scrapers.microcenter_data,
-                "jet_data": scrapers.jet_data,
+                #"jet_data": scrapers.jet_data,
                 "outletpc_data": scrapers.outletpc_data,
                 "superbiiz_data": scrapers.biiz_data
             }

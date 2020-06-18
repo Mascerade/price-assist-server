@@ -19,6 +19,7 @@ class TigerDirect(Scraper):
                          data="")
 
     def retrieve_product_price(self):
+        print(self.soup)
         try:
             count = 0
             self.price = self.soup.find('div', 'salePrice').text
@@ -53,5 +54,5 @@ class TigerDirect(Scraper):
             self.product_address = None
 
 if __name__ == "__main__":
-    tiger = TigerDirect("BX80684I99900K")
+    tiger = TigerDirect("ryzen 7")
     tiger.test()
