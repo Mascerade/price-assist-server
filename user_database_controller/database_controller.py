@@ -47,7 +47,7 @@ def add_user():
 @cross_origin()
 def update_item_models():
     uid_token = process_token(request.json['uid_token'])
-    item_model = request.json['item_model']
+    item_model = request.json['item_model'].lower().strip()
     item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
     if item_models is None:
         return json.dumps({'success': False, 'msg': 'User does not exists'}), 404
@@ -81,7 +81,7 @@ def delete_user():
 @cross_origin()
 def del_item_model():
     uid_token = process_token(request.json['uid_token'])
-    target_item_model = request.json['item_model']
+    target_item_model = request.json['item_model'].lower().strip()
     user_item_models = ply_db.get(bytes(uid_token, encoding='utf-8'))
     if user_item_models is None:
         return json.dumps({'success': False, 'msg': 'User does not exist'}), 404
