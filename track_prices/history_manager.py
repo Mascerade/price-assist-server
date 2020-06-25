@@ -104,8 +104,7 @@ def get_data():
 
     with sqlite3.connect(FAKE_DATA) as conn:
         # Have to change the item model to the version that is formatted for the SQL database
-        item_model = format_item_model(item_model)
-        get_info = '''SELECT * from "{}"'''.format(item_model)
+        get_info = '''SELECT * from "{}"'''.format(format_item_model(item_model))
         # The cursor is what actaully gets data from the database
         cur = conn.cursor()
 
