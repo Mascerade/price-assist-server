@@ -216,7 +216,8 @@ def put_price_data():
         return json.dumps({"success": True}), 201
 
 @app.route("/item_model_data", methods=["GET"])
-def print_item_model_data():
+@cross_origin
+def item_model_data():
     """
     Prints the item models with the title to the terminal
     {"item_model": "title", "item_model2": "title2" ...}
