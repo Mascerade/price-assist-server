@@ -32,22 +32,12 @@ def get_caching_data(label):
         # If stored data was in the cache and it is valid [Name, Price, Product Address]
         # Then return those values
         if cached_server_data["success"]:
-            for _, value in cached_server_data.items():
-                if type(value) == list and len(value) >= 3:
-                    scrapers.all_scrapers.append(value)
-
-            if return_type == "json":
-                return json.dumps(cached_server_data)
-            
-            elif return_type == "gui":
-                scrapers.remove_extraneous()
-                scrapers.sort_all_scrapers()
-                return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
+            return json.dumps(cached_server_data)
     
     except requests.exceptions.ConnectionError:
         logger.warning('Caching server not running right now')
 
-def network_scrapers(retailer, price, item_model, title, image, return_type):
+def network_scrapers(retailer, price, item_model, title, image):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
@@ -82,27 +72,9 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
             # This block is only run if the caching server is online
             # Otherwise, go through with scraping the websites
             if CommonPaths.CACHE:
-                # Make a request to the caching server
-                try:
-                    cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model).json()
-
-                    # If stored data was in the cache and it is valid [Name, Price, Product Address]
-                    # Then return those values
-                    if cached_server_data["success"]:
-                        for _, value in cached_server_data.items():
-                            if type(value) == list and len(value) >= 3:
-                                scrapers.all_scrapers.append(value)
-
-                        if return_type == "json":
-                            return json.dumps(cached_server_data)
-                        
-                        elif return_type == "gui":
-                            scrapers.remove_extraneous()
-                            scrapers.sort_all_scrapers()
-                            return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
-                
-                except requests.exceptions.ConnectionError:
-                    logger.warning('Caching server not running right now')
+                cache = get_caching_data(item_model)
+                if cache is not None:
+                    return cache
 
             # This makes it so that if we already have the retailer's data, we don't run the scraper
             if USING_SOURCE_RETAILER:
@@ -173,13 +145,9 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
                 except requests.exceptions.ConnectionError:
                     logger.warning('Caching server not running right now')
 
-            if return_type == "json":
-                # Jsonify the data to return it
-                load = flask.jsonify(prices)
-                return json.dumps(load.json)
-            
-            elif return_type == "gui":
-                return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), True)})
+            # Jsonify the data to return it
+            load = flask.jsonify(prices)
+            return json.dumps(load.json)
 
         else:
             return str({"Error": "Item model not found"})
@@ -188,7 +156,7 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
         logger.error('Unexpected error from lambda function: ' + str(e))
         return flask.jsonify({"success": False}), 500
 
-def process_based_scraper(retailer, price, item_model, return_type):
+def process_based_scraper(retailer, price, item_model):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
@@ -200,27 +168,9 @@ def process_based_scraper(retailer, price, item_model, return_type):
     if searcher is not None:
         # Make GET request
         if CommonPaths.CACHE:
-            try:
-                # Make a request to the caching server
-                cached_server_data = requests.get("http://localhost:5001?item_model=" + item_model + "_process").json()
-
-                # If stored data was in the cache and it is valid [Name, Price, Product Address]
-                # Then return those values
-                if cached_server_data["success"]:
-                    for _, value in cached_server_data.items():
-                        if type(value) == list and len(value) == 3:
-                            scrapers.all_scrapers.append(value)
-
-                    if return_type == "json":
-                        return json.dumps(cached_server_data)
-                    
-                    elif return_type == "gui":
-                        scrapers.remove_extraneous()
-                        scrapers.sort_all_scrapers()
-                        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, False)})
-
-            except requests.exceptions.ConnectionError:
-                logger.warning('Caching server not running right now')
+            cache = get_caching_data(item_model + '_process')
+            if cache is not None:
+                return cache
 
     # Runs each scraper and it makes it easier to know which scraper function
     # Is for which retailer
@@ -265,21 +215,12 @@ def process_based_scraper(retailer, price, item_model, return_type):
         except requests.exceptions.ConnectionError:
             logger.warning('Caching server not running right now')
 
-    if return_type == "json":
-        # Jsonify the data to return it
-        load = flask.jsonify(prices)        
-        return json.dumps(load.json)
-
-    elif return_type == "gui":
-        # Removes all the scrapers that didn't give valid information
-        scrapers.remove_extraneous()
-
-        # Sort the scrapers by price (low --> high)
-        scrapers.sort_all_scrapers()
-
-        return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.get_all_scrapers(), False)})
-
     print(time.time() - start_time)
+
+    # Jsonify the data to return it
+    load = flask.jsonify(prices)        
+    return json.dumps(load.json)
+
 
 def single_retailer(retailer, item_model):
     if CommonPaths.CACHE:
@@ -341,10 +282,9 @@ def network_scratper():
     item_model = request.args.get('item_model')
     title = request.args.get('title')
     image = request.args.get('image')
-    return_type = request.args.get('return_type')
     
     try:
-        return network_scrapers(retailer, price, item_model, title, image, return_type)
+        return network_scrapers(retailer, price, item_model, title, image)
 
     except TypeError:
         return flask.abort(500)
@@ -355,10 +295,9 @@ def process_based_scraper_response():
     retailer = request.args.get('retailer')
     price = request.args.get('price')
     item_model = request.args.get('item_model')
-    return_type = request.args.get('return_type')
 
     try:
-        return process_based_scraper(retailer, price, item_model, return_type)
+        return process_based_scraper(retailer, price, item_model)
 
     except TypeError:
         return flask.abort(500)
