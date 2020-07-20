@@ -25,6 +25,28 @@ logger.setLevel(logging.DEBUG)
 fh = logging.FileHandler('logging/lambda_function.log')
 logger.addHandler(fh)
 
+def get_caching_data(label):
+    try:
+        cached_server_data = requests.get("http://localhost:5001?item_model=" + label).json()
+
+        # If stored data was in the cache and it is valid [Name, Price, Product Address]
+        # Then return those values
+        if cached_server_data["success"]:
+            for _, value in cached_server_data.items():
+                if type(value) == list and len(value) >= 3:
+                    scrapers.all_scrapers.append(value)
+
+            if return_type == "json":
+                return json.dumps(cached_server_data)
+            
+            elif return_type == "gui":
+                scrapers.remove_extraneous()
+                scrapers.sort_all_scrapers()
+                return str({"iframe": ScraperHelpers.iframe, "head": ScraperHelpers.heading, "body": gui_generator(scrapers.all_scrapers, True)})
+    
+    except requests.exceptions.ConnectionError:
+        logger.warning('Caching server not running right now')
+
 def network_scrapers(retailer, price, item_model, title, image, return_type):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
@@ -126,8 +148,8 @@ def network_scrapers(retailer, price, item_model, title, image, return_type):
 
                 # Only put the item model and title into the database if it is from a source retailer
                 try:
-                    requests.put("http://localhost:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
-                    requests.put("http://localhost:5003/image_data", json={"item_model": item_model, "image": image})
+                    requests.put("http://10.0.0.203:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
+                    requests.put("http://10.0.0.203:5003/image_data", json={"item_model": item_model, "image": image})
 
                 except requests.exceptions.ConnectionError:
                     logger.warning('Track Prices server not running right now')
@@ -259,13 +281,60 @@ def process_based_scraper(retailer, price, item_model, return_type):
 
     print(time.time() - start_time)
 
+def single_retailer(retailer, item_model):
+    if CommonPaths.CACHE:
+        network_scrapers = get_caching_data(item_model)
+        if network_scrapers is not None:
+            try:
+                return network_scrapers[item_model]
+            
+            except KeyError:
+                process_scrapers = get_caching_data(item_model + '_process')
+                return process_scrapers[item_model]
+
+    scrapers = ScraperHelpers()
+    retailer_functions = {
+        "amazon_data": scrapers.retrieve_amazon_data,
+        "walmart_data": scrapers.retrieve_walmart_data,
+        "newegg_data": scrapers.retrieve_newegg_data,
+        "bandh_data": scrapers.retrieve_bandh_data,
+        "ebay_data": scrapers.retrieve_ebay_data,
+        "tigerdirect_data": scrapers.retrieve_tiger_direct_data,
+        "microcenter_data": scrapers.retrieve_microcenter_price,
+        #"jet_data": scrapers.retrieve_jet_price,
+        "outletpc_data": scrapers.retrieve_outletpc_price,
+        "superbiiz_data": scrapers.retrieve_super_biiz_price,
+        "bestbuy_data": scrapers.retrieve_bestbuy_data,
+        "rakuten_data": scrapers.retrieve_rakuten_data,
+        "target_data": scrapers.retrieve_target_data
+    }
+
+    retailer_functions[retailer.lower() + '_data'](item_model)
+    prices = {
+        "amazon_data": scrapers.amazon_data,
+        "walmart_data": scrapers.walmart_data,
+        "newegg_data": scrapers.newegg_data,
+        "bandh_data": scrapers.bandh_data,
+        "ebay_data": scrapers.ebay_data,
+        "tigerdirect_data": scrapers.tiger_direct_data,
+        "microcenter_data": scrapers.microcenter_data,
+        #"jet_data": scrapers.jet_data,
+        "outletpc_data": scrapers.outletpc_data,
+        "superbiiz_data": scrapers.biiz_data,
+        "bestbuy_data": scrapers.bestbuy_data,
+        "rakuten_data": scrapers.rakuten_data,
+        "target_data": scrapers.target_data
+    }
+    
+    return json.dumps(prices[retailer.lower() + '_data'])
+
 # Create the Flask app
 application = Flask(__name__)
 
 
 @application.route('/price-assist/api/network-scrapers')
 @cross_origin()
-def query():
+def network_scratper():
     # Get all the required information from the parameters in the URL
     retailer = request.args.get('retailer')
     price = request.args.get('price')
@@ -282,7 +351,7 @@ def query():
 
 @application.route('/price-assist/api/process-scrapers')
 @cross_origin()
-def proces_based_scraper_response():
+def process_based_scraper_response():
     retailer = request.args.get('retailer')
     price = request.args.get('price')
     item_model = request.args.get('item_model')
@@ -294,6 +363,17 @@ def proces_based_scraper_response():
     except TypeError:
         return flask.abort(500)
 
+@application.route('/price-assist/api/current-price')
+@cross_origin()
+def current_price():
+    retailer = request.args.get('retailer')
+    item_model = request.args.get('item_model')
+
+    try:
+        return single_retailer(retailer, item_model)
+
+    except TypeError:
+        return flask.abort(500)
 
 # Run app using localhost
 if __name__ == '__main__':
