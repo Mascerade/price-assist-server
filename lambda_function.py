@@ -223,15 +223,16 @@ def process_based_scraper(retailer, price, item_model):
 
 
 def single_retailer(retailer, item_model):
+    retailer = retailer.lower()
     if CommonPaths.CACHE:
-        network_scrapers = get_caching_data(item_model)
+        network_scrapers = json.loads(get_caching_data(item_model))
         if network_scrapers is not None:
             try:
-                return network_scrapers[item_model]
-            
+                return json.dumps(network_scrapers[retailer + '_data'])
+
             except KeyError:
-                process_scrapers = get_caching_data(item_model + '_process')
-                return process_scrapers[item_model]
+                process_scrapers = json.loads(get_caching_data(item_model + '_process'))
+                return json.dumps(process_scrapers[retailer + '_data'])
 
     scrapers = ScraperHelpers()
     retailer_functions = {
