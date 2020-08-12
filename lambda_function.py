@@ -42,6 +42,7 @@ def network_scrapers(retailer, price, item_model, title, image):
     scrapers = ScraperHelpers()
     start_time = time.time()
     searcher = item_model
+    item_model = item_model.lower()
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
@@ -160,7 +161,8 @@ def process_based_scraper(retailer, price, item_model):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
-    searcher = item_model
+    searcher = item_model.lower()
+    item_model = item_model.lower()
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
@@ -224,10 +226,12 @@ def process_based_scraper(retailer, price, item_model):
 
 def single_retailer(retailer, item_model):
     retailer = retailer.lower()
+    item_model = item_model.lower()
     if CommonPaths.CACHE:
-        network_scrapers = json.loads(get_caching_data(item_model))
+        network_scrapers = get_caching_data(item_model)
         if network_scrapers is not None:
             try:
+                network_scrapers = json.loads(network_scrapers)
                 return json.dumps(network_scrapers[retailer + '_data'])
 
             except KeyError:
@@ -312,7 +316,8 @@ def current_price():
     try:
         return single_retailer(retailer, item_model)
 
-    except TypeError:
+    except TypeError as e:
+        print(str(e))
         return flask.abort(500)
 
 # Run app using localhost
