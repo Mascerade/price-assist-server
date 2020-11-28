@@ -61,7 +61,7 @@ def network_scrapers(retailer, price, item_model, title, image):
         "microcenter_data": scrapers.retrieve_microcenter_price,
         #"jet_data": scrapers.retrieve_jet_price,
         "outletpc_data": scrapers.retrieve_outletpc_price,
-        "superbiiz_data": scrapers.retrieve_super_biiz_price
+        #"superbiiz_data": scrapers.retrieve_super_biiz_price
     }
 
     # Set the retailer that the info is coming from in the retailer_function
@@ -111,7 +111,7 @@ def network_scrapers(retailer, price, item_model, title, image):
                 "microcenter_data": scrapers.microcenter_data,
                 #"jet_data": scrapers.jet_data,
                 "outletpc_data": scrapers.outletpc_data,
-                "superbiiz_data": scrapers.biiz_data
+                #"superbiiz_data": scrapers.biiz_data
             }
                 
             if USING_SOURCE_RETAILER:
@@ -250,7 +250,7 @@ def single_retailer(retailer, item_model):
         "microcenter_data": scrapers.retrieve_microcenter_price,
         #"jet_data": scrapers.retrieve_jet_price,
         "outletpc_data": scrapers.retrieve_outletpc_price,
-        "superbiiz_data": scrapers.retrieve_super_biiz_price,
+        #"superbiiz_data": scrapers.retrieve_super_biiz_price,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
         "rakuten_data": scrapers.retrieve_rakuten_data,
         "target_data": scrapers.retrieve_target_data
@@ -267,7 +267,7 @@ def single_retailer(retailer, item_model):
         "microcenter_data": scrapers.microcenter_data,
         #"jet_data": scrapers.jet_data,
         "outletpc_data": scrapers.outletpc_data,
-        "superbiiz_data": scrapers.biiz_data,
+        #"superbiiz_data": scrapers.biiz_data,
         "bestbuy_data": scrapers.bestbuy_data,
         "rakuten_data": scrapers.rakuten_data,
         "target_data": scrapers.target_data
