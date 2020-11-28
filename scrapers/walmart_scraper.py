@@ -32,7 +32,7 @@ class Walmart(Scraper):
             self.product_address = None
 
     def retrieve_product_price(self):
-        if self.product_address is not "None":
+        if self.product_address is not None:
             try:
                 self.price = self.soup.find("span", attrs={"class": "price-group"}).text
 

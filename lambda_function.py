@@ -27,7 +27,7 @@ logger.addHandler(fh)
 
 def get_caching_data(label):
     try:
-        cached_server_data = requests.get("http://localhost:5001?item_model=" + label).json()
+        cached_server_data = requests.get("http://" + CommonPaths.CACHE_IP + ":5001?item_model=" + label).json()
 
         # If stored data was in the cache and it is valid [Name, Price, Product Address]
         # Then return those values
@@ -121,8 +121,8 @@ def network_scrapers(retailer, price, item_model, title, image):
 
                 # Only put the item model and title into the database if it is from a source retailer
                 try:
-                    requests.put("http://10.0.0.203:5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
-                    requests.put("http://10.0.0.203:5003/image_data", json={"item_model": item_model, "image": image})
+                    requests.put("http://" + CommonPaths.TRACK_PRICES_IP + ":5003/item_model_data", json={"item_model": item_model, "title": prices["title"]})
+                    requests.put("http://" + CommonPaths.TRACK_PRICES_IP + ":5003/image_data", json={"item_model": item_model, "image": image})
 
                 except requests.exceptions.ConnectionError:
                     logger.warning('Track Prices server not running right now')
@@ -141,7 +141,8 @@ def network_scrapers(retailer, price, item_model, title, image):
             # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
             if CommonPaths.CACHE:
                 try:
-                    requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
+                    print('welrhjwklj')
+                    requests.put("http://" + CommonPaths.CACHE_IP + ":5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
 
                 except requests.exceptions.ConnectionError:
                     logger.warning('Caching server not running right now')
@@ -212,7 +213,7 @@ def process_based_scraper(retailer, price, item_model):
 
     if CommonPaths.CACHE:
         try:
-            requests.put("http://localhost:5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
+            requests.put("http://" + CommonPaths.CACHE_IP + ":5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": True})
 
         except requests.exceptions.ConnectionError:
             logger.warning('Caching server not running right now')

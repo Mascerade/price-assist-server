@@ -19,7 +19,6 @@ class TigerDirect(Scraper):
                          data="")
 
     def retrieve_product_price(self):
-        print(self.soup)
         try:
             count = 0
             self.price = self.soup.find('div', 'salePrice').text

@@ -149,6 +149,7 @@ class Scraper:
                 self.data = requests.get(self.search_address, proxies=proxies, headers=self.user_agent, timeout=5).text
 
             except Exception as e:
+                self.unhandled_error(e, 'Making requrest in master_scraper.py')
                 self.price = "None"
                 self.product_address = "None"
 

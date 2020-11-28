@@ -25,6 +25,12 @@ class CommonPaths():
     # Whether we are using the caching server or not
     CACHE = True
 
+    # The IP address for the caching server
+    CACHE_IP = "localhost"
+
+    # The IP for Track Prices
+    TRACK_PRICES_IP = '10.0.0.210'
+
     if os.path.exists("settings.json"):
         # Location (from settings.json)
         with open("settings.json") as json_file:
