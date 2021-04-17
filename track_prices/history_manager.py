@@ -40,7 +40,7 @@ if not os.path.exists('databases'):
     os.makedirs('databases')
 
 # What is used to create the dict of each entry
-DB_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "banh", "ebay", "tigerdirect", "microcenter", "jet", "outletpc", "superbiiz", "target", "rakuten"]
+DB_ORDER = ["date", "amazon", "bestbuy", "newegg", "walmart", "bandh", "ebay", "tigerdirect", "microcenter", "target", "rakuten"]
 
 # ITEM_MODEL_DB stores the item model for a product as the key and the title as a value
 # This database is used for when the user of Track Prices needs to search a product
@@ -56,8 +56,8 @@ PRICES_DB = 'databases/prices.db'
 # FAKE_DATA is only used for testing the graphing part of Track Prices
 FAKE_DATA = 'databases/fake_data.db'
 
-ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = False)
-image_db = plyvel.DB(IMAGE_DB, create_if_missing = False)
+ply_db = plyvel.DB(ITEM_MODEL_DB, create_if_missing = True)
+image_db = plyvel.DB(IMAGE_DB, create_if_missing = True)
 
 app = Flask(__name__)
 
@@ -157,9 +157,6 @@ def put_price_data():
         ebay float,
         tigerdirect float,
         microcenter float,
-        jet float,
-        outlet float,
-        superbiiz float,
         target float,
         rakuten float); '''.format(item_model))
 
@@ -191,7 +188,7 @@ def put_price_data():
         # Need a tuple because that's how the prices get inserted into the "?"
         insert_values = tuple(insert_values)
         insert_format = ''' INSERT INTO "''' + item_model + '''" (date, amazon, bestbuy, newegg, walmart, bandh, 
-        ebay, tigerdirect, microcenter, jet, outlet, superbiiz, target, rakuten) VALUES(''' + "?, " * (len(DB_ORDER) - 1) + '''?)'''
+        ebay, tigerdirect, microcenter, target, rakuten) VALUES(''' + "?, " * (len(DB_ORDER) - 1) + '''?)'''
 
         # Just to check that everything is working
         print(insert_format)
@@ -216,7 +213,7 @@ def put_price_data():
         return json.dumps({"success": True}), 201
 
 @app.route("/item_model_data", methods=["GET"])
-@cross_origin
+@cross_origin()
 def item_model_data():
     """
     Prints the item models with the title to the terminal

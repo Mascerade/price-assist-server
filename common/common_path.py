@@ -5,7 +5,6 @@ import random
 sys.path.append(os.getcwd())
 
 class CommonPaths():
-    print('here')
     RETAILER_LIST = ["Amazon", "B&H", "BestBuy", "Ebay", "Jet", "Microcenter", "Newegg", "OutletPC", "Rakuten", "Superbiiz", "Target"]
 
     # This is going to be a dictionary of all the settings loaded from settings.json
@@ -29,7 +28,7 @@ class CommonPaths():
     CACHE_IP = "localhost"
 
     # The IP for Track Prices
-    TRACK_PRICES_IP = '10.0.0.210'
+    TRACK_PRICES_IP = 'localhost'
 
     if os.path.exists("settings.json"):
         # Location (from settings.json)

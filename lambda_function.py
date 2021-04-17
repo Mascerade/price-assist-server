@@ -41,8 +41,8 @@ def network_scrapers(retailer, price, item_model, title, image):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
-    searcher = item_model
     item_model = item_model.lower()
+    searcher = item_model
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
@@ -55,13 +55,9 @@ def network_scrapers(retailer, price, item_model, title, image):
         "amazon_data": scrapers.retrieve_amazon_data,
         "walmart_data": scrapers.retrieve_walmart_data,
         "newegg_data": scrapers.retrieve_newegg_data,
-        "bandh_data": scrapers.retrieve_bandh_data,
         "ebay_data": scrapers.retrieve_ebay_data,
         "tigerdirect_data": scrapers.retrieve_tiger_direct_data,
         "microcenter_data": scrapers.retrieve_microcenter_price,
-        #"jet_data": scrapers.retrieve_jet_price,
-        "outletpc_data": scrapers.retrieve_outletpc_price,
-        #"superbiiz_data": scrapers.retrieve_super_biiz_price
     }
 
     # Set the retailer that the info is coming from in the retailer_function
@@ -105,13 +101,9 @@ def network_scrapers(retailer, price, item_model, title, image):
                 "amazon_data": scrapers.amazon_data,
                 "walmart_data": scrapers.walmart_data,
                 "newegg_data": scrapers.newegg_data,
-                "bandh_data": scrapers.bandh_data,
                 "ebay_data": scrapers.ebay_data,
                 "tigerdirect_data": scrapers.tiger_direct_data,
                 "microcenter_data": scrapers.microcenter_data,
-                #"jet_data": scrapers.jet_data,
-                "outletpc_data": scrapers.outletpc_data,
-                #"superbiiz_data": scrapers.biiz_data
             }
                 
             if USING_SOURCE_RETAILER:
@@ -134,14 +126,10 @@ def network_scrapers(retailer, price, item_model, title, image):
 
             # Sort the scrapers by price (low --> high)
             scrapers.sort_all_scrapers()
-
-            # Send the item model to the item model database
             
             # Send the price data to the track prices database
-            # requests.put("http://localhost:5003/", json={"item_model": item_model, "data": prices})
             if CommonPaths.CACHE:
                 try:
-                    print('welrhjwklj')
                     requests.put("http://" + CommonPaths.CACHE_IP + ":5001/", json={"data": json.loads(json.dumps(prices)), "cache_flag": False})
 
                 except requests.exceptions.ConnectionError:
@@ -162,14 +150,14 @@ def process_based_scraper(retailer, price, item_model):
     USING_SOURCE_RETAILER = True
     scrapers = ScraperHelpers()
     start_time = time.time()
-    searcher = item_model.lower()
     item_model = item_model.lower()
+    searcher = item_model
 
     if retailer == "None":
         USING_SOURCE_RETAILER = False
 
     if searcher is not None:
-        # Make GET request
+        # Make GET request to the cache
         if CommonPaths.CACHE:
             cache = get_caching_data(item_model + '_process')
             if cache is not None:
@@ -180,6 +168,7 @@ def process_based_scraper(retailer, price, item_model):
     retailer_functions = {
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
         "rakuten_data": scrapers.retrieve_rakuten_data,
+        "bandh_data": scrapers.retrieve_bandh_data,
         "target_data": scrapers.retrieve_target_data
     }
 
@@ -208,6 +197,7 @@ def process_based_scraper(retailer, price, item_model):
         "identifier": searcher,
         "bestbuy_data": scrapers.bestbuy_data,
         "rakuten_data": scrapers.rakuten_data,
+        "bandh_data": scrapers.bandh_data,
         "target_data": scrapers.target_data
     }
 
@@ -248,9 +238,6 @@ def single_retailer(retailer, item_model):
         "ebay_data": scrapers.retrieve_ebay_data,
         "tigerdirect_data": scrapers.retrieve_tiger_direct_data,
         "microcenter_data": scrapers.retrieve_microcenter_price,
-        #"jet_data": scrapers.retrieve_jet_price,
-        "outletpc_data": scrapers.retrieve_outletpc_price,
-        #"superbiiz_data": scrapers.retrieve_super_biiz_price,
         "bestbuy_data": scrapers.retrieve_bestbuy_data,
         "rakuten_data": scrapers.retrieve_rakuten_data,
         "target_data": scrapers.retrieve_target_data
@@ -265,9 +252,6 @@ def single_retailer(retailer, item_model):
         "ebay_data": scrapers.ebay_data,
         "tigerdirect_data": scrapers.tiger_direct_data,
         "microcenter_data": scrapers.microcenter_data,
-        #"jet_data": scrapers.jet_data,
-        "outletpc_data": scrapers.outletpc_data,
-        #"superbiiz_data": scrapers.biiz_data,
         "bestbuy_data": scrapers.bestbuy_data,
         "rakuten_data": scrapers.rakuten_data,
         "target_data": scrapers.target_data
@@ -281,7 +265,7 @@ application = Flask(__name__)
 
 @application.route('/price-assist/api/network-scrapers')
 @cross_origin()
-def network_scratper():
+def network_scraper():
     # Get all the required information from the parameters in the URL
     retailer = request.args.get('retailer')
     price = request.args.get('price')
@@ -292,7 +276,8 @@ def network_scratper():
     try:
         return network_scrapers(retailer, price, item_model, title, image)
 
-    except TypeError:
+    except Exception as e:
+        logger.error('Unexpected error from network scrapers: {}'.format(str(e)))
         return flask.abort(500)
 
 @application.route('/price-assist/api/process-scrapers')
@@ -305,7 +290,8 @@ def process_based_scraper_response():
     try:
         return process_based_scraper(retailer, price, item_model)
 
-    except TypeError:
+    except Exception as e:
+        logger.error('Unexpected error from process scrapers: {}'.format(str(e)))
         return flask.abort(500)
 
 @application.route('/price-assist/api/current-price')

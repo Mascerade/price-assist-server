@@ -17,7 +17,8 @@ class BandH(Scraper):
                          product_model=product_model,
                          test_user_agent=test_user_agent,
                          test_tor_username=test_tor_username,
-                         data="")
+                         data="",
+                         use_selenium=True)
 
     def retrieve_product_price(self):
         try:
