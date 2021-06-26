@@ -3,10 +3,10 @@
 __pycache__/
 venv/
 .vscode/
-server/track_prices/databases
-server/user_database_controller/databases
-server/settings.json
-server/geckodriver.log
-server/logging/
-server/product-matcher/models/*
-!server/product-matcher/models/.gitkeep
+price_assist/track_prices/databases
+price_assist/user_database_controller/databases
+price_assist/settings.json
+price_assist/geckodriver.log
+price_assist/logging/
+price_assist/product-matcher/models/*
+!price_assist/product-matcher/models/.gitkeep
