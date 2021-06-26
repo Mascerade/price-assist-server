@@ -4,7 +4,6 @@ import os
 import sys
 import random
 import json
-sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
 

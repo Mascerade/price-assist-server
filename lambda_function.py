@@ -262,7 +262,6 @@ def single_retailer(retailer, item_model):
 # Create the Flask app
 application = Flask(__name__)
 
-
 @application.route('/price-assist/api/network-scrapers')
 @cross_origin()
 def network_scraper():

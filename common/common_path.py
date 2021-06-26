@@ -2,7 +2,6 @@ import os
 import sys
 import json
 import random
-sys.path.append(os.getcwd())
 
 class CommonPaths():
     RETAILER_LIST = ["Amazon", "B&H", "BestBuy", "Ebay", "Jet", "Microcenter", "Newegg", "OutletPC", "Rakuten", "Superbiiz", "Target"]

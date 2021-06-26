@@ -14,7 +14,6 @@ from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-sys.path.append(os.getcwd())
 from common.common_path import CommonPaths
 
 

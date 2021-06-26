@@ -6,7 +6,6 @@ import bs4
 from bs4 import BeautifulSoup
 import selenium.webdriver
 from selenium.webdriver.chrome.options import Options
-sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
 

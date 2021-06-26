@@ -4,7 +4,6 @@ import random
 import os
 import sys
 import json
-sys.path.append(os.getcwd())
 from master_scraper.master_scraper import Scraper
 
 
@@ -19,6 +18,19 @@ class Amazon(Scraper):
                          test_tor_username=test_tor_username,
                          test_user_agent = test_user_agent,
                          data="")
+
+    def retrieve_product_address(self):
+        try:
+            self.product_address = "https://www.amazon.com" + \
+                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[0]['href']
+        
+        except (AttributeError, IndexError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
@@ -35,18 +47,6 @@ class Amazon(Scraper):
             # I don't think it is necessary to do this
             # self.product_address = None
 
-    def retrieve_product_address(self):
-        try:
-            self.product_address = "https://www.amazon.com" + \
-                                   self.soup.find_all("a", attrs={"class": "a-link-normal a-text-normal"})[0]['href']
-        
-        except (AttributeError, IndexError) as e:
-            self.access_error(function_name="retrieve_product_address()")
-            self.product_address = None
-
-        except Exception as e:
-            self.unhandled_error(error=e, function_name="retrieve_product_address()")
-            self.product_address = None
 
 if __name__ == "__main__":
     amazon = Amazon("asus vivobook")

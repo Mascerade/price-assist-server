@@ -8,3 +8,5 @@ user_database_controller/databases
 settings.json
 geckodriver.log
 logging/
+product-matcher/models/*
+!product-matcher/models/.gitkeep
