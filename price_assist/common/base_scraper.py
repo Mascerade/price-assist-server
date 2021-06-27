@@ -8,11 +8,7 @@ import random
 from bs4 import BeautifulSoup
 import time
 import logging
-from selenium import webdriver
-from pyvirtualdisplay import Display
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from typing import Optional, Dict
 from common.common_path import CommonPaths
 
 
@@ -21,55 +17,44 @@ class Scraper:
     # TODO: Test user agents for each scraper
     
     """
-    The "Master" scraper
+    The scraper
     Creates unified class for all other scrapers to inherit from
     Keeps properties of objects the same across all scrapers
     * Have to create a variable that stores the amazon title across all of the scraper classes
     * Will make it simpler to keep track of it
     """
 
-    # For linux OS
-    REQUIRED_PACKAGES_INSTALLED = True
-
-    # Parameter for if we want to use selenium
-    USING_SELENIUM = True
-
-    # Parameter to control type of webdriver
-    USING_CHROME = True
-
-    # This is going to be a dictionary of all the settings loaded from settings.json
-    SETTINGS = {}
-
-    SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
-
-    if os.path.exists("settings.json"):
-        # Location (from settings.json)
-        with open("settings.json") as json_file:
-            settings = json.load(json_file)
-            SETTINGS = settings
-
-    parser = ""
-    if platform == "win32" or REQUIRED_PACKAGES_INSTALLED:
-        parser = "lxml"
-
-    else:
-        parser = "html5lib"
+    # Set the parser to use for BeautifulSoup
+    PARSER: str = "lxml"
     
-    def __init__(self, name, search_address, product_model, data, test_user_agent = None, test_tor_username = None, use_selenium = False):
+    def __init__(self,
+                 name: str,
+                 product_model: str,
+                 search_address: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         self.time = time.time()
         self.name = name
-        self.price = ""
-        self.search_address = search_address
-        self.product_address = ""
         self.product_model = product_model
-        self.user_agent = test_user_agent
-        self.title = None
-        self.data = data
+        self.search_address = search_address
+        self.using_tor = using_tor
+        self.user_agent: Dict[str, str] = test_user_agent
         self.tor_username = test_tor_username
-        self.use_selenium = use_selenium
+        
+        self.data: str = ""
+        self.price: Optional[str] = ""
+        self.product_address: Optional[str] = ""
+        self.title: Optional[str] = None
+        self.request_data: str = ""
+        self.soup: Optional[BeautifulSoup] = None
+        
+        # Logger is based on the name of the scraper (easy to find)
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.DEBUG)
-        fh = logging.FileHandler('logging/' + name.lower() + '.log')
+
+        # The file is based on the name as well
+        fh = logging.FileHandler(f'logging/{name}.log')
         self.logger.addHandler(fh)
 
         # For testing, we pass in a user agent, so if there is no testing, then find a user agent from CommonPaths
@@ -81,7 +66,7 @@ class Scraper:
             self.user_agent = {"User-Agent": test_user_agent}
 
         # Again, if we're not testing, use the username from CommonPaths
-        if test_tor_username is None:
+        if test_tor_username is None and self.using_tor:
             if CommonPaths.SCRAPER_TOR_IPS[name.lower()] is None:
                 self.tor_username = random.randint(1, 10000)
 
@@ -91,72 +76,14 @@ class Scraper:
         # Only if testing
         else: 
             self.tor_username = test_tor_username
-
-        if Scraper.USING_SELENIUM and self.use_selenium:
-            proxies = {
-                "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
-                "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
-                }
-
-            try:
-                if Scraper.USING_CHROME:
-                    display = Display(visible=0, size=(800, 600))
-                    display.start()
-                    caps = DesiredCapabilities().CHROME
-                    caps["pageLoadStrategy"] = "normal"
-                    options = Options()
-                    options.add_argument('--no-sandbox')
-                    # options.add_argument('--window-size=1420,1080')
-                    # options.add_argument('--headless')
-                    options.add_argument('--disable-gpu')
-                    driver = webdriver.Chrome(options=options, desired_capabilities=caps, executable_path="/usr/local/share/chromedriver")
-                    driver.get(self.search_address)
-
-                else:
-                    binary = FirefoxBinary("/usr/lib/firefox/firefox")
-                    caps = DesiredCapabilities().FIREFOX
-                    caps["pageLoadStrategy"] = "normal"
-                    options = webdriver.firefox.options.Options()
-                    options.add_argument("--headless")
-                    proxy = "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
-                    options.add_argument("--proxy-server=" + proxy)
-                    options.add_argument("--id=" + str(self.tor_username))
-                    driver = webdriver.Firefox(options=options, firefox_binary=binary, desired_capabilities=caps, executable_path=os.path.join(os.getcwd(), "gecko_driver/geckodriver"))
-                    driver.get(self.search_address)
-                if (self.name == "Rakuten" or self.name == "Target"):
-                    time.sleep(3)
-                self.data = driver.page_source
-
-            except Exception as e:
-                print(str(e))
-                self.price = "None"
-                self.product_address = "None"
-
-            finally:
-                #driver.close()
-                #display.stop()
-                pass
-
-        else:
-            proxies = {
-                "http": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050",
-                "https": "socks5h://" + str(self.tor_username) + ":idk@localhost:9050"
-                }
-
-            try:
-                self.data = requests.get(self.search_address, headers=self.user_agent, timeout=5).text
-
-            except Exception as e:
-                self.unhandled_error(e, 'Making request in master_scraper.py')
-                self.price = "None"
-                self.product_address = "None"
-
-        self.soup = BeautifulSoup(self.data, Scraper.parser)
-
-    def retrieve_product_address(self):
+    
+    def retrieve_soup(self) -> None:
         pass
 
-    def retrieve_product_price(self):
+    def retrieve_product_address(self) -> None:
+        pass
+
+    def retrieve_product_price(self) -> None:
         pass
 
     def get_elapsed_time(self):
@@ -169,6 +96,7 @@ class Scraper:
 
     def retrieve_all_information(self):
         scraper_info = []
+        self.retrieve_soup()
         self.retrieve_product_address()
         self.retrieve_product_price()
         scraper_info.append(self.name)
@@ -179,7 +107,7 @@ class Scraper:
 
     def access_error(self, function_name):
         error_found = False
-        for word in Scraper.SCRAPER_ERROR_WORDS:
+        for word in CommonPaths.SCRAPER_ERROR_WORDS:
             if (word in str(self.soup).lower()):
                 self.logger.error(time.ctime(time.time()) + ': Could not access ' + self.name + '. User Agent: ' + self.user_agent['User-Agent'] + ' Tor Username: ' + str(self.tor_username) + ". From " + function_name)
                 error_found = True

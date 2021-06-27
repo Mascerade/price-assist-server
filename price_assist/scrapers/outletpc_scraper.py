@@ -4,18 +4,23 @@ import os
 import sys
 import random
 import json
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.network_scraper import NetworkScraper
 
 
-class OutletPC(Scraper):
-    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
+class OutletPC(NetworkScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         super().__init__(name="OutletPC",
-                         search_address='https://sitesearch.outletpc.com/search/display_type-Grid--keywords-{}'
-                         .format(product_model),
+                         search_address=f'https://sitesearch.outletpc.com/search/display_type-Grid--keywords-{product_model}',
                          product_model=product_model,
+                         using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username,
-                         data="")
+                         test_tor_username=test_tor_username
+                        )
 
     def retrieve_product_address(self):
         try:
@@ -40,7 +45,7 @@ class OutletPC(Scraper):
                 self.access_error(function_name="retrieve_product_price()")
                 self.price = None
 
-            except Exception:
+            except Exception as e:
                 self.unhandled_error(error=e, function_name="retrieve_product_price()")
                 self.price = None
 

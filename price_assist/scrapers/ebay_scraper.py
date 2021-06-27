@@ -5,19 +5,24 @@ import random
 import os
 import sys
 import json
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.network_scraper import NetworkScraper
 
 
-class Ebay(Scraper):
-    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
+class Ebay(NetworkScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         super().__init__(name="Ebay",
-                         search_address='https://www.ebay.com/sch/i.html?_odkw={}&_osacat=0&_from=R40&_' \
-                               'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={}&_' \
-                               'sacat=0'.format(product_model, product_model),
+                         search_address=(f'https://www.ebay.com/sch/i.html?_odkw={product_model}&_osacat=0&_from=R40&_'
+                                          f'trksid=p2045573.m570.l1313.TR1.TRC0.A0.H0.TRS1&_nkw={product_model}&_sacat=0'),
                          product_model=product_model,
+                         using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username,
-                         data="")
+                         test_tor_username=test_tor_username
+                         )
 
         self.product_address = self.search_address
     
@@ -31,7 +36,7 @@ class Ebay(Scraper):
             self.access_error(function_name="retrieve_product_price()")
             self.price = None
 
-        except Exception:
+        except Exception as e:
             self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 

@@ -4,20 +4,24 @@ import os
 import sys
 import requests
 import json
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.process_scraper import ProcessScraper
 
 
-class BandH(Scraper):
-    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
-        super().__init__(name="B&H",
+class BandH(ProcessScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
+        super().__init__(name="BandH",
                          search_address='https://www.bhphotovideo.com/c/search?' \
                                       'Ntt={}&N=0&InitialSearch=yes' \
                                       '&sts=ma&Top+Nav-Search='.format(product_model),
                          product_model=product_model,
+                         using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username,
-                         data="",
-                         use_selenium=True)
+                         test_tor_username=test_tor_username)
 
     def retrieve_product_price(self):
         try:

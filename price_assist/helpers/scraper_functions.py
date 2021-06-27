@@ -11,10 +11,7 @@ from scrapers.ebay_scraper import Ebay
 from scrapers.tigerdirect_scraper import TigerDirect
 from scrapers.microcenter_scraper import Microcenter
 from scrapers.target_scraper import TargetScraper
-from scrapers.rakuten_scraper import Rakuten
-from scrapers.jet_scraper import Jet
 from scrapers.outletpc_scraper import OutletPC
-from scrapers.superbiiz_scraper import SuperBiiz
 
 
 class ScraperHelpers:
@@ -90,28 +87,10 @@ class ScraperHelpers:
         self.all_scrapers.append(self.target_data)
         return
 
-    def retrieve_rakuten_data(self, item_model):
-        rakuten = Rakuten(item_model)
-        self.rakuten_data = rakuten.retrieve_all_information()
-        self.all_scrapers.append(self.rakuten_data)
-        return
-
-    def retrieve_jet_price(self, item_model):
-        jet = Jet(item_model)
-        self.jet_data = jet.retrieve_all_information()
-        self.all_scrapers.append(self.jet_data)
-        return
-
     def retrieve_outletpc_price(self, item_model):
         outletpc = OutletPC(item_model)
         self.outletpc_data = outletpc.retrieve_all_information()
         self.all_scrapers.append(self.outletpc_data)
-        return
-
-    def retrieve_super_biiz_price(self, item_model):
-        biiz = SuperBiiz(item_model)
-        self.biiz_data = biiz.retrieve_all_information()
-        self.all_scrapers.append(self.biiz_data)
         return
 
     def reset_retailer_lists(self):

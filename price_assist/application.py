@@ -1,1 +1,1 @@
-from lambda_function import app as application
+from server import app as application

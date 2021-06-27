@@ -4,20 +4,24 @@ import os
 import sys
 import random
 import json
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.network_scraper import NetworkScraper
 
 
-class NeweggProduct(Scraper):
-    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
+class NeweggProduct(NetworkScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         super().__init__(name="Newegg",
-                         search_address='https://www.newegg.com/Product/ProductList.aspx?' +\
-                                      'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={}'\
+                         search_address=('https://www.newegg.com/Product/ProductList.aspx?'
+                                         f'Submit=ENE&DEPA=0&Order=BESTMATCH&Description={product_model}')
                                 .format(product_model),
                          product_model=product_model,
+                         using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username,
-                         use_selenium=False,
-                         data="")
+                         test_tor_username=test_tor_username)
         
     def retrieve_product_address(self):
         try:
@@ -63,7 +67,7 @@ class NeweggProduct(Scraper):
             self.access_error(function_name="retrieve_product_price()")
             self.price = None
 
-        except Exception:
+        except Exception as e:
             self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 

@@ -3,15 +3,21 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import sys
 import os
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.process_scraper import ProcessScraper
 
-class TargetScraper(Scraper):
-    def __init__(self, product_model, test_header = None, tor_username = None):
+class TargetScraper(ProcessScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         super().__init__(name="Target",
-                    search_address='https://www.target.com/s?searchTerm={}'.format(product_model),
-                    product_model=product_model,
-                    use_selenium=True,
-                    data="")
+                         search_address=f'https://www.target.com/s?searchTerm={product_model}',
+                         using_tor=False,
+                         product_model=product_model,
+                         test_user_agent=test_user_agent,
+                         test_tor_username=test_tor_username)
 
     def retrieve_product_price(self):
         try:
@@ -23,7 +29,7 @@ class TargetScraper(Scraper):
             self.access_error(function_name="retrieve_product_price()")
             self.price = None
 
-        except Exception:
+        except Exception as e:
             self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
 

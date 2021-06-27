@@ -2,26 +2,28 @@ import os
 import sys
 import json
 import random
+from typing import Dict, List, Optional
+
 
 class CommonPaths():
-    RETAILER_LIST = ["Amazon", "B&H", "BestBuy", "Ebay", "Jet", "Microcenter", "Newegg", "OutletPC", "Rakuten", "Superbiiz", "Target"]
-
-    # This is going to be a dictionary of all the settings loaded from settings.json
-    SETTINGS = {}
+    # Whether we are using the caching server or not
+    CACHE: bool = True
+    
+    # Load the settings
+    if os.path.exists("settings.json"):
+        with open("settings.json") as json_file:
+            SETTINGS: Dict[str, str] = json.load(json_file)
 
     # For when there is no auto-generated user agents to use from settings
-    DEFAULT_USER_AGENTS_DIR = "user_agents/default_user_agents"
+    DEFAULT_USER_AGENTS_DIR: str = "user_agents/default_user_agents"
 
     # Dictionary for the scrapers Tor usernames
-    SCRAPER_TOR_IPS = {}
+    SCRAPER_TOR_IPS: Dict[str, Optional[List[str]]] = {}
 
     # Dictionary for the scrapers Tor user agents
     SCRAPER_USER_AGENTS = {}
 
     SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
-
-    # Whether we are using the caching server or not
-    CACHE = True
 
     # The IP address for the caching server
     CACHE_IP = "localhost"
@@ -29,17 +31,9 @@ class CommonPaths():
     # The IP for Track Prices
     TRACK_PRICES_IP = 'localhost'
 
-    if os.path.exists("settings.json"):
-        # Location (from settings.json)
-        with open("settings.json") as json_file:
-            settings = json.load(json_file)
-            SETTINGS = settings
 
     # Essentially, get all the names of the scrapers
     all_scrapers = [f.split("_")[0] for f in os.listdir(os.path.join(os.getcwd(), 'scrapers/')) if os.path.isfile(os.path.join(os.getcwd(), 'scrapers/', f)) and f != "__init__.py"]
-    for index, scraper in enumerate(all_scrapers):
-        if scraper == "bandh":
-            all_scrapers[index] = "b&h"
 
     for scraper in all_scrapers:
         # Assigns a list of tor usernames to each scraper

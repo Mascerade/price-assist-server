@@ -3,18 +3,22 @@ import random
 import requests
 import os
 import sys
-from common.base_scraper import Scraper
+from typing import Optional, Dict
+from common.process_scraper import ProcessScraper
 
 
-class BestBuy(Scraper):
-    def __init__(self, product_model, test_user_agent = None, test_tor_username = None):
+class BestBuy(ProcessScraper):
+    def __init__(self,
+                 product_model: str,
+                 using_tor: bool = False,
+                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_tor_username: Optional[int] = None):
         super().__init__(name="BestBuy",
-                         search_address='https://www.bestbuy.com/site/searchpage.jsp?st={}'.format(product_model),
+                         search_address=f'https://www.bestbuy.com/site/searchpage.jsp?st={product_model}',
                          product_model=product_model,
+                         using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username,
-                         data="",
-                         use_selenium=True)
+                         test_tor_username=test_tor_username)
 
     def retrieve_product_address(self):
         try:
