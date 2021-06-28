@@ -21,7 +21,7 @@ class CommonPaths():
     SCRAPER_TOR_IPS: Dict[str, Optional[List[str]]] = {}
 
     # Dictionary for the scrapers Tor user agents
-    SCRAPER_USER_AGENTS = {}
+    SCRAPER_USER_AGENTS: Dict[str, List[str]] = {}
 
     SCRAPER_ERROR_WORDS = ["404", "automated", "access", "captcha"]
 
@@ -33,12 +33,12 @@ class CommonPaths():
 
 
     # Essentially, get all the names of the scrapers
-    all_scrapers = [f.split("_")[0] for f in os.listdir(os.path.join(os.getcwd(), 'scrapers/')) if os.path.isfile(os.path.join(os.getcwd(), 'scrapers/', f)) and f != "__init__.py"]
+    all_scrapers = [f.split("_")[0] for f in os.listdir('scrapers/') if os.path.isfile(os.path.join('scrapers/', f)) and f != "__init__.py"]
 
     for scraper in all_scrapers:
         # Assigns a list of tor usernames to each scraper
         try:
-            with open(os.path.join(os.getcwd(), SETTINGS['tor_ips_dir'], scraper + '_tor_ips.txt')) as f:
+            with open(os.path.join(SETTINGS['tor_ips_dir'], f'{scraper}_tor_ips.txt')) as f:
                 SCRAPER_TOR_IPS[scraper] = f.read().splitlines()
 
         except FileNotFoundError:
@@ -46,9 +46,9 @@ class CommonPaths():
         
         # Assigns a user agent to each scraper
         try:
-            with open(os.path.join(os.getcwd(), SETTINGS['tor_user_agents_dir'], scraper + '_tor.txt')) as f:
+            with open(os.path.join(SETTINGS['tor_user_agents_dir'], f'{scraper}_tor.txt')) as f:
                 SCRAPER_USER_AGENTS[scraper] = f.read().splitlines()
             
         except FileNotFoundError:
-            with open(os.path.join(os.getcwd(), DEFAULT_USER_AGENTS_DIR, 'scrapers_master.txt')) as f:
+            with open(os.path.join(DEFAULT_USER_AGENTS_DIR, 'scrapers_master.txt')) as f:
                 SCRAPER_USER_AGENTS[scraper] = f.read().splitlines()

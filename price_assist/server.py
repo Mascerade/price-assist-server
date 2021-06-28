@@ -12,11 +12,13 @@ import time
 import requests
 import logging
 import os
+import sys
 
 """ LOCAL IMPORTS """
 from helpers.scraper_functions import ScraperHelpers
 from common.common_path import CommonPaths
 
+# Create logging folder
 if not os.path.exists('logging'):
     os.mkdir('logging')
 

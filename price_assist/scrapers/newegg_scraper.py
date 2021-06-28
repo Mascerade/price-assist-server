@@ -12,7 +12,7 @@ class NeweggProduct(NetworkScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
-                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None):
         super().__init__(name="Newegg",
                          search_address=('https://www.newegg.com/Product/ProductList.aspx?'

@@ -8,7 +8,7 @@ import random
 from bs4 import BeautifulSoup
 import time
 import logging
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from common.common_path import CommonPaths
 
 
@@ -32,19 +32,19 @@ class Scraper:
                  product_model: str,
                  search_address: str,
                  using_tor: bool = False,
-                 test_user_agent: Optional[Dict[str, str]] = None,
+                 test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None):
         self.time = time.time()
         self.name = name
         self.product_model = product_model
         self.search_address = search_address
         self.using_tor = using_tor
-        self.user_agent: Dict[str, str] = test_user_agent
-        self.tor_username = test_tor_username
+        self.user_agent: Dict[str, str] = {}
+        self.tor_username: Optional[int] = None
         
         self.data: str = ""
-        self.price: Optional[str] = ""
-        self.product_address: Optional[str] = ""
+        self.price: Optional[str] = None
+        self.product_address: Optional[str] = None
         self.title: Optional[str] = None
         self.request_data: str = ""
         self.soup: Optional[BeautifulSoup] = None
@@ -67,11 +67,12 @@ class Scraper:
 
         # Again, if we're not testing, use the username from CommonPaths
         if test_tor_username is None and self.using_tor:
-            if CommonPaths.SCRAPER_TOR_IPS[name.lower()] is None:
+            scraper_tor_ips: Optional[List[str]] = CommonPaths.SCRAPER_TOR_IPS[self.name.lower()]
+            if scraper_tor_ips is None:
                 self.tor_username = random.randint(1, 10000)
 
             else:
-                self.tor_username = int(random.choice(CommonPaths.SCRAPER_TOR_IPS[self.name.lower()]).replace(" ", ""))
+                self.tor_username = int(random.choice(scraper_tor_ips).replace(" ", ""))
 
         # Only if testing
         else: 
