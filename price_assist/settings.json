@@ -1,0 +1,4 @@
+{
+    "tor_ips_dir": "tor_usernames/desktop_tor_ips",
+    "tor_user_agents_dir": "user_agents/tor_agents"
+}
