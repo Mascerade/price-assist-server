@@ -3,6 +3,7 @@
 __pycache__/
 venv/
 .vscode/
+price_assist/.mypy_cache
 price_assist/track_prices/databases
 price_assist/user_database_controller/databases
 price_assist/settings.json
