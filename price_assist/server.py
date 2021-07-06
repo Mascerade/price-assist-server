@@ -120,9 +120,7 @@ def process_based_scraper(retailer: Optional[str],
                           price: Optional[str],
                           item_model: Optional[str]) -> Tuple[str, int]:
     start_time = time.time()
-    if item_model is not None:
-        item_model = item_model.lower()
-        identifier: str = item_model
+    if item_model is not None:     
 
     print(retailer)
 
