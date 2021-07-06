@@ -36,7 +36,7 @@ class ScraperManager():
         for thread in thread_list:
             thread.join()
 
-    def run_single_scraper(self, scraper_name: str) -> Optional[Dict[str, Optional[str]]]:
+    def run_single_scraper(self, scraper_name: str) -> Optional[Dict[str, Optional[Dict]]]:
         '''
         Run single scraper
         '''

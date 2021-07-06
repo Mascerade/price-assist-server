@@ -120,7 +120,9 @@ def process_based_scraper(retailer: Optional[str],
                           price: Optional[str],
                           item_model: Optional[str]) -> Tuple[str, int]:
     start_time = time.time()
-    if item_model is not None:     
+    if item_model is not None:
+        item_model = item_model.lower()
+        identifier: str = item_model
 
     print(retailer)
 
@@ -184,7 +186,7 @@ def single_retailer(retailer: Optional[str], item_model: Optional[str]) -> Tuple
             scraper_manager.add(BestBuy(item_model))
             scraper_manager.add(BandH(item_model))
             scraper_manager.add(Target(item_model))
-            if retailer != None:
+            if retailer is not None:
                 return json.dumps(scraper_manager.run_single_scraper(retailer)), 200
             else:
                 return json.dumps({"success": False, "message": "Could not find the retailer"}), 404
