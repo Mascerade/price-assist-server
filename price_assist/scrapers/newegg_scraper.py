@@ -8,7 +8,7 @@ from typing import Optional, Dict
 from common.network_scraper import NetworkScraper
 
 
-class NeweggProduct(NetworkScraper):
+class Newegg(NetworkScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -72,5 +72,5 @@ class NeweggProduct(NetworkScraper):
             self.price = None
 
 if __name__ == "__main__":
-    newegg = NeweggProduct("P2719H")
+    newegg = Newegg("P2719H")
     newegg.test()

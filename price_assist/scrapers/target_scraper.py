@@ -6,7 +6,7 @@ import os
 from typing import Optional, Dict
 from common.process_scraper import ProcessScraper
 
-class TargetScraper(ProcessScraper):
+class Target(ProcessScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -50,5 +50,5 @@ class TargetScraper(ProcessScraper):
             self.product_address = None
 
 if __name__ == "__main__":
-    target = TargetScraper("lg oled tv")
+    target = Target("lg oled tv")
     target.test()

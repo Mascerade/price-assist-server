@@ -96,26 +96,31 @@ class Scraper:
         print(self.price, self.product_address)
 
     def retrieve_all_information(self):
-        scraper_info = []
+        # scraper_info = []
         self.retrieve_soup()
         self.retrieve_product_address()
         self.retrieve_product_price()
-        scraper_info.append(self.name)
-        scraper_info.append(self.price)
-        scraper_info.append(self.product_address)
+        # scraper_info.append(self.name)
+        # scraper_info.append(self.price)
+        # scraper_info.append(self.product_address)
         self.get_elapsed_time()
-        return scraper_info
+        # return scraper_info
 
     def access_error(self, function_name):
         error_found = False
         for word in CommonPaths.SCRAPER_ERROR_WORDS:
             if (word in str(self.soup).lower()):
-                self.logger.error(time.ctime(time.time()) + ': Could not access ' + self.name + '. User Agent: ' + self.user_agent['User-Agent'] + ' Tor Username: ' + str(self.tor_username) + ". From " + function_name)
-                error_found = True
-                break
-        
+                self.logger.error(time.ctime(time.time()))
+
         if not error_found:
             self.logger.warning(time.ctime(time.time()) + ': Did not find the product ' + self.product_model)
 
     def unhandled_error(self, error, function_name):
         self.logger.error(time.ctime(time.time()) + ': Unhandled type of error: ' + str(error) + '. ' + function_name)
+
+    def as_dict(self) -> Dict[str, Optional[str]]:
+        return {
+            'retailer': self.name.lower(),
+            'price': self.price,
+            'product_address': self.product_address
+        }
