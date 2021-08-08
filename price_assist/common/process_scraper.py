@@ -23,7 +23,9 @@ class ProcessScraper(Scraper):
                  using_tor: bool,
                  test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None,
-                 webdriver_type: str = 'firefox'):
+                 webdriver_type: str = 'firefox',
+                 *args,
+                 **kwargs):
         super().__init__(
             name = name,
             product_model=product_model,

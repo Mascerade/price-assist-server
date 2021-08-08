@@ -8,7 +8,6 @@ from flask_cors import cross_origin
 from typing import Tuple, Optional
 import json
 import flask
-import threading
 import time
 import requests
 import logging
@@ -26,6 +25,12 @@ from scrapers.tigerdirect_scraper import TigerDirect
 from scrapers.walmart_scraper import Walmart
 from common.common_path import CommonPaths
 from common.scraper_manager import ScraperManager
+from common.scraper_tab_manager import ScraperTabManager
+from common.stm_scraper import STMScraper
+
+# manager = ScraperTabManager('Amazon', '500', 'https://www.google.com')
+# print(manager)
+# test = STMScraper('Amazon', 'x', 'https://www.google.com/', using_tor=False, indicator_element=[], test_user_agent=None, test_tor_username=None)
 
 # Create logging folder
 if not os.path.exists('logging'):

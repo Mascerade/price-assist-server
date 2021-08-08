@@ -16,6 +16,8 @@ class NetworkScraper(Scraper):
                  using_tor: bool,
                  test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None,
+                 *args,
+                 **kwargs
                 ):
         super().__init__(
             name = name,

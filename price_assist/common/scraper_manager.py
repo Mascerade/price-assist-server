@@ -7,6 +7,7 @@ class ScraperManager():
                  cr: Optional[str],
                  cr_price: Optional[str],
                  cr_product_address: Optional[str]):
+        # cr stands for current retailer
         self.cr = cr
         self.cr_price = cr_price
         self.cr_product_address = cr_product_address
