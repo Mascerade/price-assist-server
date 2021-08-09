@@ -1,7 +1,6 @@
 from typing import List, Dict, Union, Optional
 from threading import Thread
 from stm.manager import ChromeTabManager
-from common.base_scraper import Scraper
 from common.stm_scraper import STMScraper
 from common.scraper_manager import ScraperManager
 
@@ -18,7 +17,7 @@ class ScraperTabManager(ScraperManager, ChromeTabManager):
                                 cr_product_address)
         ChromeTabManager.__init__(self, [], *args, **kwargs)
 
-    def add(self, scraper: STMScraper) -> None:
+    def add(self, scraper: STMScraper) -> None: # type: ignore[override]
         '''
         Both add the scraper to the ScraperManager and to the TabManager
         '''
