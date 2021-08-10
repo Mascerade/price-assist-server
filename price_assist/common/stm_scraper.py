@@ -14,8 +14,7 @@ class STMScraper(Scraper, Tab):
                  using_tor: bool,
                  indicator_element: Sequence[Union[Any, str]],
                  test_user_agent: Optional[str] = None,
-                 test_tor_username: Optional[int] = None,
-                ):
+                 test_tor_username: Optional[int] = None):
         Scraper.__init__(
             self,
             name = name,
@@ -29,6 +28,15 @@ class STMScraper(Scraper, Tab):
             name=name,
             url=search_address,
             indicator_element=indicator_element)
+
+    def test(self):
+        from common.scraper_tab_manager import ScraperTabManager
+        manager = ScraperTabManager(cr=None, cr_price=None, cr_product_address=None, executable_path='./chromedriver')
+        manager.add(self)
+        manager.open_tabs()
+        manager.execute_all_on_indicated()
+        manager.quit()
+        super().test()
 
     def retrieve_soup(self):
         '''

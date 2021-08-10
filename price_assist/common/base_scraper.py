@@ -93,7 +93,7 @@ class Scraper:
     def test(self):
         self.retrieve_product_address()
         self.retrieve_product_price()
-        print(self.price, self.product_address)
+        print(f'Price: {self.price}\nProduct Address: {self.product_address}')
 
     def retrieve_all_information(self):
         # scraper_info = []

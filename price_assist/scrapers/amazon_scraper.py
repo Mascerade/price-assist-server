@@ -1,14 +1,9 @@
-from bs4 import BeautifulSoup
-import requests
-import random
-import os
-import sys
-import json
 from typing import Optional, Dict
+from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
+from common.stm_scraper import STMScraper
 
-
-class Amazon(NetworkScraper):
+class Amazon(STMScraper):
     """
     We now have 4 scrapers that are essentially gaurenteed to work
     """
@@ -22,7 +17,8 @@ class Amazon(NetworkScraper):
                          product_model=product_model,
                          using_tor=using_tor,
                          test_tor_username=test_tor_username,
-                         test_user_agent=test_user_agent)
+                         test_user_agent=test_user_agent,
+                         indicator_element=[By.CSS_SELECTOR, 'div.s-main-slot.s-result-list.s-search-results.sg-row'])
 
     def retrieve_product_address(self):
         try:
@@ -39,7 +35,8 @@ class Amazon(NetworkScraper):
 
     def retrieve_product_price(self):
         try:
-            self.price = self.soup.find_all("span", attrs={"class": "a-offscreen"})[0].text
+            price_wrapper = self.soup.find("span", attrs={"class": "a-price", "data-a-size": "l", "data-a-color": "base"})
+            self.price = price_wrapper.find("span", attrs={"class": "a-offscreen"}).text
 
         except (AttributeError, IndexError, TypeError) as e:
             # AttributeError most likely means that it was not able to find the span
@@ -56,3 +53,4 @@ class Amazon(NetworkScraper):
 if __name__ == "__main__":
     amazon = Amazon("asus vivobook")
     amazon.test()
+    
