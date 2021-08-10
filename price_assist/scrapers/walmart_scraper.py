@@ -1,25 +1,22 @@
-from bs4 import BeautifulSoup
-import requests
-import os
-import sys
-import random
-import json
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
+from common.stm_scraper import STMScraper
 
-
-class Walmart(NetworkScraper):
+class Walmart(STMScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
                  test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None):
         super().__init__(name="Walmart",
+                         #search_address='https://www.walmart.com/',
                          search_address=f'https://www.walmart.com/search/?query={product_model}',
                          product_model=product_model,
                          using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.XPATH, "//div[@data-automation-id='search-result-listview-items'"])
 
     def retrieve_product_address(self):
         # TODO: Fix address
@@ -53,7 +50,6 @@ class Walmart(NetworkScraper):
         else:
             self.price = None
 
-
 if __name__ == "__main__":
-    walmart = Walmart("Ryzen 9 3900X")
+    walmart = Walmart("lg tv")
     walmart.test()
