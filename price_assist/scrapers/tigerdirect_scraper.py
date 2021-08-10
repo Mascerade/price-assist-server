@@ -1,17 +1,12 @@
-from bs4 import BeautifulSoup
-import requests
-import os
-import random
-import sys
-import json
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
+from common.stm_scraper import STMScraper
 
-
-class TigerDirect(NetworkScraper):
+class TigerDirect(STMScraper):
     def __init__(self,
                  product_model: str,
-                 using_tor: bool =False,
+                 using_tor: bool = False,
                  test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None):
         super().__init__(name="TigerDirect",
@@ -19,12 +14,15 @@ class TigerDirect(NetworkScraper):
                          product_model=product_model,
                          using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.CLASS_NAME, 'sku-display'])
 
     def retrieve_product_price(self):
         try:
             count = 0
-            self.price = self.soup.find('div', 'salePrice').text
+            self.price = self.soup.find('p', attrs={'class': 'price'}).text
+            if self.price is None:
+                self.price = self.soup.find('p', attrs={'class': 'salePrice'}).text
             if self.price.count("$") > 1:
                 for index, x in enumerate(self.price):
                     if x == "$" and count > 0:
