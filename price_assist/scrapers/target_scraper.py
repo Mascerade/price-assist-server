@@ -1,12 +1,9 @@
-import selenium.webdriver
-from selenium.webdriver.chrome.options import Options
-from bs4 import BeautifulSoup
-import sys
-import os
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.process_scraper import ProcessScraper
+from common.stm_scraper import STMScraper
 
-class Target(ProcessScraper):
+class Target(STMScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -14,14 +11,28 @@ class Target(ProcessScraper):
                  test_tor_username: Optional[int] = None):
         super().__init__(name="Target",
                          search_address=f'https://www.target.com/s?searchTerm={product_model}',
-                         using_tor=False,
+                         using_tor=using_tor,
                          product_model=product_model,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.XPATH, "//div[@data-test='product-list-container']"])
+
+    def retrieve_product_address(self):
+        try:
+            product_address_attrs = {"data-test": "product-title"}
+            self.product_address = "https://www.target.com" + self.soup.find("a", attrs=product_address_attrs)["href"]
+
+        except (AttributeError, IndexError, TypeError) as e:
+            self.access_error(function_name="retrieve_product_address()")
+            self.product_address = None 
+
+        except Exception as e:
+            self.unhandled_error(error=e, function_name="retrieve_product_address()")
+            self.product_address = None
 
     def retrieve_product_price(self):
         try:
-            self.price = self.soup.find("span", attrs={"data-test": "product-price"}).text
+            self.price = self.soup.find("div", attrs={"data-test": "current-price"}).text
             
         except (AttributeError, IndexError, TypeError) as e:
             # AttributeError most likely means that it was not able to find the span
@@ -32,22 +43,6 @@ class Target(ProcessScraper):
         except Exception as e:
             self.unhandled_error(error=e, function_name="retrieve_product_price()")
             self.price = None
-
-    def retrieve_product_address(self):
-        # TODO: Returns None for address
-        try:
-            product_address_attrs = {"class": "Link-sc-1khjl8b-0 styles__StyledTitleLink-e5kry1-5 cPukFm h-display-block h-text-bold h-text-bs flex-grow-one",
-                            "data-test": "product-title"}
-
-            self.product_address = "https://www.target.com" + self.soup.find("a", attrs=product_address_attrs)["href"]
-
-        except (AttributeError, IndexError, TypeError) as e:
-            self.access_error(function_name="retrieve_product_address()")
-            self.product_address = None 
-
-        except Exception as e:
-            self.unhandled_error(error=e, function_name="retrieve_product_address()")
-            self.product_address = None
 
 if __name__ == "__main__":
     target = Target("lg oled tv")

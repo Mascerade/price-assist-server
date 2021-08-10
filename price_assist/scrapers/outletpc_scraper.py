@@ -1,9 +1,3 @@
-from bs4 import BeautifulSoup
-import requests
-import os
-import sys
-import random
-import json
 from typing import Optional, Dict
 from common.network_scraper import NetworkScraper
 
