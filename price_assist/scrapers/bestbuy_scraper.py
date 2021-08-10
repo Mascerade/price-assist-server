@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from common.process_scraper import ProcessScraper
 from common.stm_scraper import STMScraper
 
-
 class BestBuy(STMScraper):
     def __init__(self,
                  product_model: str,
