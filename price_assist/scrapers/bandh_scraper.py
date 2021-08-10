@@ -4,11 +4,13 @@ import os
 import sys
 import requests
 import json
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.process_scraper import ProcessScraper
+from common.stm_scraper import STMScraper
 
 
-class BandH(ProcessScraper):
+class BandH(STMScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -16,12 +18,12 @@ class BandH(ProcessScraper):
                  test_tor_username: Optional[int] = None):
         super().__init__(name="BandH",
                          search_address='https://www.bhphotovideo.com/c/search?' \
-                                      'Ntt={}&N=0&InitialSearch=yes' \
-                                      '&sts=ma&Top+Nav-Search='.format(product_model),
+                                      'Ntt={}'.format(product_model),
                          product_model=product_model,
                          using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.XPATH, "//div[@data-selenium='listingProductDetailSection']"])
 
     def retrieve_product_price(self):
         try:
