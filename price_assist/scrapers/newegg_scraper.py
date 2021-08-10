@@ -1,14 +1,9 @@
-from bs4 import BeautifulSoup
-import requests
-import os
-import sys
-import random
-import json
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
+from common.stm_scraper import STMScraper
 
-
-class Newegg(NetworkScraper):
+class Newegg(STMScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -21,14 +16,14 @@ class Newegg(NetworkScraper):
                          product_model=product_model,
                          using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.CLASS_NAME, 'list-wrap'])
         
     def retrieve_product_address(self):
         try:
             self.title = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"}).text
             self.title = self.title.replace('"', '\\\"')
             self.product_address = self.soup.find("a", attrs={"class": "item-title", "title": "View Details"})['href']
-
 
         except (AttributeError, IndexError, TypeError) as e:
             self.access_error(function_name="retrieve_product_address()")

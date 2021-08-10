@@ -35,7 +35,6 @@ class Microcenter(STMScraper):
         try:
             self.product_address = "https://www.microcenter.com" + self.soup.find("a", attrs={"id": "hypProductH2_0"})["href"]
 
-
         except (AttributeError, IndexError, TypeError) as e:
             self.access_error(function_name="retrieve_product_address()")
             self.product_address = None 
