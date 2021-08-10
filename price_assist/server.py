@@ -28,10 +28,6 @@ from common.scraper_manager import ScraperManager
 from common.scraper_tab_manager import ScraperTabManager
 from common.stm_scraper import STMScraper
 
-# manager = ScraperTabManager('Amazon', '500', 'https://www.google.com')
-# print(manager)
-# test = STMScraper('Amazon', 'x', 'https://www.google.com/', using_tor=False, indicator_element=[], test_user_agent=None, test_tor_username=None)
-
 # Create logging folder
 if not os.path.exists('logging'):
     os.mkdir('logging')
@@ -83,7 +79,7 @@ def network_scrapers(retailer: Optional[str],
                     return cache, 200
             
             # Add the network scrapers to scraper manager and run them
-            scraper_manager: ScraperManager = ScraperManager(retailer, price, identifier)
+            scraper_manager: ScraperTabManager = ScraperTabManager(retailer, price, identifier)
             scraper_manager.add(Amazon(identifier))
             scraper_manager.add(Ebay(identifier))
             scraper_manager.add(Microcenter(identifier))

@@ -1,5 +1,6 @@
 from typing import Optional
 from selenium.webdriver import chrome
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from stm.manager import ChromeTabManager
 from common.stm_scraper import STMScraper
@@ -28,6 +29,7 @@ class ScraperTabManager(ScraperManager, ChromeTabManager):
                                 cr_product_address)
         ChromeTabManager.__init__(self,
                                   [],
+                                  executable_path='./executables/chromedriver',
                                   desired_capabilities=caps,
                                   options=opts,
                                   *args,
@@ -45,4 +47,12 @@ class ScraperTabManager(ScraperManager, ChromeTabManager):
         Run the scrapers through the ChromeTabManager
         '''
         self.open_tabs()
-        self.execute_all_on_indicated()
+        try:
+            self.execute_all_on_indicated(timeout=5)
+        except TimeoutException as e:
+            print(str(e))
+        finally:
+            self.quit()
+        
+        for scraper in self.scrapers:
+            scraper.retrieve_all_information()

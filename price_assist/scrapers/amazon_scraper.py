@@ -36,6 +36,7 @@ class Amazon(STMScraper):
     def retrieve_product_price(self):
         try:
             price_wrapper = self.soup.find("span", attrs={"class": "a-price", "data-a-size": "l", "data-a-color": "base"})
+            print(self.soup)
             self.price = price_wrapper.find("span", attrs={"class": "a-offscreen"}).text
 
         except (AttributeError, IndexError, TypeError) as e:
