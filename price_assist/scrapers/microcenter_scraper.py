@@ -1,14 +1,9 @@
-from bs4 import BeautifulSoup
-import requests
-import os
-import random
-import sys
-import json
-from typing import Optional, Dict
+from typing import Optional
+from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
+from common.stm_scraper import STMScraper
 
-
-class Microcenter(NetworkScraper):
+class Microcenter(STMScraper):
     def __init__(self,
                  product_model: str,
                  using_tor: bool = False,
@@ -19,7 +14,8 @@ class Microcenter(NetworkScraper):
                          product_model=product_model,
                          using_tor=using_tor,
                          test_user_agent=test_user_agent,
-                         test_tor_username=test_tor_username)
+                         test_tor_username=test_tor_username,
+                         indicator_element=[By.ID, 'contentResults'])
 
     def retrieve_product_price(self):
         try:
@@ -49,6 +45,6 @@ class Microcenter(NetworkScraper):
             self.product_address = None
 
 if __name__ == "__main__":
-    micro = Microcenter("BX80684I99900K")
+    micro = Microcenter("ryzen 7")
     micro.test()
     

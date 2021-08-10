@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Optional
 from selenium.webdriver.common.by import By
 from common.network_scraper import NetworkScraper
 from common.stm_scraper import STMScraper
