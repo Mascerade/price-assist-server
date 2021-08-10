@@ -1,9 +1,3 @@
-from bs4 import BeautifulSoup
-import random
-import os
-import sys
-import requests
-import json
 from typing import Optional
 from selenium.webdriver.common.by import By
 from common.process_scraper import ProcessScraper
