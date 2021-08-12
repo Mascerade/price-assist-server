@@ -47,12 +47,7 @@ class ScraperTabManager(ScraperManager, ChromeTabManager):
         Run the scrapers through the ChromeTabManager
         '''
         self.open_tabs()
-        try:
-            self.execute_all_on_indicated(timeout=5)
-        except TimeoutException as e:
-            print(str(e))
-        finally:
-            self.quit()
-        
+        self.execute_all_on_indicated(timeout=5)
+        self.quit()
         for scraper in self.scrapers:
             scraper.retrieve_all_information()

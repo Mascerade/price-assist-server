@@ -31,7 +31,7 @@ class STMScraper(Scraper, Tab):
 
     def test(self):
         from common.scraper_tab_manager import ScraperTabManager
-        manager = ScraperTabManager(cr=None, cr_price=None, cr_product_address=None, executable_path='./executables/chromedriver')
+        manager = ScraperTabManager(cr=None, cr_price=None, cr_product_address=None)
         manager.add(self)
         manager.open_tabs()
         manager.execute_all_on_indicated()

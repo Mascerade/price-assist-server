@@ -18,7 +18,7 @@ class Amazon(STMScraper):
                          using_tor=using_tor,
                          test_tor_username=test_tor_username,
                          test_user_agent=test_user_agent,
-                         indicator_element=[By.CSS_SELECTOR, 'div.s-main-slot.s-result-list.s-search-results.sg-row'])
+                         indicator_element=[By.CSS_SELECTOR, 'div.s-result-item.s-asin.sg-col-0-of-12.sg-col-16-of-20.AdHolder.sg-col.sg-col-12-of-16'])
 
     def retrieve_product_address(self):
         try:
@@ -36,7 +36,6 @@ class Amazon(STMScraper):
     def retrieve_product_price(self):
         try:
             price_wrapper = self.soup.find("span", attrs={"class": "a-price", "data-a-size": "l", "data-a-color": "base"})
-            print(self.soup)
             self.price = price_wrapper.find("span", attrs={"class": "a-offscreen"}).text
 
         except (AttributeError, IndexError, TypeError) as e:
