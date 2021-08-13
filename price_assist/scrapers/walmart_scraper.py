@@ -10,7 +10,7 @@ class Walmart(STMScraper):
                  test_user_agent: Optional[str] = None,
                  test_tor_username: Optional[int] = None):
         super().__init__(name="Walmart",
-                         #search_address='https://www.walmart.com/',
+                         #search_address='chrome://version',
                          search_address=f'https://www.walmart.com/search/?query={product_model}',
                          product_model=product_model,
                          using_tor=using_tor,
